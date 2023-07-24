@@ -2,26 +2,26 @@ package Project.Logic;
 
 import java.util.HashMap;
 
-public abstract class Member {
-    private String id;
+public abstract class User {
+    private String Email;
     private int password;
     private String fullName;
     private HashMap<String, Position> projects;
     //you can put Project class instead of String
 
-    public Member(String id, int password, String fullName) {
-        this.id = id;
+    public User(String Email, int password, String fullName) {
+        this.Email = Email;
         this.password = password;
         this.fullName = fullName;
         this.projects = new HashMap<>();
     }
 
-    public String getId() {
-        return id;
+    public String getEmail() {
+        return Email;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setEmail(String Email) {
+        this.Email = Email;
     }
 
     public int getPassword() {
