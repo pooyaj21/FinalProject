@@ -2,11 +2,11 @@ package Project.Logic;
 
 import java.util.HashMap;
 
-public abstract class User {
+public class User {
     private String Email;
     private int password;
     private String fullName;
-    private HashMap<String, Position> projects;
+    private HashMap<String, Role> projects;
     //you can put Project class instead of String
 
     public User(String Email, int password, String fullName) {
@@ -40,15 +40,15 @@ public abstract class User {
         this.fullName = fullName;
     }
 
-    public HashMap<String, Position> getProjects() {
+    public HashMap<String, Role> getProjects() {
         return projects;
     }
 
-    public void setProjects(HashMap<String, Position> projects) {
+    public void setProjects(HashMap<String, Role> projects) {
         this.projects = projects;
     }
 
-    public void addProject(String project,Position position){
+    public void addProject(String project, Role position){
         projects.put(project,position);
     }
 }
