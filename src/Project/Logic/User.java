@@ -4,15 +4,17 @@ import java.util.HashMap;
 
 public class User {
     private String Email;
-    private int password;
+    private String password;
     private String fullName;
     private HashMap<String, Role> projects;
     //you can put Project class instead of String
+    private Role role;
 
-    public User(String Email, int password, String fullName) {
+    public User(String Email, String password, String fullName, Role role) {
         this.Email = Email;
         this.password = password;
         this.fullName = fullName;
+        this.role=role;
         this.projects = new HashMap<>();
     }
 
@@ -24,11 +26,11 @@ public class User {
         this.Email = Email;
     }
 
-    public int getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(int password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 

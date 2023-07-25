@@ -1,4 +1,4 @@
-package Project.Logic.LogIn;
+package Project.Logic;
 
 public class LogInController {
     private static LogInController instance;

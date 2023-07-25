@@ -1,10 +1,11 @@
 package Project;
 
-import Project.Ui.LoginPanel;
+
+import Project.Ui.UserManagementPanel;
 
 import javax.swing.*;
 
-public class LoginTest {
+public class UserManagementTest {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -14,13 +15,13 @@ public class LoginTest {
     }
 
     private static void createAndShowGUI() {
-        JFrame frame = new JFrame("Login UI");
+        JFrame frame = new JFrame("user Management UI");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(420, 420);
+        frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
-        JPanel login = new LoginPanel(0,0);
-        login.setVisible(true);
-        frame.add(login);
+        UserManagementPanel userManagement = new UserManagementPanel(0,0);
+        userManagement.setVisible(true);
+        frame.add(userManagement);
         frame.setLayout(null);
         frame.setVisible(true);
     }

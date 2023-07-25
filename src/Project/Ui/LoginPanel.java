@@ -1,13 +1,15 @@
 package Project.Ui;
 
 
-import Project.Logic.LogIn.UserManagement;
+import Project.Logic.UserManagement;
 import Project.Util.RoundedButton;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class LoginPanel extends JPanel {
     RoundedButton loginButton = new RoundedButton("Login",15,Color.blue,Color.white,12);
@@ -19,7 +21,8 @@ public class LoginPanel extends JPanel {
     JLabel emailErrorLabel = new JLabel();
     JLabel passwordErrorLabel = new JLabel();
 
-    public LoginPanel() {
+    public LoginPanel(int x, int y) {
+        setBounds(x,y,420,420);
         userEmailLabel.setBounds(50, 100, 75, 25);
         userPasswordLabel.setBounds(50, 150, 75, 25);
 
@@ -47,7 +50,7 @@ public class LoginPanel extends JPanel {
                     emailErrorLabel.setText("Enter Email");
                 }else{
                     try{
-                        UserManagement.getInstance().checkEmail(userEmailField.getText());
+                        UserManagement.getInstance().checkEmail(userEmailField.getText().toLowerCase());
                     }catch (IllegalArgumentException exception){
                         emailErrorLabel.setForeground(Color.red);
                         emailErrorLabel.setText("Wrong Email");
@@ -82,5 +85,32 @@ public class LoginPanel extends JPanel {
         add(loginButton);
         setLayout(null);
         setVisible(true);
+
+
+       userPasswordField.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {}
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    loginButton.doClick();
+                }
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {}
+        });
+        userEmailField.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {}
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    loginButton.doClick();
+                }
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {}
+        });
+
     }
 }
