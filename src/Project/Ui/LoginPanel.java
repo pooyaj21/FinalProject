@@ -2,6 +2,7 @@ package Project.Ui;
 
 
 import Project.Logic.UserManagement;
+import Project.Util.GeneralController;
 import Project.Util.RoundedButton;
 
 import javax.swing.*;
@@ -45,7 +46,7 @@ public class LoginPanel extends JPanel {
                 messageLabel.setText("");
                 emailErrorLabel.setText("");
                 passwordErrorLabel.setText("");
-                if (userEmailField.getText().isEmpty()){
+                if (GeneralController.getInstance().isEmpty(userEmailField.getText())){
                     emailErrorLabel.setForeground(Color.red);
                     emailErrorLabel.setText("Enter Email");
                 }else{
@@ -56,7 +57,7 @@ public class LoginPanel extends JPanel {
                         emailErrorLabel.setText("Wrong Email");
                     }
                 }
-                if (userPasswordField.getText().isEmpty()){
+                if (GeneralController.getInstance().isEmpty(userPasswordField.getText())){
                     passwordErrorLabel.setForeground(Color.red);
                     passwordErrorLabel.setText("Enter Password");
                     return;
@@ -85,31 +86,17 @@ public class LoginPanel extends JPanel {
         add(loginButton);
         setLayout(null);
         setVisible(true);
+        int condition = JComponent.WHEN_IN_FOCUSED_WINDOW;
+        InputMap inputMap = getInputMap(condition);
+        ActionMap actionMap = getActionMap();
 
-
-       userPasswordField.addKeyListener(new KeyListener() {
+        String enterKey = "enterKey";
+        inputMap.put(KeyStroke.getKeyStroke("ENTER"), enterKey);
+        actionMap.put(enterKey, new AbstractAction() {
             @Override
-            public void keyTyped(KeyEvent e) {}
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    loginButton.doClick();
-                }
+            public void actionPerformed(ActionEvent e) {
+                loginButton.doClick();
             }
-            @Override
-            public void keyReleased(KeyEvent e) {}
-        });
-        userEmailField.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {}
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    loginButton.doClick();
-                }
-            }
-            @Override
-            public void keyReleased(KeyEvent e) {}
         });
 
     }

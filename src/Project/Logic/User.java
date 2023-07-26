@@ -53,4 +53,12 @@ public class User {
     public void addProject(String project, Role position){
         projects.put(project,position);
     }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }

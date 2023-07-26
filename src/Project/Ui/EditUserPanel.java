@@ -14,7 +14,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class CreateUserPanel extends JPanel {
+public class EditUserPanel extends JPanel {
+    UserManagement userManagement = UserManagement.getInstance();
     JLabel emailLabel = new JLabel("Email:");
     JLabel nameLabel = new JLabel("Name:");
     JLabel passwordLabel = new JLabel("Password:");
@@ -28,10 +29,12 @@ public class CreateUserPanel extends JPanel {
     JLabel nameErrorLabel = new JLabel();
     JLabel passwordErrorLabel = new JLabel();
     JLabel roleErrorLabel = new JLabel();
+    User user;
     JLabel successMassage = new JLabel();
 
 
-    public CreateUserPanel(int x, int y) {
+    public EditUserPanel(int x, int y) {
+        this.user=user;
         setBounds(x, y, 600, 600);
         setLayout(null);
         setFocusable(true);
@@ -56,6 +59,10 @@ public class CreateUserPanel extends JPanel {
         nameField.setBounds(150, 200, 200, 25);
         passwordField.setBounds(150, 300, 200, 25);
         roleComboBox.setBounds(150, 400, 200, 25);
+
+
+
+
 
         int condition = JComponent.WHEN_IN_FOCUSED_WINDOW;
         InputMap inputMap = getInputMap(condition);
@@ -86,6 +93,8 @@ public class CreateUserPanel extends JPanel {
             roleComboBox.addItem(roleName);
         }
 
+
+
         submit.setBounds(400, 500, 100, 25);
         submit.addActionListener(new ActionListener() {
             @Override
@@ -103,12 +112,13 @@ public class CreateUserPanel extends JPanel {
                 if (GeneralController.getInstance().isEmpty(emailField.getText())) {
                     emailErrorLabel.setForeground(Color.red);
                     emailErrorLabel.setText("Enter Email");
-                } else if (!UserManagement.getInstance().emailAuthentication(emailField.getText().toLowerCase())) {
+                } else if (!userManagement.emailAuthentication(emailField.getText().toLowerCase())) {
                     emailErrorLabel.setForeground(Color.red);
                     emailErrorLabel.setText("Enter a Correct Email");
-                } else if (UserManagement.getInstance().isEmailExist(emailField.getText().toLowerCase())) {
+                } else if (!user.getEmail().equalsIgnoreCase(emailField.getText()) && userManagement.isEmailExist(emailField.getText().toLowerCase())) {
+                    // Check if the new email is different from the current email and if it already exists in the database
                     emailErrorLabel.setForeground(Color.red);
-                    emailErrorLabel.setText("This Email already Exist");
+                    emailErrorLabel.setText("This Email already exists");
                 } else isEmailFine = true;
                 if (GeneralController.getInstance().isEmpty(nameField.getText())) {
                     nameErrorLabel.setForeground(Color.red);
@@ -122,12 +132,15 @@ public class CreateUserPanel extends JPanel {
                     roleErrorLabel.setForeground(Color.red);
                     roleErrorLabel.setText("Select a role");
                 }else isRoleFine=true;
-                if (isEmailFine && isNameFine && isPasswordFine&&isRoleFine) {
-                    UserManagement.getInstance().makeAccount(new User(emailField.getText().toLowerCase(), passwordField.getText()
-                            , nameField.getText(), Role.values()[roleComboBox.getSelectedIndex()]));
+                if (isEmailFine && isNameFine && isPasswordFine && isRoleFine) {
+                  if(!user.getEmail().equals(emailField.getText())) {
+                      userManagement.editUserEmail(user, emailField.getText());
+                  }
+                    userManagement.editUserName(user, nameField.getText());
+                    userManagement.editUserPassword(user, passwordField.getText());
+                    userManagement.editUserRole(user, Role.values()[roleComboBox.getSelectedIndex()]);
                     successMassage.setForeground(Color.green);
-                    UserManagementPanel.getInstance(0,0).repaint();
-                    UserManagementPanel.getInstance(0,0).drawUsers();
+                    successMassage.setText("Updated Successfully");
                 }
             }
         });
@@ -158,10 +171,35 @@ public class CreateUserPanel extends JPanel {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     submit.doClick();
+                    System.out.println("clicked");
                 }
             }
             @Override
             public void keyReleased(KeyEvent e) {}
         });
     }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+    public void update(){
+            emailField.setText(user.getEmail());
+            nameField.setText(user.getFullName());
+            passwordField.setText(user.getPassword());
+            for (Role role:Role.values()) {
+                int index = 0;
+                switch (user.getRole()) {
+                    case PROJECT_OWNER:
+                        index=1;
+                        break;
+                    case DEVELOPER:
+                        index=2;
+                        break;
+                    case QA:
+                        index=3;
+                        break;
+                }
+                roleComboBox.setSelectedIndex(index);
+            }
+        }
 }
