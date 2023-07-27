@@ -123,7 +123,7 @@ public class EditUserPanel extends JPanel {
                 if (GeneralController.getInstance().isEmpty(emailField.getText())) {
                     emailErrorLabel.setForeground(Color.red);
                     emailErrorLabel.setText("Enter Email");
-                } else if (!userManagement.emailAuthentication(emailField.getText().toLowerCase())) {
+                } else if (!userManagement.emailAuthentication(user.getEmail().toLowerCase())) {
                     emailErrorLabel.setForeground(Color.red);
                     emailErrorLabel.setText("Enter a Correct Email");
                 } else if (!user.getEmail().equalsIgnoreCase(emailField.getText()) && userManagement.isEmailExist(emailField.getText().toLowerCase())) {

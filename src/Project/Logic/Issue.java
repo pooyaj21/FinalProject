@@ -1,9 +1,6 @@
 package Project.Logic;
 
-import Project.Ui.Priority;
 import Project.Util.DateUtil;
-
-import java.util.Date;
 
 public class Issue {
     private final long addTime;

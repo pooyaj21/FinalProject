@@ -1,8 +1,7 @@
-package Project;
+package Project.Test;
 
 
 import Project.Logic.DataBase.ProjectManager;
-import Project.Logic.DataBase.UserDatabase;
 import Project.Logic.Role;
 import Project.Logic.User;
 import Project.Logic.DataBase.UserManagement;

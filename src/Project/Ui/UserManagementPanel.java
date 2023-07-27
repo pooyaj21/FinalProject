@@ -1,8 +1,6 @@
 package Project.Ui;
 
-import Project.Logic.DataBase.ProjectDatabase;
-import Project.Logic.DataBase.ProjectManager;
-import Project.Logic.Project;
+
 import Project.Logic.User;
 import Project.Logic.DataBase.UserDatabase;
 

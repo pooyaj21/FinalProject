@@ -1,4 +1,4 @@
-package Project;
+package Project.Test;
 
 import Project.Ui.LoginPanel;
 
