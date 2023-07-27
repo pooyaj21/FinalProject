@@ -2,8 +2,7 @@ package Project.Ui;
 
 import Project.Logic.Role;
 import Project.Logic.User;
-import Project.Logic.UserDataBase;
-import Project.Logic.UserManagement;
+import Project.Logic.DataBase.UserManagement;
 import Project.Util.GeneralController;
 import Project.Util.RoundedButton;
 
@@ -28,8 +27,6 @@ public class CreateUserPanel extends JPanel {
     JLabel nameErrorLabel = new JLabel();
     JLabel passwordErrorLabel = new JLabel();
     JLabel roleErrorLabel = new JLabel();
-    JLabel successMassage = new JLabel();
-
 
     public CreateUserPanel(int x, int y) {
         setBounds(x, y, 600, 600);
@@ -49,8 +46,6 @@ public class CreateUserPanel extends JPanel {
         roleErrorLabel.setBounds(150, 425, 200, 25);
         roleErrorLabel.setFont(new Font(null, Font.ITALIC, 10));
 
-        successMassage.setBounds(150, 475, 200, 100);
-        successMassage.setFont(new Font(null, Font.ITALIC, 50));
 
         emailField.setBounds(150, 100, 200, 25);
         nameField.setBounds(150, 200, 200, 25);
@@ -94,7 +89,6 @@ public class CreateUserPanel extends JPanel {
                 nameErrorLabel.setText("");
                 passwordErrorLabel.setText("");
                 roleErrorLabel.setText("");
-                successMassage.setText("");
                 boolean isEmailFine = false;
                 boolean isNameFine = false;
                 boolean isPasswordFine = false;
@@ -125,9 +119,12 @@ public class CreateUserPanel extends JPanel {
                 if (isEmailFine && isNameFine && isPasswordFine&&isRoleFine) {
                     UserManagement.getInstance().makeAccount(new User(emailField.getText().toLowerCase(), passwordField.getText()
                             , nameField.getText(), Role.values()[roleComboBox.getSelectedIndex()]));
-                    successMassage.setForeground(Color.green);
                     UserManagementPanel.getInstance(0,0).repaint();
                     UserManagementPanel.getInstance(0,0).drawUsers();
+                    emailField.setText("");
+                    passwordField.setText("");
+                    nameField.setText("");
+                    roleComboBox.setSelectedIndex(0);
                 }
             }
         });
@@ -143,7 +140,6 @@ public class CreateUserPanel extends JPanel {
         add(passwordErrorLabel);
         add(roleErrorLabel);
 
-        add(successMassage);
 
         add(emailField);
         add(nameField);

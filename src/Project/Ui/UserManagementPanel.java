@@ -1,28 +1,34 @@
 package Project.Ui;
 
+import Project.Logic.DataBase.ProjectDatabase;
+import Project.Logic.DataBase.ProjectManager;
+import Project.Logic.Project;
 import Project.Logic.User;
-import Project.Logic.UserDataBase;
-import Project.Logic.UserManagement;
+import Project.Logic.DataBase.UserDatabase;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 public class UserManagementPanel extends JPanel {
+    private static UserManagementPanel instance;
     CreateUserPanel createUserPanel;
     EditUserPanel editUserPanel;
-    UserDataBase userDataBase = UserDataBase.getInstance();
-    JPanel userPanel= new JPanel(){
+    UserDatabase userDataBase = UserDatabase.getInstance();
+    int selectedUserIndex = -1;
+    JPanel userPanel = new JPanel() {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            for (int i = 0; i < userDataBase.getUsers().size()-1; i++) {
-                g.drawLine(0, (100*(i+1)), 200, (100*(i+1)));
+            for (int i = 0; i < userDataBase.getUsers().size() - 1; i++) {
+                g.drawLine(0, (100 * (i + 1)), 200, (100 * (i + 1)));
             }
-        }};
+        }
+    };
     JScrollPane userScrollPane;
+    JButton userButton;
 
-    private static UserManagementPanel instance;
     private UserManagementPanel(int x, int y) {
         setBounds(x, y, 800, 600);
         setLayout(null);
@@ -30,19 +36,20 @@ public class UserManagementPanel extends JPanel {
 
         userPanel.setBounds(0,50,199,getHeight());
         userPanel.setLayout(null);
+        userPanel.setPreferredSize(new Dimension(199, 600));
         add(userPanel);
 
         userScrollPane = new JScrollPane(userPanel);
         userScrollPane.setBounds(0, 50, 199, getHeight());
         userScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         userScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        add(userScrollPane);
+        add(userScrollPane, BorderLayout.CENTER);
 
-        createUserPanel = new CreateUserPanel(200,0);
+        createUserPanel = new CreateUserPanel(200, 0);
         createUserPanel.setVisible(false);
         add(createUserPanel);
 
-        editUserPanel = new EditUserPanel(200,0);
+        editUserPanel = new EditUserPanel(200, 0,this);
         editUserPanel.setVisible(false);
         add(editUserPanel);
 
@@ -53,36 +60,56 @@ public class UserManagementPanel extends JPanel {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                selectedUserIndex=-1;
+                drawUsers();
                 createUserPanel.setVisible(true);
                 editUserPanel.setVisible(false);
             }
         });
+        add(button, BorderLayout.NORTH); // Add the "Add+" button in the north
 
-        add(button);
+        drawUsers(); // Draw the user buttons
 
-        drawUsers();
+        setFocusable(true);
+        requestFocusInWindow();
     }
+
+
+    public static UserManagementPanel getInstance(int x, int y) {
+        if (instance == null) {
+            instance = new UserManagementPanel(x, y);
+        }
+        return instance;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawLine(200, 0, 200, getHeight());
         g.drawLine(0, 50, 200, 50);
     }
-    public static UserManagementPanel getInstance(int x, int y) {
-        if (instance == null) {
-            instance = new UserManagementPanel(x,y);
-        }
-        return instance;
+
+    @Override
+    public Dimension getPreferredSize() {
+        // Calculate the preferred size based on the width and number of users
+        int preferredHeight = Math.max(getHeight(), userDataBase.getUsers().size() * 100 + 50);
+        return new Dimension(800, preferredHeight);
     }
 
-
-
     private void drawUserButton(User user, int index) {
-        JButton userButton = new JButton();
+        userButton = new JButton();
         userButton.setBounds(0, (100 * index), 200, 100);
         userButton.setText(user.getFullName());
         userButton.setContentAreaFilled(false);
         userButton.setBorder(null);
+
+        if (index == selectedUserIndex) {
+            userButton.setContentAreaFilled(true);
+            userButton.setBackground(Color.GRAY);
+        } else {
+            userButton.setBackground(null); // Set background to null to show the default color
+        }
+
         userButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -90,6 +117,12 @@ public class UserManagementPanel extends JPanel {
                 editUserPanel.setUser(user);
                 editUserPanel.update();
                 editUserPanel.setVisible(true);
+
+                // Update the selected user index when a button is clicked
+                selectedUserIndex = index;
+
+                // Redraw the userPanel to update the button colors
+                drawUsers();
             }
         });
         userPanel.add(userButton);
@@ -97,15 +130,22 @@ public class UserManagementPanel extends JPanel {
 
     public void drawUsers() {
         userPanel.removeAll(); // Remove all existing buttons before adding new ones
-        userPanel.setBounds(getX(),getY(),getWidth(),getHeight()+100);
 
-        for (int i = 0; i < userDataBase.getUsers().size() - 1; i++) {
-            User user = userDataBase.getUsers().get(i + 1);
-            drawUserButton(user, i);
+        for (int i = 1; i < userDataBase.getUsers().size(); i++) {
+            User user = userDataBase.getUsers().get(i);
+            drawUserButton(user, i-1);
         }
 
         // Repaint the userPanel and update the scroll pane
         userPanel.revalidate();
         userPanel.repaint();
+        userPanel.setPreferredSize(new Dimension(199, userDataBase.getUsers().size() * 100));
+        if (userDataBase.getUsers().size() > 6) {
+            userScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        } else {
+            userScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        }
+        userScrollPane.revalidate();
     }
+
 }

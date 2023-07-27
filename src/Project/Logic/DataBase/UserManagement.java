@@ -1,8 +1,11 @@
-package Project.Logic;
+package Project.Logic.DataBase;
+
+import Project.Logic.Role;
+import Project.Logic.User;
 
 public class UserManagement {
     private static UserManagement instance;
-    private final UserDataBase userDataBase = UserDataBase.getInstance();
+    private final UserDatabase userDataBase = UserDatabase.getInstance();
 
     private UserManagement() {
     }
@@ -15,19 +18,22 @@ public class UserManagement {
     }
 
     public void makeAccount(User user) {
-        if (!UserDataBase.getInstance().getUserMatches().containsKey(user.getEmail().toLowerCase())) {
-            UserDataBase.getInstance().getUserMatches().put(user.getEmail().toLowerCase(), user);
-            UserDataBase.getInstance().getUsers().add(user);
+        if (!UserDatabase.getInstance().getUserMatches().containsKey(user.getEmail().toLowerCase())) {
+            UserDatabase.getInstance().getUserMatches().put(user.getEmail().toLowerCase(), user);
+            UserDatabase.getInstance().getUsers().add(user);
         } else {
             throw new IllegalArgumentException("Email already exists in the database: " + user.getEmail());
         }
     }
 
-    public void changePassword(String email, String password) {
-        if (UserDataBase.getInstance().getUserMatches().containsKey(email.toLowerCase()) && emailAuthentication(email)) {
-            UserDataBase.getInstance().getUserMatches().get(email).setPassword(password);
+    public void deleteUser(User user) {
+        String lowerCaseEmail = user.getEmail().toLowerCase();
+
+        if (userDataBase.getUserMatches().containsKey(lowerCaseEmail)) {
+            userDataBase.getUsers().remove(user);
+            userDataBase.getUserMatches().remove(lowerCaseEmail);
         } else {
-            throw new IllegalArgumentException("Email don't exists in the database: " + email);
+            throw new IllegalArgumentException("User with email not found: " + user.getEmail());
         }
     }
 
@@ -39,13 +45,13 @@ public class UserManagement {
 
     public void checkPassword(String email, String password) {
         checkEmail(email.toLowerCase());
-        if (!UserDataBase.getInstance().getUserMatches().get(email.toLowerCase()).getPassword().equals(password)) {
+        if (!UserDatabase.getInstance().getUserMatches().get(email.toLowerCase()).getPassword().equals(password)) {
             throw new IllegalArgumentException("Wrong password");
         }
     }
 
     public boolean isEmailExist(String email) {
-        return UserDataBase.getInstance().getUserMatches().containsKey(email.toLowerCase());
+        return UserDatabase.getInstance().getUserMatches().containsKey(email.toLowerCase());
     }
 
     public boolean emailAuthentication(String email) {

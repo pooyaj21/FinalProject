@@ -1,14 +1,17 @@
-package Project.Logic;
+package Project.Logic.DataBase;
+
+import Project.Logic.Role;
+import Project.Logic.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class UserDataBase {
-    private static UserDataBase instance;
+public class UserDatabase {
+    private static UserDatabase instance;
     private final HashMap<String, User> userMatches;
     private final ArrayList<User> users;
 
-    private UserDataBase() {
+    private UserDatabase() {
         userMatches = new HashMap<>();
         users = new ArrayList<>();
         User superAdmin = new User("admin@a.com", "admin", "Super Admin", Role.SUPER_ADMIN);
@@ -16,9 +19,9 @@ public class UserDataBase {
         users.add(superAdmin);
     }
 
-    public static UserDataBase getInstance() {
+    public static UserDatabase getInstance() {
         if (instance == null) {
-            instance = new UserDataBase();
+            instance = new UserDatabase();
         }
         return instance;
     }
