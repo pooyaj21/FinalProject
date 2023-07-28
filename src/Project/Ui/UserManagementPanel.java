@@ -83,7 +83,7 @@ public class UserManagementPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawLine(200, 0, 200, getHeight());
+        g.drawLine(199, 0, 199, getHeight());
         g.drawLine(0, 50, 200, 50);
     }
 

@@ -80,7 +80,6 @@ public class EditUserPanel extends JPanel {
 
         InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = getActionMap();
-
         String enterKey = "enterKey";
         inputMap.put(KeyStroke.getKeyStroke("ENTER"), enterKey);
         actionMap.put(enterKey, new AbstractAction() {
@@ -207,22 +206,6 @@ public class EditUserPanel extends JPanel {
 
         add(submit);
         add(delete);
-        addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    submit.doClick();
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-            }
-        });
     }
 
     public void setUser(User user) {
@@ -271,13 +254,16 @@ public class EditUserPanel extends JPanel {
         projectAvailable =new ArrayList<>();
         projectsComboBox.addItem("");
         for (Project project : allProjects) {
-            if (!projectsInList.contains(project)) {
+            if (!projectsInList.contains(project)&&!projectManager.getProjectsByMember(user).contains(project)) {
                 projectsComboBox.addItem(project.getName());
                 projectAvailable.add(project);
             }
         }
 
         projectListModel.removeAllElements();
+        for (Project project :projectManager.getProjectsByMember(user)){
+            projectListModel.addElement(project.getName());
+        }
         for (Project project : projectsInList) {
             projectListModel.addElement(project.getName());
         }

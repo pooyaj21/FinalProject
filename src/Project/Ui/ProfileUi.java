@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ProfileUi extends JPanel {
-    private UserManagement userManagement = UserManagement.getInstance();
+    private final UserManagement userManagement = UserManagement.getInstance();
 
     private JLabel nameLabel = new JLabel("Name:");
     private JLabel emailLabel = new JLabel("Email:");
@@ -26,7 +26,7 @@ public class ProfileUi extends JPanel {
     private RoundedButton submitButton = new RoundedButton("Submit", 15, Color.blue, Color.white, 12);
     private JLabel emailErrorLabel = new JLabel();
     private JLabel passwordErrorLabel = new JLabel();
-    private JLabel changeSuccessfulLabel = new JLabel("Change Successful");
+    private JLabel changeSuccessfulLabel = new JLabel();
     private RoundedButton logoutButton = new RoundedButton("Log Out", 12, Color.red, Color.white, 12);
 
     private String roleName = "";
@@ -46,7 +46,6 @@ public class ProfileUi extends JPanel {
         passwordErrorLabel.setFont(new Font(null, Font.ITALIC, 10));
         roleLabel.setBounds(centerX, centerY + 250, 100, 25);
         changeSuccessfulLabel.setBounds(centerX + 400, centerY + 330, 150, 25);
-        changeSuccessfulLabel.setForeground(Color.green);
         changeSuccessfulLabel.setFont(new Font(null, Font.ITALIC, 10));
         logoutButton.setBounds(900, 20, 80, 30);
 
@@ -60,7 +59,6 @@ public class ProfileUi extends JPanel {
         nameField.setText(user.getFullName());
         emailLField.setText(user.getEmail());
         passwordField.setText(user.getPassword());
-        changeSuccessfulLabel.setVisible(false);
 
         for (Role role : Role.values()) {
             switch (user.getRole()) {
@@ -85,8 +83,12 @@ public class ProfileUi extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 emailErrorLabel.setText("");
                 passwordErrorLabel.setText("");
+                changeSuccessfulLabel.setText("");
                 boolean isEmailFine = false;
                 boolean isPasswordFine = false;
+
+                boolean isEmailChange = false;
+                boolean isPasswordChange = false;
 
                 if (GeneralController.getInstance().isEmpty(emailLField.getText())) {
                     emailErrorLabel.setForeground(Color.red);
@@ -94,20 +96,30 @@ public class ProfileUi extends JPanel {
                 } else if (!UserManagement.getInstance().emailAuthentication(emailLField.getText().toLowerCase())) {
                     emailErrorLabel.setForeground(Color.red);
                     emailErrorLabel.setText("Enter a Correct Email");
-                } else if (UserManagement.getInstance().isEmailExist(emailLField.getText().toLowerCase())) {
+                }  else if (!user.getEmail().equalsIgnoreCase(emailLField.getText()) && userManagement.isEmailExist(emailLField.getText().toLowerCase())) {
                     emailErrorLabel.setForeground(Color.red);
-                    emailErrorLabel.setText("This Email already Exist");
+                    emailErrorLabel.setText("This Email already exists");
                 } else isEmailFine = true;
                 if (GeneralController.getInstance().isEmpty(passwordField.getText())) {
                     passwordErrorLabel.setForeground(Color.red);
                     passwordErrorLabel.setText("Enter Password");
                 } else isPasswordFine = true;
                 if (isEmailFine && isPasswordFine) {
-                    if (!user.getEmail().equals(emailLField.getText())) {
+                    if (!user.getEmail().equalsIgnoreCase(emailLField.getText())) {
                         userManagement.editUserEmail(user, emailLField.getText());
+                        isEmailChange=true;
                     }
-                    userManagement.editUserPassword(user, passwordField.getText());
-                    changeSuccessfulLabel.setVisible(true);
+                    if (!user.getPassword().equalsIgnoreCase(passwordField.getText())) {
+                        userManagement.editUserPassword(user, passwordField.getText());
+                        isPasswordChange=true;
+                    }
+                    if (isEmailChange||isPasswordChange) {
+                        changeSuccessfulLabel.setForeground(Color.green);
+                        changeSuccessfulLabel.setText("Change Successful");
+                    }else{
+                        changeSuccessfulLabel.setForeground(Color.red);
+                        changeSuccessfulLabel.setText("There is no Changes");
+                    }
                 }
             }
         });
@@ -136,5 +148,16 @@ public class ProfileUi extends JPanel {
         add(emailLField);
         add(passwordField);
         add(roleLabelField);
+
+        InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = getActionMap();
+        String enterKey = "enterKey";
+        inputMap.put(KeyStroke.getKeyStroke("ENTER"), enterKey);
+        actionMap.put(enterKey, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                submitButton.doClick();
+            }
+        });
     }
 }
