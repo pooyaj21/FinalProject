@@ -17,6 +17,6 @@ public class GeneralController {
     }
 
     public boolean isEmpty(String a) {
-        return a.isEmpty();
+        return a.trim().isEmpty();
     }
 }

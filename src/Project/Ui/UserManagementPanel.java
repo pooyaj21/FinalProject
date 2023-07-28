@@ -105,7 +105,7 @@ public class UserManagementPanel extends JPanel {
             userButton.setContentAreaFilled(true);
             userButton.setBackground(Color.GRAY);
         } else {
-            userButton.setBackground(null); // Set background to null to show the default color
+            userButton.setBackground(null);
         }
 
         userButton.addActionListener(new ActionListener() {
@@ -127,7 +127,7 @@ public class UserManagementPanel extends JPanel {
     }
 
     public void drawUsers() {
-        userPanel.removeAll(); // Remove all existing buttons before adding new ones
+        userPanel.removeAll();
 
         for (int i = 1; i < userDataBase.getUsers().size(); i++) {
             User user = userDataBase.getUsers().get(i);

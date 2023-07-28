@@ -2,21 +2,18 @@ package Project.Logic;
 
 import Project.Util.DateUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Project {
     private String name;
     private String description;
     private final long addDate;
-    private ArrayList<Board> boards;
-    private ArrayList<User> members;
     private final int id;
-    public Project(int id, String name) {
-        this.id = id;
+    private static int counter = 0;
+
+    public Project(String name) {
+        counter++;
+        this.id = counter;
         this.name = name;
         this.addDate = DateUtil.timeOfNow();
-        this.members = new ArrayList<>();
     }
 
     public String getName() {
@@ -39,33 +36,7 @@ public class Project {
         return addDate;
     }
 
-    public ArrayList<Board> getBoards() {
-        return boards;
-    }
-
-    public void setBoards(ArrayList<Board> boards) {
-        this.boards = boards;
-    }
-
-    public List<User> getMembers() {
-        return members;
-    }
-
-    public void addMember(User user) {
-        if (!members.contains(user)) {
-            members.add(user);
-        }
-    }
-    public void removeMember(User user) {
-        members.remove(user);
-    }
-
     public int getId() {
         return id;
-    }
-
-    @Override
-    public String toString() {
-        return name;
     }
 }
