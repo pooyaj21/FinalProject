@@ -30,12 +30,12 @@ public class ProfileUi extends JPanel {
     private RoundedButton logoutButton = new RoundedButton("Log Out", 12, Color.red, Color.white, 12);
 
     private String roleName = "";
-
     public ProfileUi(User user) {
         setLayout(null);
+        setSize(1000,600);
 
         int centerX = (1000 - 400) / 2;
-        int centerY = (600 - 300) / 2;
+        int centerY = (700 - 300) / 2;
 
         nameLabel.setBounds(centerX, centerY - 50, 100, 25);
         emailLabel.setBounds(centerX, centerY + 50, 100, 25);
@@ -127,9 +127,7 @@ public class ProfileUi extends JPanel {
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("loged out");
-                System.exit(0);
-                //TODO:add logout logic
+                AppFrame.getInstance().logOut();
             }
         });
 

@@ -1,7 +1,9 @@
 package Project.Ui;
 
 
+import Project.Logic.DataBase.UserDatabase;
 import Project.Logic.DataBase.UserManagement;
+import Project.Logic.User;
 import Project.Util.GeneralController;
 import Project.Util.RoundedButton;
 
@@ -20,8 +22,8 @@ public class LoginPanel extends JPanel {
     JLabel emailErrorLabel = new JLabel();
     JLabel passwordErrorLabel = new JLabel();
 
-    public LoginPanel(int x, int y) {
-        setBounds(x,y,420,420);
+    public LoginPanel() {
+        setSize(420,420);
         userEmailLabel.setBounds(50, 100, 75, 25);
         userPasswordLabel.setBounds(50, 150, 75, 25);
 
@@ -68,8 +70,9 @@ public class LoginPanel extends JPanel {
                         return;
                     }
                 }
-                messageLabel.setForeground(Color.GREEN);
-                messageLabel.setText("yaye");
+                AppFrame.getInstance().loginPanel.setVisible(false);
+                User selectedUser = UserManagement.getInstance().getUser(userEmailField.getText().toLowerCase());
+                AppFrame.getInstance().updateLoggedInUser(selectedUser);
             }
         });
 

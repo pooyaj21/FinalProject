@@ -104,10 +104,7 @@ public class ProjectManagementPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 createProjectPanel.setVisible(false);
-                // Update the selected project index when a button is clicked
                 selectedProjectIndex = index;
-
-                // Redraw the projectPanel to update the button colors
                 drawProjects();
             }
         });

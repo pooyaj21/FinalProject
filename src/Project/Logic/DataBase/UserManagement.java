@@ -86,4 +86,8 @@ public class UserManagement {
     public void editUserRole(User user, Role newRole) throws IllegalArgumentException {
         user.setRole(newRole);
     }
+
+    public User getUser(String email){
+       return userDataBase.getUserMatches().get(email.toLowerCase());
+    }
 }

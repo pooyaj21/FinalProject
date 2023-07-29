@@ -1,34 +1,28 @@
 package Project.Test;
 
-import Project.Logic.DataBase.UserDatabase;
-import Project.Logic.DataBase.UserManagement;
 import Project.Logic.Role;
 import Project.Logic.User;
-import Project.Ui.ProfileUi;
-
+import Project.Ui.TopPanel;
+import Project.Ui.UserManagementPanel;
 
 import javax.swing.*;
 
-public class ProfileTest {
+public class TopPanelTest {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 createAndShowGUI();
             }
         });
-
     }
     private static void createAndShowGUI() {
-        UserDatabase userDatabase = UserDatabase.getInstance();
-        UserManagement userManagement = UserManagement.getInstance();
+        JFrame frame = new JFrame("Top panel");
         User user = new User("p@p1.com", "p", "pooya1", Role.DEVELOPER);
-        userManagement.makeAccount(user);
-        ProfileUi profilePanel = new ProfileUi(UserDatabase.getInstance().getUsers().get(0));
-        JFrame frame = new JFrame("User Profile");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 600);
+        frame.setSize(1000,200);
         frame.setLocationRelativeTo(null);
-        frame.add(profilePanel);
+        TopPanel topPanel = new TopPanel(user);
+        frame.add(topPanel);
         frame.setVisible(true);
 
     }

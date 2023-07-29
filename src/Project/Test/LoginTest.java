@@ -18,7 +18,7 @@ public class LoginTest {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(420, 420);
         frame.setLocationRelativeTo(null);
-        JPanel login = new LoginPanel(0,0);
+        JPanel login = new LoginPanel();
         login.setVisible(true);
         frame.add(login);
         frame.setLayout(null);
