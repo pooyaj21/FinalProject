@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ProjectManagementPanel extends JPanel {
-    private static ProjectManagementPanel instance;
     CreateProjectPanel createProjectPanel;
     ProjectManager projectManager = ProjectManager.getInstance();
     int selectedProjectIndex = -1;
@@ -17,39 +16,40 @@ public class ProjectManagementPanel extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            for (int i = 0; i < projectManager.getAllProjects().size() - 1; i++) {
-                g.drawLine(0, (100 * (i + 1)), 200, (100 * (i + 1)));
+            for (int i = 0; i < projectManager.getAllProjects().size(); i++) {
+                g.drawLine(0, (100 * i ), 200, (100 * i));
             }
         }
     };
     JScrollPane projectScrollPane;
     JButton projectButton;
 
-    private ProjectManagementPanel(int x, int y) {
-        setBounds(x, y, 800, 600);
+    public ProjectManagementPanel() {
+        setSize( 800, 700);
         setLayout(null);
 
         projectPanel.setBounds(0, 50, 199, getHeight());
         projectPanel.setLayout(null);
-        projectPanel.setPreferredSize(new Dimension(199, 600));
+        projectPanel.setSize(200,700);
         add(projectPanel);
 
         projectScrollPane = new JScrollPane(projectPanel);
-        projectScrollPane.setBounds(0, 50, 199, getHeight());
+        projectScrollPane.setBounds(0, 50, 200, getHeight()-50);
         projectScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         projectScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         add(projectScrollPane, BorderLayout.CENTER);
 
-        createProjectPanel = new CreateProjectPanel(200, 0);
+        createProjectPanel = new CreateProjectPanel(this);
+        createProjectPanel.setBounds(200,0,getWidth(),getHeight());
         createProjectPanel.setVisible(false);
         add(createProjectPanel);
 
 
-        JButton button = new JButton("Add+");
-        button.setBounds(0, 0, 200, 50);
-        button.setContentAreaFilled(false);
-        button.setBorder(null);
-        button.addActionListener(new ActionListener() {
+        JButton addButton = new JButton("Add+");
+        addButton.setBounds(0, 0, 200, 50);
+        addButton.setContentAreaFilled(false);
+        addButton.setBorder(null);
+        addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 selectedProjectIndex = -1;
@@ -57,33 +57,20 @@ public class ProjectManagementPanel extends JPanel {
                 createProjectPanel.setVisible(true);
             }
         });
-        add(button, BorderLayout.NORTH); // Add the "Add+" button in the north
+        add(addButton);
 
-        drawProjects(); // Draw the project buttons
+        drawProjects();
 
         setFocusable(true);
         requestFocusInWindow();
     }
 
-    public static ProjectManagementPanel getInstance(int x, int y) {
-        if (instance == null) {
-            instance = new ProjectManagementPanel(x, y);
-        }
-        return instance;
-    }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawLine(199, 0, 199, getHeight());
         g.drawLine(0, 50, 200, 50);
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        // Calculate the preferred size based on the width and number of projects
-        int preferredHeight = Math.max(getHeight(), projectManager.getAllProjects().size() * 100 + 50);
-        return new Dimension(800, preferredHeight);
     }
 
     private void drawProjectButton(Project project, int index) {

@@ -28,8 +28,8 @@ public class CreateUserPanel extends JPanel {
     JLabel passwordErrorLabel = new JLabel();
     JLabel roleErrorLabel = new JLabel();
 
-    public CreateUserPanel(int x, int y) {
-        setBounds(x, y, 600, 600);
+    public CreateUserPanel(UserManagementPanel userManagementPanel) {
+        setSize( 600, 600);
         setLayout(null);
         setFocusable(true);
         emailLabel.setBounds(75, 100, 75, 25);
@@ -119,8 +119,8 @@ public class CreateUserPanel extends JPanel {
                 if (isEmailFine && isNameFine && isPasswordFine&&isRoleFine) {
                     UserManagement.getInstance().makeAccount(new User(emailField.getText().toLowerCase(), passwordField.getText()
                             , nameField.getText(), Role.values()[roleComboBox.getSelectedIndex()]));
-                    UserManagementPanel.getInstance(0,0).repaint();
-                    UserManagementPanel.getInstance(0,0).drawUsers();
+                    userManagementPanel.repaint();
+                    userManagementPanel.drawUsers();
                     emailField.setText("");
                     passwordField.setText("");
                     nameField.setText("");

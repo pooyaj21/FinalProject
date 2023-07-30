@@ -1,7 +1,6 @@
 package Project.Ui;
 
 
-import Project.Logic.DataBase.UserDatabase;
 import Project.Logic.DataBase.UserManagement;
 import Project.Logic.User;
 import Project.Util.GeneralController;
@@ -87,8 +86,7 @@ public class LoginPanel extends JPanel {
         add(loginButton);
         setLayout(null);
         setVisible(true);
-        int condition = JComponent.WHEN_IN_FOCUSED_WINDOW;
-        InputMap inputMap = getInputMap(condition);
+        InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = getActionMap();
 
         String enterKey = "enterKey";

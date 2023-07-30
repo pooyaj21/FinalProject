@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class UserManagementPanel extends JPanel {
-    private static UserManagementPanel instance;
     CreateUserPanel createUserPanel;
     EditUserPanel editUserPanel;
     UserDatabase userDataBase = UserDatabase.getInstance();
@@ -27,23 +26,24 @@ public class UserManagementPanel extends JPanel {
     JScrollPane userScrollPane;
     JButton userButton;
 
-    private UserManagementPanel(int x, int y) {
-        setBounds(x, y, 800, 600);
+    public UserManagementPanel() {
+        setSize( 800, 700);
         setLayout(null);
 
 
         userPanel.setBounds(0,50,199,getHeight());
         userPanel.setLayout(null);
-        userPanel.setPreferredSize(new Dimension(199, 600));
+        userPanel.setPreferredSize(new Dimension(199, getHeight()));
         add(userPanel);
 
         userScrollPane = new JScrollPane(userPanel);
-        userScrollPane.setBounds(0, 50, 199, getHeight());
+        userScrollPane.setBounds(0, 50, 199, getHeight()-50);
         userScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         userScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         add(userScrollPane, BorderLayout.CENTER);
 
-        createUserPanel = new CreateUserPanel(200, 0);
+        createUserPanel = new CreateUserPanel(this);
+        createUserPanel.setBounds(200,0,getWidth(),getHeight());
         createUserPanel.setVisible(false);
         add(createUserPanel);
 
@@ -73,27 +73,12 @@ public class UserManagementPanel extends JPanel {
     }
 
 
-    public static UserManagementPanel getInstance(int x, int y) {
-        if (instance == null) {
-            instance = new UserManagementPanel(x, y);
-        }
-        return instance;
-    }
-
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawLine(199, 0, 199, getHeight());
         g.drawLine(0, 50, 200, 50);
     }
-
-    @Override
-    public Dimension getPreferredSize() {
-        // Calculate the preferred size based on the width and number of users
-        int preferredHeight = Math.max(getHeight(), userDataBase.getUsers().size() * 100 + 50);
-        return new Dimension(800, preferredHeight);
-    }
-
     private void drawUserButton(User user, int index) {
         userButton = new JButton();
         userButton.setBounds(0, (100 * index), 200, 100);

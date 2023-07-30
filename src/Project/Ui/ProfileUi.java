@@ -28,14 +28,19 @@ public class ProfileUi extends JPanel {
     private JLabel passwordErrorLabel = new JLabel();
     private JLabel changeSuccessfulLabel = new JLabel();
     private RoundedButton logoutButton = new RoundedButton("Log Out", 12, Color.red, Color.white, 12);
+    private RoundedButton backButton = new RoundedButton("⬅",30,Color.red, Color.white, 12);
 
     private String roleName = "";
     public ProfileUi(User user) {
         setLayout(null);
-        setSize(1000,600);
+        setSize(1000,800);
 
         int centerX = (1000 - 400) / 2;
-        int centerY = (700 - 300) / 2;
+        int centerY = ((800 - 300) / 2)+100;
+        TopPanel topPanel = new TopPanel(user);
+        topPanel.setBounds(0, 0, 1000, 100);
+        topPanel.setVisible(true);
+        add(topPanel);
 
         nameLabel.setBounds(centerX, centerY - 50, 100, 25);
         emailLabel.setBounds(centerX, centerY + 50, 100, 25);
@@ -47,7 +52,10 @@ public class ProfileUi extends JPanel {
         roleLabel.setBounds(centerX, centerY + 250, 100, 25);
         changeSuccessfulLabel.setBounds(centerX + 400, centerY + 330, 150, 25);
         changeSuccessfulLabel.setFont(new Font(null, Font.ITALIC, 10));
-        logoutButton.setBounds(900, 20, 80, 30);
+        logoutButton.setBounds(centerX+500, centerY -190, 80, 25);
+        logoutButton.setFont(new Font(null, Font.PLAIN, 15));
+        backButton.setBounds(centerX-170, centerY -180, 20, 20);
+        backButton.setFont(new Font(null, Font.PLAIN, 15));
 
         nameField.setBounds(centerX + 100, centerY - 50, 200, 25);
         emailLField.setBounds(centerX + 100, centerY + 50, 200, 25);
@@ -131,6 +139,14 @@ public class ProfileUi extends JPanel {
             }
         });
 
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AppFrame.getInstance().hiddenEveryThing();
+                AppFrame.getInstance().backFun();
+            }
+        });
+
         add(submitButton);
         add(logoutButton);
 
@@ -141,6 +157,7 @@ public class ProfileUi extends JPanel {
         add(passwordErrorLabel);
         add(roleLabel);
         add(changeSuccessfulLabel);
+        add(backButton);
 
         add(nameField);
         add(emailLField);

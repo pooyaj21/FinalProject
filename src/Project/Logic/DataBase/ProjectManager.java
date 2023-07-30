@@ -26,6 +26,7 @@ public class ProjectManager {
             throw new IllegalArgumentException("Project name cannot be null or empty");
         Project project = new Project(name);
         projectDatabase.addProject(project);
+        addMemberToProject(project,UserDatabase.getInstance().getUsers().get(0));
     }
 
     public void createProject(Project project) {

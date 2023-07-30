@@ -14,7 +14,7 @@ public class UserDatabase {
     private UserDatabase() {
         userMatches = new HashMap<>();
         users = new ArrayList<>();
-        User superAdmin = new User("admin@a.com", "admin", "Super Admin", Role.SUPER_ADMIN);
+        User superAdmin = new User("admin@a.com", "admin", "The Almighty Admin", Role.SUPER_ADMIN);
         userMatches.put(superAdmin.getEmail(), superAdmin);
         users.add(superAdmin);
     }

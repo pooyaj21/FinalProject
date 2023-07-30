@@ -10,4 +10,8 @@ public enum Role {
     Role( int levelOfAccess) {
         this.levelOfAccess = levelOfAccess;
     }
+
+    public int getLevelOfAccess() {
+        return levelOfAccess;
+    }
 }

@@ -1,5 +1,7 @@
 package Project.Ui;
 
+import Project.Logic.DataBase.ProjectDatabase;
+import Project.Logic.Role;
 import Project.Logic.User;
 
 import javax.swing.*;
@@ -8,7 +10,9 @@ public class AppFrame extends JFrame {
     private static AppFrame instance;
     LoginPanel loginPanel = new LoginPanel();
     ProfileUi profileUi;
-    TopPanel topPanel;
+    SuperAdminPanel superAdminPanel;
+    UserPanel userPanel;
+    User user;
 
     int x = (1000 - 420) / 2;
     int y = (800 - 420) / 2;
@@ -36,20 +40,52 @@ public class AppFrame extends JFrame {
     }
 
     public void updateLoggedInUser(User loggedInUser) {
-        profileUi = new ProfileUi(loggedInUser);
-        profileUi.setBounds(0, 100, 1000, 700);
+        this.user = loggedInUser;
+        hiddenEveryThing();
+        if (loggedInUser.getRole()== Role.SUPER_ADMIN){
+            superAdminPanel = new SuperAdminPanel();
+            superAdminPanel.setBounds(0,0,getWidth(),getHeight());
+            add(superAdminPanel);
+            repaint();
+        }else {
+            userPanel = new UserPanel(user);
+            userPanel.setBounds(0,0,getWidth(),getHeight());
+            add(userPanel);
+            repaint();
+        }
+    }
+
+    public void profile(){
+        profileUi = new ProfileUi(user);
+        profileUi.setBounds(0, 0, 1000, 800);
         profileUi.setVisible(true);
         add(profileUi);
-        topPanel = new TopPanel(loggedInUser);
-        topPanel.setBounds(0, 0, 1000, 100);
-        topPanel.setVisible(true);
-        add(topPanel);
         repaint();
     }
 
+    public void hiddenEveryThing(){
+       if (loginPanel!=null)loginPanel.setVisible(false);
+       if (profileUi!=null)profileUi.setVisible(false);
+       if (superAdminPanel!=null)superAdminPanel.setVisible(false);
+       if (userPanel!=null)userPanel.setVisible(false);
+    }
+
+    public void backFun(){
+        hiddenEveryThing();
+        if (user.getRole()==Role.SUPER_ADMIN){
+            superAdminPanel = new SuperAdminPanel();
+            superAdminPanel.setBounds(0,0,getWidth(),getHeight());
+            add(superAdminPanel);
+            repaint();
+        }else {
+
+        }
+    }
+
+
+
     public void logOut(){
         profileUi.setVisible(false);
-        topPanel.setVisible(false);
         loginPanel.userEmailField.setText("");
         loginPanel.userPasswordField.setText("");
         loginPanel.setVisible(true);

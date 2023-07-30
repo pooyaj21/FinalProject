@@ -26,7 +26,7 @@ public class ProfileTest {
         ProfileUi profilePanel = new ProfileUi(UserDatabase.getInstance().getUsers().get(0));
         JFrame frame = new JFrame("User Profile");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 600);
+        frame.setSize(1000, 700);
         frame.setLocationRelativeTo(null);
         frame.add(profilePanel);
         frame.setVisible(true);

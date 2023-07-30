@@ -19,7 +19,7 @@ public class TopPanelTest {
         JFrame frame = new JFrame("Top panel");
         User user = new User("p@p1.com", "p", "pooya1", Role.DEVELOPER);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000,200);
+        frame.setSize(1000,100);
         frame.setLocationRelativeTo(null);
         TopPanel topPanel = new TopPanel(user);
         frame.add(topPanel);

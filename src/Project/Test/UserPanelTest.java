@@ -1,15 +1,16 @@
 package Project.Test;
 
-
+import Project.Logic.DataBase.ProjectDatabase;
 import Project.Logic.DataBase.ProjectManager;
+import Project.Logic.DataBase.UserDatabase;
+import Project.Logic.DataBase.UserManagement;
 import Project.Logic.Role;
 import Project.Logic.User;
-import Project.Logic.DataBase.UserManagement;
-import Project.Ui.ProjectManagementPanel;
+import Project.Ui.UserPanel;
 
 import javax.swing.*;
 
-public class ProjectManagementTest {
+public class UserPanelTest {
     public static void main(String[] args) {
         UserManagement userManagement = UserManagement.getInstance();
         userManagement.makeAccount(new User("p@p1.com", "p", "pooya1", Role.DEVELOPER));
@@ -27,23 +28,22 @@ public class ProjectManagementTest {
         projectManager.createProject("c");
         projectManager.createProject("d");
         projectManager.createProject("e");
-
-
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                createAndShowGUI();
+                JFrame frame = new JFrame("User Panel");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                ProjectManager.getInstance().addMemberToProject(ProjectDatabase.getInstance().getProjects().get(2)
+                        ,UserDatabase.getInstance().getUsers().get(1));
+                ProjectManager.getInstance().addMemberToProject(ProjectDatabase.getInstance().getProjects().get(3)
+                        ,UserDatabase.getInstance().getUsers().get(1));
+
+                UserPanel userPanel = new UserPanel(UserDatabase.getInstance().getUsers().get(1));
+                frame.add(userPanel);
+
+                frame.setSize(1000, 800);
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
             }
         });
-    }
-
-    private static void createAndShowGUI() {
-        JFrame frame = new JFrame("Project Management");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800,700);
-        frame.setLocationRelativeTo(null);
-        ProjectManagementPanel projectManagementPanel = new ProjectManagementPanel();
-        frame.add(projectManagementPanel);
-        frame.setVisible(true);
-
     }
 }

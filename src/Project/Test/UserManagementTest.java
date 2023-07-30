@@ -39,9 +39,9 @@ public class UserManagementTest {
     private static void createAndShowGUI() {
         JFrame frame = new JFrame("User Management");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800,600);
+        frame.setSize(800,700);
         frame.setLocationRelativeTo(null);
-        UserManagementPanel userManagementPanel = UserManagementPanel.getInstance(0, 0);
+        UserManagementPanel userManagementPanel = new UserManagementPanel();
         frame.add(userManagementPanel);
         frame.setVisible(true);
 
