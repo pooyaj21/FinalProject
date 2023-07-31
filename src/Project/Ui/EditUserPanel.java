@@ -12,8 +12,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 public class EditUserPanel extends JPanel {
@@ -40,6 +38,8 @@ public class EditUserPanel extends JPanel {
     User user;
     UserManagementPanel userManagementPanel;
     DefaultListModel<String> projectListModel = new DefaultListModel<>();
+    JList<String> userList = new JList<>(projectListModel);
+    JScrollPane listScrollPane = new JScrollPane(userList);
     ArrayList<Project> projectsInList = new ArrayList<>();
     ArrayList<Project> projectAvailable = new ArrayList<>();
 
@@ -72,10 +72,10 @@ public class EditUserPanel extends JPanel {
         projectsComboBox.setBounds(150, 300, 200, 25);
 
 
-        JList<String> projectList = new JList<>(projectListModel);
-        projectList.setBounds(150, 330, 200, 100);
-        projectList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        add(projectList);
+        userList.setBounds(150, 330, 200, 100);
+        userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        add(userList);
+        add(listScrollPane);
 
 
         InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -237,13 +237,13 @@ public class EditUserPanel extends JPanel {
         projectsInList= new ArrayList<>();
         projectsComboBox.addItem("");
         for (Project project : allProjects) {
-            if(!projectManager.getProjectsByMember(user).contains(project)) {
+            if(!projectManager.getProjectsByUser(user).contains(project)) {
                 projectsComboBox.addItem(project.getName());
                 projectAvailable.add(project);
             }
         }
         projectListModel.removeAllElements();
-        for (Project project : projectManager.getProjectsByMember(user)) {
+        for (Project project : projectManager.getProjectsByUser(user)) {
             projectListModel.addElement(project.getName());
         }
     }
@@ -254,14 +254,14 @@ public class EditUserPanel extends JPanel {
         projectAvailable =new ArrayList<>();
         projectsComboBox.addItem("");
         for (Project project : allProjects) {
-            if (!projectsInList.contains(project)&&!projectManager.getProjectsByMember(user).contains(project)) {
+            if (!projectsInList.contains(project)&&!projectManager.getProjectsByUser(user).contains(project)) {
                 projectsComboBox.addItem(project.getName());
                 projectAvailable.add(project);
             }
         }
 
         projectListModel.removeAllElements();
-        for (Project project :projectManager.getProjectsByMember(user)){
+        for (Project project :projectManager.getProjectsByUser(user)){
             projectListModel.addElement(project.getName());
         }
         for (Project project : projectsInList) {

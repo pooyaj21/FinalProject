@@ -17,12 +17,13 @@ public class ProjectManagementPanel extends JPanel {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             for (int i = 0; i < projectManager.getAllProjects().size(); i++) {
-                g.drawLine(0, (100 * i ), 200, (100 * i));
+                g.drawLine(0, (100 * (i + 1)), 200, (100 * (i + 1)));
             }
         }
     };
     JScrollPane projectScrollPane;
     JButton projectButton;
+    ProjectSettingPanel projectSettingPanel;
 
     public ProjectManagementPanel() {
         setSize( 800, 700);
@@ -44,6 +45,11 @@ public class ProjectManagementPanel extends JPanel {
         createProjectPanel.setVisible(false);
         add(createProjectPanel);
 
+        projectSettingPanel= new ProjectSettingPanel(this);
+        projectSettingPanel.setBounds(200,0,getWidth(),getHeight());
+        projectSettingPanel.setVisible(false);
+        add(projectSettingPanel);
+
 
         JButton addButton = new JButton("Add+");
         addButton.setBounds(0, 0, 200, 50);
@@ -55,6 +61,7 @@ public class ProjectManagementPanel extends JPanel {
                 selectedProjectIndex = -1;
                 drawProjects();
                 createProjectPanel.setVisible(true);
+                projectSettingPanel.setVisible(false);
             }
         });
         add(addButton);
@@ -93,6 +100,12 @@ public class ProjectManagementPanel extends JPanel {
                 createProjectPanel.setVisible(false);
                 selectedProjectIndex = index;
                 drawProjects();
+
+                projectSettingPanel.setProject(project);
+                projectSettingPanel.update();
+                projectSettingPanel.setVisible(true);
+
+
             }
         });
         projectPanel.add(projectButton);
@@ -101,12 +114,12 @@ public class ProjectManagementPanel extends JPanel {
     public void drawProjects() {
         projectPanel.removeAll();
 
-        for (int i = 1; i < projectManager.getAllProjects().size(); i++) {
+        for (int i = 0; i < projectManager.getAllProjects().size(); i++) {
             Project project = projectManager.getAllProjects().get(i);
-            drawProjectButton(project, i - 1);
+            drawProjectButton(project, i);
         }
 
-        // Repaint the projectPanel and update the scroll pane
+        // Repaint the projectPanelMaker and update the scroll pane
         projectPanel.revalidate();
         projectPanel.repaint();
         projectPanel.setPreferredSize(new Dimension(199, projectManager.getAllProjects().size() * 100));

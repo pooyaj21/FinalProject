@@ -26,7 +26,6 @@ public class ProjectManager {
             throw new IllegalArgumentException("Project name cannot be null or empty");
         Project project = new Project(name);
         projectDatabase.addProject(project);
-        addMemberToProject(project,UserDatabase.getInstance().getUsers().get(0));
     }
 
     public void createProject(Project project) {
@@ -37,7 +36,7 @@ public class ProjectManager {
         return new ArrayList<>(projectDatabase.getProjects().values());
     }
 
-    public ArrayList<Project> getProjectsByMember(User member) {
+    public ArrayList<Project> getProjectsByUser(User member) {
         if (member == null) throw new IllegalArgumentException("Member cannot be null");
 
         ArrayList<Project> projectsByMember = new ArrayList<>();
@@ -47,6 +46,18 @@ public class ProjectManager {
             if (members.contains(member)) projectsByMember.add(project);
         }
         return projectsByMember;
+    }
+    public ArrayList<User> getUsersByProject(Project project) {
+        if (project == null) throw new IllegalArgumentException("Project cannot be null");
+
+        ArrayList<User> users = new ArrayList<>();
+        for (Map.Entry<Project, ArrayList<User>> entry : projectDatabase.getProjectsMembers().entrySet()) {
+            if (entry.getKey().equals(project)) {
+                users.addAll(entry.getValue());
+                break;
+            }
+        }
+        return users;
     }
 
     public Project getProjectById(int projectId) {
@@ -58,10 +69,11 @@ public class ProjectManager {
     public void addMemberToProject(Project project, User member) {
         if (project == null) throw new IllegalArgumentException("Project cannot be null");
 
-        if (member == null) throw new IllegalArgumentException("Member cannot be null");
+        if (member == null) throw new IllegalArgumentException("User cannot be null");
 
         ArrayList<User> members = projectDatabase.getMembersByProject(project);
-        if (!members.contains(member)) members.add(member);
+        if (members.contains(member))throw new IllegalArgumentException("Can not add user twice");
+        else members.add(member);
     }
 
     public void removeMemberFromProject(Project project, User member) {
@@ -90,4 +102,34 @@ public class ProjectManager {
         ArrayList<Board> boards = projectDatabase.getBoardsByProject(project);
         boards.remove(board);
     }
+
+    public void editProjectName(Project project, String newName) {
+        if (project == null) throw new IllegalArgumentException("Project cannot be null");
+        if (newName == null || newName.trim().isEmpty())
+            throw new IllegalArgumentException("Project name cannot be null or empty");
+
+        project.setName(newName);
+    }
+
+    public void editProjectDescription(Project project, String newDescription) {
+        if (project == null) throw new IllegalArgumentException("Project cannot be null");
+
+        project.setDescription(newDescription);
+    }
+
+    public void editProjectMembers(Project project, ArrayList<User> newMembers) {
+        if (project == null) throw new IllegalArgumentException("Project cannot be null");
+        if (newMembers == null) throw new IllegalArgumentException("Members list cannot be null");
+
+        ArrayList<User> members = projectDatabase.getMembersByProject(project);
+        members.clear();
+        members.addAll(newMembers);
+    }
+
+    public void removeProject(Project project) {
+        if (project == null) throw new IllegalArgumentException("Project cannot be null");
+        projectDatabase.removeProject(project);
+    }
+
+
 }

@@ -11,20 +11,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class UserPanel extends JPanel {
-    JPanel projectPanel = new JPanel() {
+    JPanel projectPanelMaker = new JPanel() {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            for (int i = 0; i < projectManager.getProjectsByMember(user).size(); i++) {
+            for (int i = 0; i < projectManager.getProjectsByUser(user).size(); i++) {
                 g.drawLine(0, (100 * (i + 1)), 200, (100 * (i + 1)));
             }
         }
     };
+    ProjectSettingPanel projectSettingPanel;
     private JButton projectButton;
     int selectedProjectIndex = -1;
     JScrollPane projectScrollPane;
     ProjectManager projectManager = ProjectManager.getInstance();
     private User user;
+    ProjectPanel projectPanel;
 
     public UserPanel(User user) {
         this.user = user;
@@ -35,9 +37,9 @@ public class UserPanel extends JPanel {
         setBounds(0,0,getWidth(),getHeight());
         add(topPanel);
 
-        projectPanel.setBounds(0, 150, 200, getHeight());
-        projectPanel.setLayout(null);
-        add(projectPanel);
+        projectPanelMaker.setBounds(0, 150, 200, getHeight());
+        projectPanelMaker.setLayout(null);
+        add(projectPanelMaker);
 
         JButton addButton = new JButton();
         if (user.getRole().getLevelOfAccess()<2)addButton.setText("Add+");
@@ -47,11 +49,18 @@ public class UserPanel extends JPanel {
         addButton.setBorder(null);
         add(addButton);
 
-        projectScrollPane = new JScrollPane(projectPanel);
+        projectScrollPane = new JScrollPane(projectPanelMaker);
         projectScrollPane.setBounds(0, 150, 200, getHeight() - 50);
         projectScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         projectScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         add(projectScrollPane);
+
+        projectPanel=new ProjectPanel();
+        projectPanel.setBounds(200,100,800,700);
+        projectPanel.setVisible(false);
+        add(projectPanel);
+
+
         drawProjects();
     }
 
@@ -83,29 +92,29 @@ public class UserPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 selectedProjectIndex = index;
                 drawProjects();
-                if (user.getRole().getLevelOfAccess()<2){
-                    //TODO
-                }else{
-                    //TODO
-                }
+
+                projectPanel.setProject(project);
+                projectPanel.setUser(user);
+                projectPanel.setVisible(true);
+                projectPanel.update();
             }
         });
-        projectPanel.add(projectButton);
+        projectPanelMaker.add(projectButton);
     }
 
     public void drawProjects() {
-        projectPanel.removeAll();
+        projectPanelMaker.removeAll();
 
-        for (int i = 0; i < projectManager.getProjectsByMember(user).size(); i++) {
-            Project project = projectManager.getProjectsByMember(user).get(i);
+        for (int i = 0; i < projectManager.getProjectsByUser(user).size(); i++) {
+            Project project = projectManager.getProjectsByUser(user).get(i);
             drawProjectButton(project, i);
         }
 
-        // Repaint the projectPanel and update the scroll pane
-        projectPanel.revalidate();
-        projectPanel.repaint();
-        projectPanel.setPreferredSize(new Dimension(200, projectManager.getProjectsByMember(user).size() * 100));
-        if (projectManager.getProjectsByMember(user).size() > 6) {
+        // Repaint the projectPanelMaker and update the scroll pane
+        projectPanelMaker.revalidate();
+        projectPanelMaker.repaint();
+        projectPanelMaker.setPreferredSize(new Dimension(200, projectManager.getProjectsByUser(user).size() * 100));
+        if (projectManager.getProjectsByUser(user).size() > 6) {
             projectScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         } else {
             projectScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
