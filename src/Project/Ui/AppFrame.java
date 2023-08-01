@@ -78,7 +78,10 @@ public class AppFrame extends JFrame {
             add(superAdminPanel);
             repaint();
         }else {
-
+            userPanel = new UserPanel(user);
+            userPanel.setBounds(0,0,getWidth(),getHeight());
+            add(userPanel);
+            repaint();
         }
     }
 

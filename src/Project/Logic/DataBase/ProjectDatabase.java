@@ -7,7 +7,6 @@ import Project.Logic.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ProjectDatabase {
@@ -71,6 +70,5 @@ public class ProjectDatabase {
     public ArrayList<Issue> getIssuesByProject(Project project) {
         return projectsIssues.get(project);
     }
-
 
 }

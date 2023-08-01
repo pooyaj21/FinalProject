@@ -89,25 +89,20 @@ public class ProjectManager {
         if (project == null) throw new IllegalArgumentException("Project cannot be null");
 
         if (board == null) throw new IllegalArgumentException("Board cannot be null");
-
-        ArrayList<Board> boards = projectDatabase.getBoardsByProject(project);
-        if (!boards.contains(board)) boards.add(board);
+        projectDatabase.getBoardsByProject(project).add(board);
     }
 
     public void removeBoardFromProject(Project project, Board board) {
         if (project == null) throw new IllegalArgumentException("Project cannot be null");
 
         if (board == null) throw new IllegalArgumentException("Board cannot be null");
-
-        ArrayList<Board> boards = projectDatabase.getBoardsByProject(project);
-        boards.remove(board);
+        projectDatabase.getBoardsByProject(project).remove(board);
     }
 
     public void editProjectName(Project project, String newName) {
         if (project == null) throw new IllegalArgumentException("Project cannot be null");
         if (newName == null || newName.trim().isEmpty())
             throw new IllegalArgumentException("Project name cannot be null or empty");
-
         project.setName(newName);
     }
 
@@ -121,9 +116,8 @@ public class ProjectManager {
         if (project == null) throw new IllegalArgumentException("Project cannot be null");
         if (newMembers == null) throw new IllegalArgumentException("Members list cannot be null");
 
-        ArrayList<User> members = projectDatabase.getMembersByProject(project);
-        members.clear();
-        members.addAll(newMembers);
+        projectDatabase.getMembersByProject(project).clear();
+        projectDatabase.getMembersByProject(project).addAll(newMembers);
     }
 
     public void removeProject(Project project) {

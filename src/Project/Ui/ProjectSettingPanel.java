@@ -18,6 +18,7 @@ public class ProjectSettingPanel extends JPanel {
     JLabel nameLabel = new JLabel("Name:");
     JTextField nameField = new JTextField();
     JLabel descriptionLabel = new JLabel("Description:");
+    JLabel usersLabel = new JLabel("Users:");
     JTextArea descriptionArea = new JTextArea();
     RoundedButton addButton = new RoundedButton("Add+", 15, Color.blue, Color.white, 12);
     RoundedButton submit = new RoundedButton("Submit", 15, Color.blue, Color.white, 12);
@@ -67,7 +68,7 @@ public class ProjectSettingPanel extends JPanel {
         });
 
         comboBox.setBounds(150, 250, 200, 25);
-
+        usersLabel.setBounds(50, 250, 200, 25);
 
         listScrollPane.setBounds(150, 300, 200, 200);
 
@@ -100,6 +101,7 @@ public class ProjectSettingPanel extends JPanel {
                 projectManager.removeProject(project);
                 projectManagementPanel.selectedProjectIndex = -1;
                 projectManagementPanel.drawProjects();
+                projectManagementPanel.projectPanel.setVisible(false);
                 setVisible(false);
             }
         });
@@ -116,6 +118,94 @@ public class ProjectSettingPanel extends JPanel {
         add(delete);
         add(nameErrorLabel);
         add(addErrorLabel);
+        add(usersLabel);
+
+    }
+
+    public ProjectSettingPanel(UserPanel userPanel) {
+        setSize(600, 700);
+        setLayout(null);
+
+        nameLabel.setBounds(50, 50, 100, 25);
+        nameField.setBounds(150, 50, 200, 25);
+        nameErrorLabel.setBounds(150, 75, 200, 25);
+        nameErrorLabel.setFont(new Font(null, Font.ITALIC, 10));
+
+        descriptionLabel.setBounds(50, 100, 100, 25);
+        descriptionArea.setBounds(150, 100, 400, 100);
+        descriptionArea.setLineWrap(true);
+        descriptionArea.setWrapStyleWord(true);
+
+
+        addButton.setBounds(350, 250, 90, 25);
+        addErrorLabel.setBounds(350, 275, 200, 25);
+        addErrorLabel.setFont(new Font(null, Font.ITALIC, 10));
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addErrorLabel.setText("");
+                if (comboBox.getSelectedIndex() == 0) {
+                    addErrorLabel.setForeground(Color.red);
+                    addErrorLabel.setText("First select a Project");
+                } else {
+                    userInList.add(availableUsers.get(comboBox.getSelectedIndex() - 1));
+                    listUpdate();
+                }
+            }
+        });
+
+        comboBox.setBounds(150, 250, 200, 25);
+        usersLabel.setBounds(50, 250, 200, 25);
+
+        listScrollPane.setBounds(150, 300, 200, 200);
+
+
+        submit.setBounds(490, 550, 100, 25);
+        submit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                nameErrorLabel.setText("");
+                if (GeneralController.getInstance().isEmpty(nameField.getText())) {
+                    nameErrorLabel.setForeground(Color.red);
+                    nameErrorLabel.setText("Enter a name");
+                } else {
+                    projectManager.editProjectName(project, nameField.getText());
+                    projectManager.editProjectDescription(project, descriptionArea.getText());
+                    for (User user : userInList) {
+                        projectManager.addMemberToProject(project, user);
+                    }
+                    update();
+                    userPanel.drawProjects();
+                }
+            }
+        });
+
+
+        delete.setBounds(375, 550, 100, 25);
+        delete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                projectManager.removeProject(project);
+                userPanel.selectedProjectIndex = -1;
+                userPanel.projectPanel.setVisible(false);
+                userPanel.drawProjects();
+                setVisible(false);
+            }
+        });
+
+
+        add(nameLabel);
+        add(nameField);
+        add(descriptionLabel);
+        add(descriptionArea);
+        add(addButton);
+        add(comboBox);
+        add(listScrollPane);
+        add(submit);
+        add(delete);
+        add(nameErrorLabel);
+        add(addErrorLabel);
+        add(usersLabel);
 
     }
 
@@ -164,5 +254,6 @@ public class ProjectSettingPanel extends JPanel {
 
     public void setProject(Project project) {
         this.project = project;
+        update();
     }
 }

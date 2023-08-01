@@ -1,9 +1,9 @@
 package Project.Ui;
 
-import Project.Logic.DataBase.UserDatabase;
 import Project.Logic.DataBase.UserManagement;
 import Project.Logic.Role;
 import Project.Logic.User;
+import Project.Util.CircleLabel;
 import Project.Util.GeneralController;
 import Project.Util.RoundedButton;
 
@@ -19,12 +19,12 @@ public class ProfileUi extends JPanel {
     private JLabel emailLabel = new JLabel("Email:");
     private JLabel passwordLabel = new JLabel("Password:");
     private JLabel roleLabel = new JLabel("Role:");
-    private JLabel nameField = new JLabel();
-    private JTextField emailLField = new JTextField();
+    private JTextField nameField = new JTextField();
+    private JLabel emailLField = new JLabel();
     private JTextField passwordField = new JTextField();
     private JLabel roleLabelField = new JLabel();
     private RoundedButton submitButton = new RoundedButton("Submit", 15, Color.blue, Color.white, 12);
-    private JLabel emailErrorLabel = new JLabel();
+    private JLabel nameErrorLabel = new JLabel();
     private JLabel passwordErrorLabel = new JLabel();
     private JLabel changeSuccessfulLabel = new JLabel();
     private RoundedButton logoutButton = new RoundedButton("Log Out", 12, Color.red, Color.white, 12);
@@ -42,10 +42,12 @@ public class ProfileUi extends JPanel {
         topPanel.setVisible(true);
         add(topPanel);
 
+        CircleLabel profile = new CircleLabel(user.getFullName());
+        profile.setBounds(centerX+150, centerY-200, 50, 50);
         nameLabel.setBounds(centerX, centerY - 50, 100, 25);
         emailLabel.setBounds(centerX, centerY + 50, 100, 25);
-        emailErrorLabel.setBounds(centerX + 100, centerY + 75, 200, 25);
-        emailErrorLabel.setFont(new Font(null, Font.ITALIC, 10));
+        nameErrorLabel.setBounds(centerX + 100, centerY -25, 200, 25);
+        nameErrorLabel.setFont(new Font(null, Font.ITALIC, 10));
         passwordLabel.setBounds(centerX, centerY + 150, 100, 25);
         passwordErrorLabel.setBounds(centerX + 100, centerY + 175, 200, 25);
         passwordErrorLabel.setFont(new Font(null, Font.ITALIC, 10));
@@ -89,39 +91,33 @@ public class ProfileUi extends JPanel {
         submitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                emailErrorLabel.setText("");
+                nameErrorLabel.setText("");
                 passwordErrorLabel.setText("");
                 changeSuccessfulLabel.setText("");
-                boolean isEmailFine = false;
+                boolean isNameFine = false;
                 boolean isPasswordFine = false;
 
-                boolean isEmailChange = false;
+                boolean isNameChange = false;
                 boolean isPasswordChange = false;
 
-                if (GeneralController.getInstance().isEmpty(emailLField.getText())) {
-                    emailErrorLabel.setForeground(Color.red);
-                    emailErrorLabel.setText("Enter Email");
-                } else if (!UserManagement.getInstance().emailAuthentication(emailLField.getText().toLowerCase())) {
-                    emailErrorLabel.setForeground(Color.red);
-                    emailErrorLabel.setText("Enter a Correct Email");
-                }  else if (!user.getEmail().equalsIgnoreCase(emailLField.getText()) && userManagement.isEmailExist(emailLField.getText().toLowerCase())) {
-                    emailErrorLabel.setForeground(Color.red);
-                    emailErrorLabel.setText("This Email already exists");
-                } else isEmailFine = true;
+                if (GeneralController.getInstance().isEmpty(nameField.getText())) {
+                    nameErrorLabel.setForeground(Color.red);
+                    nameErrorLabel.setText("Enter Name");
+                } else isNameFine = true;
                 if (GeneralController.getInstance().isEmpty(passwordField.getText())) {
                     passwordErrorLabel.setForeground(Color.red);
                     passwordErrorLabel.setText("Enter Password");
                 } else isPasswordFine = true;
-                if (isEmailFine && isPasswordFine) {
+                if (isNameFine && isPasswordFine) {
                     if (!user.getEmail().equalsIgnoreCase(emailLField.getText())) {
                         userManagement.editUserEmail(user, emailLField.getText());
-                        isEmailChange=true;
+                        isNameChange=true;
                     }
                     if (!user.getPassword().equalsIgnoreCase(passwordField.getText())) {
                         userManagement.editUserPassword(user, passwordField.getText());
                         isPasswordChange=true;
                     }
-                    if (isEmailChange||isPasswordChange) {
+                    if (isNameChange||isPasswordChange) {
                         changeSuccessfulLabel.setForeground(Color.green);
                         changeSuccessfulLabel.setText("Change Successful");
                     }else{
@@ -150,9 +146,10 @@ public class ProfileUi extends JPanel {
         add(submitButton);
         add(logoutButton);
 
+        add(profile);
         add(nameLabel);
         add(emailLabel);
-        add(emailErrorLabel);
+        add(nameErrorLabel);
         add(passwordLabel);
         add(passwordErrorLabel);
         add(roleLabel);

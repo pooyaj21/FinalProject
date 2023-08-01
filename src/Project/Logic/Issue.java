@@ -9,10 +9,14 @@ public class Issue {
     private Type type;
     private Priority priority;
     private Status status;
+    private final int id;
+    private static int counter;
 
     public Issue( String description) {
+        counter++;
         this.addTime = DateUtil.timeOfNow();
         this.description = description;
+        id=counter;
     }
 
     public long getAddTime() {
@@ -57,5 +61,9 @@ public class Issue {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public int getId() {
+        return id;
     }
 }

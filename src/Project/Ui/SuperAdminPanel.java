@@ -24,9 +24,18 @@ public class SuperAdminPanel extends JPanel {
         TopPanel topPanel =new TopPanel(UserDatabase.getInstance().getUsers().get(0));
         topPanel.setBounds(0,0,getWidth(),100);
 
+        ImageIcon userIcon = new ImageIcon("Assets/Pfp.png");
+        ImageIcon projectIcon = new ImageIcon("Assets/FolderPic.png");
 
-        userManagementButton.setBounds(0,100,200,100);
-        projectManagementButton.setBounds(0,200,200,100);
+        userManagementButton.setIcon(resizeIcon(userIcon, 30, 30));
+        userManagementButton.setBounds(0,100,200,50);
+        userManagementButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        userManagementButton.setHorizontalAlignment(SwingConstants.LEFT);
+
+        projectManagementButton.setIcon(resizeIcon(projectIcon, 30, 30));
+        projectManagementButton.setBounds(0,150,200,50);
+        projectManagementButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        projectManagementButton.setHorizontalAlignment(SwingConstants.LEFT);
 
         userManagementButton.addActionListener(new ActionListener() {
             @Override
@@ -36,9 +45,12 @@ public class SuperAdminPanel extends JPanel {
                     isProjectManagementPanelClicked=false;
                     if (projectManagementPanel != null) projectManagementPanel.setVisible(false);
                     userManagementPanel = new UserManagementPanel();
-                    userManagementPanel.setBounds(200, 100, getWidth(), getHeight());
+                    userManagementPanel.setBounds(201, 100, getWidth(), getHeight());
                     add(userManagementPanel);
                     userManagementPanel.setVisible(true);
+                    projectManagementButton.setBackground(null);
+                    userManagementButton.setContentAreaFilled(true);
+                    userManagementButton.setBackground(Color.gray);
                     repaint();
                 }
             }
@@ -54,9 +66,12 @@ public class SuperAdminPanel extends JPanel {
                     isProjectManagementPanelClicked=true;
                     if (userManagementPanel != null) userManagementPanel.setVisible(false);
                     projectManagementPanel = new ProjectManagementPanel();
-                    projectManagementPanel.setBounds(200, 100, getWidth(), getHeight());
+                    projectManagementPanel.setBounds(201, 100, getWidth(), getHeight());
                     add(projectManagementPanel);
                     projectManagementPanel.setVisible(true);
+                    userManagementButton.setBackground(null);
+                    projectManagementButton.setContentAreaFilled(true);
+                    projectManagementButton.setBackground(Color.gray);
                     repaint();
                 }
             }
@@ -77,7 +92,12 @@ public class SuperAdminPanel extends JPanel {
         super.paintComponent(g);
         g.drawLine(200, 99, 200, getHeight());
         g.drawLine(0, 99, getWidth(), 100);
+        g.drawLine(0, 150, 200, 150);
         g.drawLine(0, 200, 200, 200);
-        g.drawLine(0, 300, 200, 300);
+    }
+    private ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
+        Image img = icon.getImage();
+        Image resizedImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(resizedImg);
     }
 }

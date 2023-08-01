@@ -1,6 +1,7 @@
 package Project.Ui;
 
 import Project.Logic.DataBase.ProjectManager;
+import Project.Logic.FeatureAccess;
 import Project.Logic.Project;
 import Project.Logic.User;
 import Project.Util.GeneralController;
@@ -20,8 +21,8 @@ public class UserPanel extends JPanel {
             }
         }
     };
-    ProjectSettingPanel projectSettingPanel;
-    private JButton projectButton;
+    CreateProjectPanel createProjectPanel;
+     JButton projectButton;
     int selectedProjectIndex = -1;
     JScrollPane projectScrollPane;
     ProjectManager projectManager = ProjectManager.getInstance();
@@ -37,12 +38,27 @@ public class UserPanel extends JPanel {
         setBounds(0,0,getWidth(),getHeight());
         add(topPanel);
 
+        createProjectPanel=new CreateProjectPanel(this);
+        createProjectPanel.setBounds(200,100,getWidth(),getHeight());
+        createProjectPanel.setVisible(false);
+        add(createProjectPanel);
+
         projectPanelMaker.setBounds(0, 150, 200, getHeight());
         projectPanelMaker.setLayout(null);
         add(projectPanelMaker);
 
         JButton addButton = new JButton();
-        if (user.getRole().getLevelOfAccess()<2)addButton.setText("Add+");
+        if (user.getRole().hasAccess(FeatureAccess.CREATE_PROJECT)){
+            addButton.setText("Add+");
+            addButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    selectedProjectIndex=-1;
+                    drawProjects();
+                    createProjectPanel.setVisible(true);
+                }
+            });
+        }
         else addButton.setText("Your Projects");
         addButton.setBounds(0, 100, 200, 50);
         addButton.setContentAreaFilled(false);
@@ -55,7 +71,7 @@ public class UserPanel extends JPanel {
         projectScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         add(projectScrollPane);
 
-        projectPanel=new ProjectPanel();
+        projectPanel=new ProjectPanel(this);
         projectPanel.setBounds(200,100,800,700);
         projectPanel.setVisible(false);
         add(projectPanel);
@@ -93,6 +109,8 @@ public class UserPanel extends JPanel {
                 selectedProjectIndex = index;
                 drawProjects();
 
+                createProjectPanel.setVisible(false);
+                projectPanel.projectSettingPanel.setVisible(false);
                 projectPanel.setProject(project);
                 projectPanel.setUser(user);
                 projectPanel.setVisible(true);
@@ -110,7 +128,6 @@ public class UserPanel extends JPanel {
             drawProjectButton(project, i);
         }
 
-        // Repaint the projectPanelMaker and update the scroll pane
         projectPanelMaker.revalidate();
         projectPanelMaker.repaint();
         projectPanelMaker.setPreferredSize(new Dimension(200, projectManager.getProjectsByUser(user).size() * 100));
@@ -120,5 +137,9 @@ public class UserPanel extends JPanel {
             projectScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         }
         projectScrollPane.revalidate();
+    }
+
+    public User getUser() {
+        return user;
     }
 }
