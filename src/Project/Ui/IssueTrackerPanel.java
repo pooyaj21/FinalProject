@@ -24,6 +24,7 @@ public class IssueTrackerPanel extends JPanel {
 
     public IssueTrackerPanel(Project project,User user) {
         this.project=project;
+        setSize(780, 600);
         setLayout(new BorderLayout());
         tableModel = new DefaultTableModel(new Object[]{"Description", "Type", "Priority", "Status"}, 0) {
             @Override

@@ -20,6 +20,9 @@ public class BoardManager {
     }
 
     BoardDatabase boardDatabase = BoardDatabase.getInstance();
+    public ArrayList<Board> getAllBoards() {
+        return new ArrayList<>(boardDatabase.getBoards().values());
+    }
 
     public void addMemberToBoard(Board board, User member) {
         ArrayList<User> boardMembersList = boardDatabase.getBoardMembers().get(board);

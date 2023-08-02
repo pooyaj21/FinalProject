@@ -99,24 +99,31 @@ public class UserPanel extends JPanel {
         if (index == selectedProjectIndex) {
             projectButton.setContentAreaFilled(true);
             projectButton.setBackground(Color.GRAY);
+            projectButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                }
+            });
         } else {
             projectButton.setBackground(null);
+            projectButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    selectedProjectIndex = index;
+                    drawProjects();
+
+                    createProjectPanel.setVisible(false);
+                    projectPanel.projectSettingPanel.setVisible(false);
+                    //TODO update this
+                    projectPanel.setProject(project);
+                    projectPanel.setUser(user);
+                    projectPanel.setVisible(true);
+                    projectPanel.update();
+                }
+            });
         }
 
-        projectButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectedProjectIndex = index;
-                drawProjects();
 
-                createProjectPanel.setVisible(false);
-                projectPanel.projectSettingPanel.setVisible(false);
-                projectPanel.setProject(project);
-                projectPanel.setUser(user);
-                projectPanel.setVisible(true);
-                projectPanel.update();
-            }
-        });
         projectPanelMaker.add(projectButton);
     }
 

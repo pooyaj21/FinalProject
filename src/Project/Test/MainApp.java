@@ -1,7 +1,7 @@
 package Project.Test;
 
-import Project.Logic.DataBase.ProjectManager;
-import Project.Logic.DataBase.UserManagement;
+import Project.Logic.Board;
+import Project.Logic.DataBase.*;
 import Project.Logic.Role;
 import Project.Logic.User;
 import Project.Ui.AppFrame;
@@ -27,6 +27,10 @@ public class MainApp {
         projectManager.createProject("c");
         projectManager.createProject("d");
         projectManager.createProject("e");
+
+        projectManager.addMemberToProject(projectManager.getAllProjects().get(0),UserDatabase.getInstance().getUsers().get(1));
+        projectManager.addMemberToProject(projectManager.getAllProjects().get(1),UserDatabase.getInstance().getUsers().get(1));
+
         SwingUtilities.invokeLater(() -> {
             AppFrame.getInstance();
         });

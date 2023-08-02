@@ -20,7 +20,7 @@ public class KanbanBoardPanel extends JPanel {
     final DesignedColumn qaD = new DesignedColumn("QA", qa, this, Color.YELLOW);
     final CategoryPanel done = new CategoryPanel(Status.DONE);
     final DesignedColumn doneD = new DesignedColumn("Done", done, this, Color.GREEN);
-    int panelWidth = 200;
+    int panelWidth = 190;
     Board board;
     User user;
 
@@ -28,7 +28,7 @@ public class KanbanBoardPanel extends JPanel {
         this.board=board;
         this.user=user;
         setLayout(null);
-        setPreferredSize(new Dimension(800,600));
+        setPreferredSize(new Dimension(780,650));
         setBackground(new Color(0xf7f7f7));
         int panelHeight = getHeight();
 
@@ -58,7 +58,7 @@ public class KanbanBoardPanel extends JPanel {
     public void drawFirstTime(){
         if (board != null) {
             Map<Board, ArrayList<Issue>> boardIssues = BoardDatabase.getInstance().getBoardIssues();
-            ArrayList<Issue> issues = boardIssues.get(board);
+            ArrayList<Issue>  issues= boardIssues.get(board);
             if (issues != null) {
                 for (Issue issue : issues) {
                     CategoryPanel categoryPanel = getCategoryPanelForStatus(issue.getStatus());
@@ -120,10 +120,6 @@ public class KanbanBoardPanel extends JPanel {
     public void removeTask(TaskPanel task, CategoryPanel panel) {
         panel.removeTask(task);
         reset();
-    }
-
-    public Board getBoard() {
-        return board;
     }
 
     public void setBoard(Board board) {

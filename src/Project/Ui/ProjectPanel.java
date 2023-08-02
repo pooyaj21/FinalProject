@@ -17,11 +17,14 @@ public class ProjectPanel extends JPanel {
     Project project;
     User user;
     ProjectSettingPanel projectSettingPanel;
-    JTabbedPane tabbedPane = new JTabbedPane();
+    JButton kanbanButton = new JButton("Kanban Board");
+    JButton issueButton = new JButton("Issue Tracker");
+    JButton reportButton = new JButton("Reports");
     JButton settingButton = new JButton("⋮");
     JLabel nameProjectLabel = new JLabel();
     KanbanBoardPanel kanbanBoardPanel;
     IssueTrackerPanel issueTrackerPanel;
+    Board board;
 
     public ProjectPanel(UserPanel userPanel) {
         setLayout(null);
@@ -43,8 +46,10 @@ public class ProjectPanel extends JPanel {
                 projectSettingPanel.setVisible(true);
             }
         });
-        tabbedPane.setBounds(10, 25, 780, 650);
 
+        kanbanButton.setBounds(50, 25, 200, 30);
+        issueButton.setBounds(260, 25, 200, 30);
+        reportButton.setBounds(470, 25, 200, 30);
 
         nameProjectLabel.setFont(new Font(null, Font.PLAIN, 20));
         nameProjectLabel.setBounds(250, 5, 200, 30);
@@ -54,7 +59,31 @@ public class ProjectPanel extends JPanel {
         add(nameProjectLabel);
         add(settingButton);
         add(projectSettingPanel);
-        add(tabbedPane);
+        add(kanbanButton);
+        add(issueButton);
+        add(reportButton);
+
+        kanbanButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showKanbanBoardPanel();
+            }
+        });
+
+        issueButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeAllPanels() ;
+                showIssueTrackerPanel();
+            }
+        });
+
+        reportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showReportsPanel();
+            }
+        });
     }
 
     public void setProject(Project project) {
@@ -68,8 +97,7 @@ public class ProjectPanel extends JPanel {
     public void update() {
         settingButton.setVisible(user.getRole().hasAccess(FeatureAccess.PROJECT_SETTING));
         nameProjectLabel.setText(project.getName());
-        tabbedPane.removeAll();
-        Board board = new Board("aa");
+        board = new Board("aa");
         BoardDatabase.getInstance().addBoard(board);
 
         for (Issue issue : ProjectManager.getInstance().getIssuesByProject(project)) {
@@ -78,8 +106,37 @@ public class ProjectPanel extends JPanel {
 
         kanbanBoardPanel = new KanbanBoardPanel(board, user);
         issueTrackerPanel = new IssueTrackerPanel(project, user);
-        tabbedPane.addTab("Boards", kanbanBoardPanel);
-        tabbedPane.addTab("Issues", issueTrackerPanel);
-        tabbedPane.addTab("Reports", null);
+    }
+
+    private void showKanbanBoardPanel() {
+        removeAllPanels();
+        update();
+        kanbanBoardPanel=new KanbanBoardPanel(board,user);
+        kanbanBoardPanel.setBounds(10, 60, 770, 600);
+        kanbanBoardPanel.setVisible(true);
+        add(kanbanBoardPanel);
+        revalidate();
+        repaint();
+    }
+
+    private void showIssueTrackerPanel() {
+        removeAllPanels();
+        update();
+        issueTrackerPanel=new IssueTrackerPanel(project,user);
+        issueTrackerPanel.setBounds(10, 60, 770, 600);
+        issueTrackerPanel.setVisible(true);
+        add(issueTrackerPanel);
+        revalidate();
+        repaint();
+    }
+
+    private void showReportsPanel() {
+        // You can implement the Reports panel or handle the logic accordingly.
+    }
+
+    private void removeAllPanels() {
+        issueTrackerPanel.setVisible(false);
+        kanbanBoardPanel.setVisible(false);
+        // Remove other panels as you add them in the future.
     }
 }
