@@ -34,6 +34,7 @@ public class ProjectDatabase {
         projects.put(project.getId(), project);
         projectsBoards.put(project, new ArrayList<>());
         projectsMembers.put(project, new ArrayList<>());
+        projectsIssues.put(project, new ArrayList<>());
     }
 
     public void removeProject(Project project) {

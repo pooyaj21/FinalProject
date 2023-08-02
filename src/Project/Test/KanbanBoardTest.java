@@ -2,7 +2,7 @@ package Project.Test;
 
 import Project.Logic.*;
 import Project.Logic.DataBase.BoardDatabase;
-import Project.Logic.DataBase.BoredManager;
+import Project.Logic.DataBase.BoardManager;
 import Project.Logic.DataBase.UserDatabase;
 import Project.Logic.DataBase.UserManagement;
 import Project.Ui.KanbanBoard.KanbanBoardPanel;
@@ -35,14 +35,14 @@ public class KanbanBoardTest {
         Issue issue4 = new Issue("Document Feature B");
         issue4.setStatus(Status.DONE);
 
-        BoredManager.getInstance().addIssueToBoard(board, issue1);
-        BoredManager.getInstance().addIssueToBoard(board, issue2);
-        BoredManager.getInstance().addIssueToBoard(board, issue3);
-        BoredManager.getInstance().addIssueToBoard(board, issue4);
+        BoardManager.getInstance().addIssueToBoard(board, issue1);
+        BoardManager.getInstance().addIssueToBoard(board, issue2);
+        BoardManager.getInstance().addIssueToBoard(board, issue3);
+        BoardManager.getInstance().addIssueToBoard(board, issue4);
 
         // Create the Kanban board panel and set the board
 
-        KanbanBoardPanel kanbanBoardPanel = new KanbanBoardPanel(board, UserDatabase.getInstance().getUsers().get(0));
+        KanbanBoardPanel kanbanBoardPanel = new KanbanBoardPanel(board, UserDatabase.getInstance().getUsers().get(1));
         kanbanBoardPanel.setBoard(board);
 
         // Create the main frame and add the Kanban board panel to it

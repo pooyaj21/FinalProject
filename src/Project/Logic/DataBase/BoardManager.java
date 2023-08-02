@@ -6,15 +6,15 @@ import Project.Logic.User;
 
 import java.util.ArrayList;
 
-public class BoredManager {
-    private static BoredManager instance;
+public class BoardManager {
+    private static BoardManager instance;
 
-    private BoredManager() {
+    private BoardManager() {
     }
 
-    public static BoredManager getInstance() {
+    public static BoardManager getInstance() {
         if (instance == null) {
-            instance = new BoredManager();
+            instance = new BoardManager();
         }
         return instance;
     }

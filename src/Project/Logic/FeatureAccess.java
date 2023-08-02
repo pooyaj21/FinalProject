@@ -6,4 +6,8 @@ public enum FeatureAccess {
     MOVE_EVERYWHERE,
     MOVE_TO_QA,
     MOVE_FROM_QA,
+    ADD_ISSUES,
+    ADD_BUG,
+    EDIT_ISSUES,
+    EDIT_BUG,
 }

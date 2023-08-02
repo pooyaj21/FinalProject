@@ -26,26 +26,10 @@ public class DesignedColumn extends JPanel {
 
 
         numberTask.setBounds(name.length()*5+50, 12, 35, 30);
-        RoundedButton addTask = new RoundedButton("+ Add New Task", 12, Color.white, new Color(0x4a60b5), 12);
-        addTask.setFont(new Font("assets/Montserrat-ExtraLight.ttf", Font.BOLD, 12));
-        addTask.setBounds(5, 47, 190, 32);
-        addTask.setVisible(categoryPanel.getStatus() == Status.TODO);
-        addTask.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-//                taskPanel = new TaskPanel(categoryPanel, kanbanBoardPanel,);
-//                kanbanBoardPanel.add(taskPanel);
-//                kanbanBoardPanel.addTask(taskPanel, categoryPanel);
-//                kanbanBoardPanel.repaint(); // Repaint the container
-//                kanbanBoardPanel.reset();
-            }
-        });
-
         add(numberTask);
         add(header);
         add(theDot);
 
-        add(addTask);
         setVisible(true);
     }
 }

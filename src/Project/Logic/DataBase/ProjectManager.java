@@ -1,8 +1,6 @@
 package Project.Logic.DataBase;
 
-import Project.Logic.Board;
-import Project.Logic.Project;
-import Project.Logic.User;
+import Project.Logic.*;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -124,6 +122,19 @@ public class ProjectManager {
         if (project == null) throw new IllegalArgumentException("Project cannot be null");
         projectDatabase.removeProject(project);
     }
+    public void createIssue(Project project, Issue issue) {
+        if (project == null) throw new IllegalArgumentException("Project cannot be null");
+        if (issue == null) throw new IllegalArgumentException("Issue cannot be null");
+        projectDatabase.getIssuesByProject(project).add(issue);
+    }
 
+    public void deleteIssue(Project project, Issue issue) {
+        if (project == null || issue == null) throw new IllegalArgumentException("Project and Issue cannot be null");
+        projectDatabase.getIssuesByProject(project).remove(issue);
+    }
+    public ArrayList<Issue> getIssuesByProject(Project project) {
+        if (project == null) throw new IllegalArgumentException("Project cannot be null");
+        return new ArrayList<>(projectDatabase.getIssuesByProject(project));
+    }
 
 }

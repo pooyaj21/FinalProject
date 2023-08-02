@@ -16,8 +16,8 @@ public class KanbanBoardPanel extends JPanel {
     final DesignedColumn toDoD = new DesignedColumn("To Do", toDo, this, Color.RED);
     final CategoryPanel inProgress = new CategoryPanel(Status.IN_PROGRESS);
     final DesignedColumn inProgressD = new DesignedColumn("In Progress", inProgress, this, Color.BLUE);
-    final CategoryPanel needReview = new CategoryPanel(Status.QA);
-    final DesignedColumn needReviewD = new DesignedColumn("Need Review", needReview, this, Color.YELLOW);
+    final CategoryPanel qa = new CategoryPanel(Status.QA);
+    final DesignedColumn qaD = new DesignedColumn("QA", qa, this, Color.YELLOW);
     final CategoryPanel done = new CategoryPanel(Status.DONE);
     final DesignedColumn doneD = new DesignedColumn("Done", done, this, Color.GREEN);
     int panelWidth = 200;
@@ -34,25 +34,25 @@ public class KanbanBoardPanel extends JPanel {
 
         toDo.setBounds(0, 75, panelWidth, panelHeight);
         inProgress.setBounds(panelWidth, 75, panelWidth, panelHeight);
-        needReview.setBounds(panelWidth * 2, 75, panelWidth, panelHeight);
+        qa.setBounds(panelWidth * 2, 75, panelWidth, panelHeight);
         done.setBounds(panelWidth * 3, 75, panelWidth, panelHeight);
 
         toDoD.setBounds(0, 0, panelWidth, 80);
         inProgressD.setBounds(panelWidth, 0, panelWidth, 80);
-        needReviewD.setBounds(panelWidth * 2, 0, panelWidth, 80);
+        qaD.setBounds(panelWidth * 2, 0, panelWidth, 80);
         doneD.setBounds(panelWidth * 3, 0, panelWidth, 80);
 
         add(toDo);
         add(inProgress);
-        add(needReview);
+        add(qa);
         add(done);
 
         add(toDoD);
         add(inProgressD);
-        add(needReviewD);
+        add(qaD);
         add(doneD);
-        reset();
         drawFirstTime();
+        reset();
     }
 
     public void drawFirstTime(){
@@ -76,7 +76,7 @@ public class KanbanBoardPanel extends JPanel {
 
         toDo.showTasks();
         inProgress.showTasks();
-        needReview.showTasks();
+        qa.showTasks();
         done.showTasks();
     }
 
@@ -85,8 +85,8 @@ public class KanbanBoardPanel extends JPanel {
         toDoD.numberTask.setText(String.valueOf(toDo.tasks.size()));
         inProgress.showTasks();
         inProgressD.numberTask.setText(String.valueOf(inProgress.tasks.size()));
-        needReview.showTasks();
-        needReviewD.numberTask.setText(String.valueOf(needReview.tasks.size()));
+        qa.showTasks();
+        qaD.numberTask.setText(String.valueOf(qa.tasks.size()));
         done.showTasks();
         doneD.numberTask.setText(String.valueOf(done.tasks.size()));
     }
@@ -102,7 +102,7 @@ public class KanbanBoardPanel extends JPanel {
                     categoryPanel= inProgress;
                     break;
                 case QA:
-                    categoryPanel= needReview;
+                    categoryPanel= qa;
                     break;
                 case DONE:
                     categoryPanel= done;
