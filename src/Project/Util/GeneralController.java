@@ -59,6 +59,20 @@ public class GeneralController {
         return null;
     }
 
+    public static int findHighest(int[] numbers) {
+        if (numbers.length == 0) {
+            throw new IllegalArgumentException("No numbers provided");
+        }
+
+        int highest = numbers[0];
+        for (int i = 1; i < numbers.length; i++) {
+            if (numbers[i] > highest) {
+                highest = numbers[i];
+            }
+        }
+        return highest;
+    }
+
 
     public boolean isEmpty(String a) {
         return a.trim().isEmpty();

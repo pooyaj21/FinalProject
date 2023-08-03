@@ -26,12 +26,12 @@ public class CategoryPanel extends JPanel {
     }
 
     public void showTasks() {
-        lowestY = getY()+10;
+        lowestY = 0;
         int categoryPanelX = getX();
         setBackground(null);
 
         for (TaskPanel task : tasks) {
-            task.setBounds(categoryPanelX + 10, lowestY + 5, 180, 130);
+            task.setBounds(categoryPanelX + 10, lowestY, 180, 130);
             lowestY += task.getHeight() + 5;
         }
         repaint();

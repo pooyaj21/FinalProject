@@ -12,6 +12,7 @@ public class Issue {
     private final int id;
     private static int counter;
 
+    private User user;
     public Issue( String description) {
         counter++;
         this.addTime = DateUtil.timeOfNow();
@@ -65,5 +66,13 @@ public class Issue {
 
     public int getId() {
         return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

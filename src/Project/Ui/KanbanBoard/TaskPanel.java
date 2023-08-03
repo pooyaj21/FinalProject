@@ -1,6 +1,7 @@
 package Project.Ui.KanbanBoard;
 
 import Project.Logic.*;
+import Project.Util.RoundedButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -147,37 +148,30 @@ public class TaskPanel extends JPanel {
             }
         });
         addMouseListener(new MouseAdapter() {
+
             @Override
             public void mousePressed(MouseEvent e) {
-                double mouseX = e.getXOnScreen(); // Get the mouse X coordinate on the screen
-                double panelX = kanbanBoardPanel.getLocationOnScreen().getX(); // Get the panel's X coordinate on the screen
-                double columnWidth = kanbanBoardPanel.getWidth() / 4.0; // Divide the width into 5 equal parts
-                double whichColumn = (mouseX - panelX) / columnWidth; // Calculate which column the mouse is pressed in
+                offset = e.getPoint();
+                getParent().setComponentZOrder(TaskPanel.this, 0);
 
-                addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        offset = e.getPoint();
-                        getParent().setComponentZOrder(TaskPanel.this, 0);
-
-                        double mouseX = e.getXOnScreen();
-                        double panelX = kanbanBoardPanel.getLocationOnScreen().getX();
-                        double columnWidth = kanbanBoardPanel.getWidth() / 4.0;
-                        double whichColumn = (mouseX - panelX) / columnWidth;
-                        if (whichColumn < 1) {
-                            canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE) || user.getRole().hasAccess(FeatureAccess.MOVE_TO_QA);
-                        } else if (whichColumn >= 1 && whichColumn < 2) {
-                            canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE) || user.getRole().hasAccess(FeatureAccess.MOVE_TO_QA);
-                        } else if (whichColumn >= 2 && whichColumn < 3) {
-                            canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE) || user.getRole().hasAccess(FeatureAccess.MOVE_FROM_QA);
-                        } else if (whichColumn >= 3 && whichColumn < 4) {
-                            canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE);
-                        } else {
-                            canMove = false;
-                        }
-                    }
-                });
+                double mouseX = e.getXOnScreen();
+                double panelX = kanbanBoardPanel.getLocationOnScreen().getX();
+                double columnWidth = kanbanBoardPanel.getWidth() / 4.0;
+                double whichColumn = (mouseX - panelX) / columnWidth;
+                if (whichColumn < 1) {
+                    canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE) || user == issue.getUser();
+                } else if (whichColumn >= 1 && whichColumn < 2) {
+                    canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE) || user == issue.getUser();
+                } else if (whichColumn >= 2 && whichColumn < 3) {
+                    canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE) || user.getRole().hasAccess(FeatureAccess.MOVE_FROM_QA);
+                } else if (whichColumn >= 3 && whichColumn < 4) {
+                    canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE);
+                } else {
+                    canMove = false;
+                }
             }
+
+
 
 
             @Override
@@ -187,27 +181,28 @@ public class TaskPanel extends JPanel {
                 double columnWidth = kanbanBoardPanel.getWidth() / 4.0; // Divide the width into 5 equal parts
                 double whichColumn = (mouseX - panelX) / columnWidth; // Calculate which column the mouse is released in
 
-                if (currentColumn != null) {
-                    kanbanBoardPanel.removeTask(TaskPanel.this, currentColumn);
-                }
 
                 CategoryPanel newColumn = null;
 
-                if (whichColumn < 1&&canMove) {
+                if (whichColumn < 1 && canMove) {
                     newColumn = kanbanBoardPanel.toDo;
                     issue.setStatus(Status.TODO);
-                } else if (whichColumn >= 1 && whichColumn < 2&&canMove) {
+                } else if (whichColumn >= 1 && whichColumn < 2 && canMove) {
                     newColumn = kanbanBoardPanel.inProgress;
                     issue.setStatus(Status.IN_PROGRESS);
-                } else if (whichColumn >= 2 && whichColumn < 3&&canMove) {
+                } else if (whichColumn >= 2 && whichColumn < 3 && canMove) {
                     newColumn = kanbanBoardPanel.qa;
                     issue.setStatus(Status.QA);
-                } else if (whichColumn >= 3 && whichColumn < 4 && (user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE) || user.getRole().hasAccess(FeatureAccess.MOVE_FROM_QA))&&canMove) {
+                } else if (whichColumn >= 3 && whichColumn < 4 && user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE) || user.getRole().hasAccess(FeatureAccess.MOVE_FROM_QA)) {
                     newColumn = kanbanBoardPanel.done;
                     issue.setStatus(Status.DONE);
                 } else kanbanBoardPanel.addTask(TaskPanel.this, currentColumn);
 
-                if (newColumn != null) {
+
+                if (currentColumn != null && currentColumn != newColumn) {
+                    kanbanBoardPanel.removeTask(TaskPanel.this, currentColumn);
+                }
+                if (newColumn != null && currentColumn != newColumn) {
                     currentColumn = newColumn;
                     kanbanBoardPanel.addTask(TaskPanel.this, currentColumn);
                 }
@@ -290,6 +285,10 @@ public class TaskPanel extends JPanel {
         for (MouseListener listener : getMouseListeners()) {
             listener.mouseClicked(e);
         }
+    }
+
+    public void setCurrentColumn(CategoryPanel currentColumn) {
+        this.currentColumn = currentColumn;
     }
 }
 

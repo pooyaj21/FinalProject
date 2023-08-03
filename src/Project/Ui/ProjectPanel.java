@@ -7,8 +7,6 @@ import Project.Logic.DataBase.ProjectManager;
 import Project.Ui.KanbanBoard.KanbanBoardPanel;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,8 +23,12 @@ public class ProjectPanel extends JPanel {
     KanbanBoardPanel kanbanBoardPanel;
     IssueTrackerPanel issueTrackerPanel;
     Board board;
+    UserPanel userPanel;
 
-    public ProjectPanel(UserPanel userPanel) {
+    public ProjectPanel(UserPanel userPanel,Project project,User user) {
+        this.userPanel = userPanel;
+        this.project = project;
+        this.user = user;
         setLayout(null);
 
         setSize(800, 700);
@@ -47,9 +49,9 @@ public class ProjectPanel extends JPanel {
             }
         });
 
-        kanbanButton.setBounds(50, 25, 200, 30);
-        issueButton.setBounds(260, 25, 200, 30);
-        reportButton.setBounds(470, 25, 200, 30);
+        kanbanButton.setBounds(50, 30, 200, 30);
+        issueButton.setBounds(260, 30, 200, 30);
+        reportButton.setBounds(470, 30, 200, 30);
 
         nameProjectLabel.setFont(new Font(null, Font.PLAIN, 20));
         nameProjectLabel.setBounds(250, 5, 200, 30);
@@ -73,7 +75,6 @@ public class ProjectPanel extends JPanel {
         issueButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                removeAllPanels() ;
                 showIssueTrackerPanel();
             }
         });
@@ -97,7 +98,7 @@ public class ProjectPanel extends JPanel {
     public void update() {
         settingButton.setVisible(user.getRole().hasAccess(FeatureAccess.PROJECT_SETTING));
         nameProjectLabel.setText(project.getName());
-        board = new Board("aa");
+        board = new Board("");
         BoardDatabase.getInstance().addBoard(board);
 
         for (Issue issue : ProjectManager.getInstance().getIssuesByProject(project)) {
@@ -111,7 +112,7 @@ public class ProjectPanel extends JPanel {
     private void showKanbanBoardPanel() {
         removeAllPanels();
         update();
-        kanbanBoardPanel=new KanbanBoardPanel(board,user);
+        kanbanBoardPanel = new KanbanBoardPanel(board, user);
         kanbanBoardPanel.setBounds(10, 60, 770, 600);
         kanbanBoardPanel.setVisible(true);
         add(kanbanBoardPanel);
@@ -122,7 +123,7 @@ public class ProjectPanel extends JPanel {
     private void showIssueTrackerPanel() {
         removeAllPanels();
         update();
-        issueTrackerPanel=new IssueTrackerPanel(project,user);
+        issueTrackerPanel = new IssueTrackerPanel(project, user);
         issueTrackerPanel.setBounds(10, 60, 770, 600);
         issueTrackerPanel.setVisible(true);
         add(issueTrackerPanel);

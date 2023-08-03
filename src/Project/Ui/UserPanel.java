@@ -71,10 +71,6 @@ public class UserPanel extends JPanel {
         projectScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         add(projectScrollPane);
 
-        projectPanel=new ProjectPanel(this);
-        projectPanel.setBounds(200,100,800,700);
-        projectPanel.setVisible(false);
-        add(projectPanel);
 
 
         drawProjects();
@@ -102,6 +98,7 @@ public class UserPanel extends JPanel {
             projectButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    projectPanel.projectSettingPanel.setVisible(false);
                 }
             });
         } else {
@@ -111,14 +108,17 @@ public class UserPanel extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     selectedProjectIndex = index;
                     drawProjects();
-
                     createProjectPanel.setVisible(false);
-                    projectPanel.projectSettingPanel.setVisible(false);
-                    //TODO update this
-                    projectPanel.setProject(project);
-                    projectPanel.setUser(user);
+                    if (projectPanel!=null){
+                        projectPanel.setVisible(false);
+                        projectPanel.projectSettingPanel.setVisible(false);
+                    }
+                    projectPanel=new ProjectPanel(UserPanel.this,project,user);
                     projectPanel.setVisible(true);
+                    projectPanel.setBounds(200,100,800,700);
+                    add(projectPanel);
                     projectPanel.update();
+                    projectPanel.kanbanButton.doClick();
                 }
             });
         }

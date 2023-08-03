@@ -31,6 +31,11 @@ public class MainApp {
         projectManager.addMemberToProject(projectManager.getAllProjects().get(0),UserDatabase.getInstance().getUsers().get(1));
         projectManager.addMemberToProject(projectManager.getAllProjects().get(1),UserDatabase.getInstance().getUsers().get(1));
 
+        projectManager.addMemberToProject(projectManager.getAllProjects().get(0),UserDatabase.getInstance().getUsers().get(2));
+        projectManager.addMemberToProject(projectManager.getAllProjects().get(1),UserDatabase.getInstance().getUsers().get(2));
+
+        projectManager.addMemberToProject(projectManager.getAllProjects().get(0),UserDatabase.getInstance().getUsers().get(3));
+        projectManager.addMemberToProject(projectManager.getAllProjects().get(1),UserDatabase.getInstance().getUsers().get(3));
         SwingUtilities.invokeLater(() -> {
             AppFrame.getInstance();
         });
