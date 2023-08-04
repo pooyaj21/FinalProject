@@ -1,9 +1,6 @@
 package Project.Ui;
 
 import Project.Logic.*;
-import Project.Logic.DataBase.BoardDatabase;
-import Project.Logic.DataBase.BoardManager;
-import Project.Logic.DataBase.ProjectManager;
 import Project.Ui.KanbanBoard.KanbanBoardPanel;
 
 import javax.swing.*;
@@ -20,8 +17,11 @@ public class ProjectPanel extends JPanel {
     JButton reportButton = new JButton("Reports");
     JButton settingButton = new JButton("⋮");
     JLabel nameProjectLabel = new JLabel();
-    KanbanBoardPanel kanbanBoardPanel;
+    BoardsPanel boardsPanel;
     IssueTrackerPanel issueTrackerPanel;
+    KanbanBoardPanel kanbanBoardPanel;
+    AddBoredPanel addBoredPanel;
+    EditBoardPanel editBoardPanel;
     Board board;
     UserPanel userPanel;
 
@@ -68,7 +68,7 @@ public class ProjectPanel extends JPanel {
         kanbanButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showKanbanBoardPanel();
+                showBoardsPanel();
             }
         });
 
@@ -98,24 +98,55 @@ public class ProjectPanel extends JPanel {
     public void update() {
         settingButton.setVisible(user.getRole().hasAccess(FeatureAccess.PROJECT_SETTING));
         nameProjectLabel.setText(project.getName());
-        board = new Board("");
-        BoardDatabase.getInstance().addBoard(board);
 
-        for (Issue issue : ProjectManager.getInstance().getIssuesByProject(project)) {
-            BoardManager.getInstance().addIssueToBoard(board, issue);
-        }
-
-        kanbanBoardPanel = new KanbanBoardPanel(board, user);
+        boardsPanel = new BoardsPanel(project,user,this);
         issueTrackerPanel = new IssueTrackerPanel(project, user);
+        kanbanBoardPanel = new KanbanBoardPanel(board,user);
+        editBoardPanel = new EditBoardPanel(board,this);
+        addBoredPanel = new AddBoredPanel(project,this);
     }
 
-    private void showKanbanBoardPanel() {
+    private void showBoardsPanel() {
         removeAllPanels();
         update();
-        kanbanBoardPanel = new KanbanBoardPanel(board, user);
+        boardsPanel = new BoardsPanel(project,user,this);
+        boardsPanel.setBounds(10, 60, 770, 600);
+        boardsPanel.setVisible(true);
+        add(boardsPanel);
+        revalidate();
+        repaint();
+    }
+    public void showKanBanBoardsPanel(Board board) {
+        removeAllPanels();
+        update();
+        kanbanBoardPanel = new KanbanBoardPanel(board,user);
         kanbanBoardPanel.setBounds(10, 60, 770, 600);
         kanbanBoardPanel.setVisible(true);
         add(kanbanBoardPanel);
+        revalidate();
+        repaint();
+    }
+
+    public void showAddBoardsPAnel() {
+        removeAllPanels();
+        update();
+        addBoredPanel = new AddBoredPanel(project,this);
+        addBoredPanel.setBounds(10, 60, 770, 600);
+        addBoredPanel.setVisible(true);
+        add(addBoredPanel);
+        revalidate();
+        repaint();
+    }
+
+    public void showEditBoardsPanel(Board board) {
+        removeAllPanels();
+        update();
+        editBoardPanel = new EditBoardPanel(board,this);
+        editBoardPanel.setBounds(10, 60, 770, 600);
+        editBoardPanel.setProject(project);
+        editBoardPanel.update();
+        editBoardPanel.setVisible(true);
+        add(editBoardPanel);
         revalidate();
         repaint();
     }
@@ -135,9 +166,16 @@ public class ProjectPanel extends JPanel {
         // You can implement the Reports panel or handle the logic accordingly.
     }
 
-    private void removeAllPanels() {
+    void removeAllPanels() {
         issueTrackerPanel.setVisible(false);
+        boardsPanel.setVisible(false);
         kanbanBoardPanel.setVisible(false);
+        editBoardPanel.setVisible(false);
+        addBoredPanel.setVisible(false);
         // Remove other panels as you add them in the future.
+    }
+
+    public void showKanbanBoardsPanel(){
+
     }
 }

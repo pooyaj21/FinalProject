@@ -10,4 +10,6 @@ public enum FeatureAccess {
     ADD_BUG,
     EDIT_ISSUES,
     EDIT_BUG,
+    ADD_BOARD,
+    EDIT_BOARD
 }

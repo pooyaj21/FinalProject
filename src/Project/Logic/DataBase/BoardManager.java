@@ -20,6 +20,7 @@ public class BoardManager {
     }
 
     BoardDatabase boardDatabase = BoardDatabase.getInstance();
+
     public ArrayList<Board> getAllBoards() {
         return new ArrayList<>(boardDatabase.getBoards().values());
     }
@@ -51,4 +52,22 @@ public class BoardManager {
             boardDatabase.getBoardIssues().get(board).remove(issue);
         }
     }
+
+    public void editBoardName(Board board, String newName) {
+        if (board != null && newName != null) {
+            board.setName(newName);
+        }
+    }
+
+    public void addUserToBoard(Board board, User user) {
+        ArrayList<User> boardMembersList = boardDatabase.getBoardMembers().get(board);
+        if (boardMembersList != null && user != null) {
+            boardMembersList.add(user);
+        }
+    }
+
+    public ArrayList<User> getMembersOfBoard(Board board) {
+        return boardDatabase.getBoardMembers().getOrDefault(board, new ArrayList<>());
+    }
+
 }
