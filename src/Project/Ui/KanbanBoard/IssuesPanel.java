@@ -1,14 +1,20 @@
 package Project.Ui.KanbanBoard;
 
+import Project.Logic.DataBase.BoardManager;
+import Project.Logic.DataBase.ProjectManager;
 import Project.Logic.*;
 import Project.Util.RoundedButton;
+import Project.Util.RoundedPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
-public class TaskPanel extends JPanel {
+public class IssuesPanel extends JPanel {
     private final JTextArea title = new JTextArea();
     private final JTextArea theText = new JTextArea();
 
@@ -27,46 +33,40 @@ public class TaskPanel extends JPanel {
         }
     };
     Issue issue;
-    User user = new User("Aa", "Aa", "aa", Role.SUPER_ADMIN);
+    private final RoundedButton setting = new RoundedButton("⋮", 30, Color.white, Color.BLACK, 22);
+    User user;
+    ProjectManager projectManager = ProjectManager.getInstance();
     private boolean canMove = false;
     private CategoryPanel currentColumn;
     private Point offset;
-    private int currentTask = 0;
     private boolean isSettingOpen = false;
     private boolean isEditable = false;
+    BoardManager boardManager = BoardManager.getInstance();
 
-    public TaskPanel(CategoryPanel categoryPanel, KanbanBoardPanel kanbanBoardPanel, Issue issue) {
+
+    public IssuesPanel(CategoryPanel categoryPanel, KanbanBoardPanel kanbanBoardPanel, Issue issue) {
         this.issue = issue;
         currentColumn = categoryPanel;
         setBackground(Color.white);
         setLayout(null);
         setTitle("The Title");
-        setText("The Body of the task");
-
+        setText("");
         add(settingPanel);
         settingPanel.setVisible(false);
         settingPanel.setLayout(null);
 
-        RoundedButton editButton = new RoundedButton("Edit", 0, getBackground(), getForeground(), 13);
-        editButton.setBounds(0, 0, 100, 30);
-        editButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                settingPanel.setVisible(false);
-                isSettingOpen = false;
-                isEditable = true;
-                toggleEditMode(true); // Switch to edit mode
-            }
-        });
-        settingPanel.add(editButton);
 
         RoundedButton removeButton = new RoundedButton("Remove", 0, getBackground(), getForeground(), 13);
         removeButton.setBounds(0, 30, 100, 30);
         removeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                TaskPanel.this.setVisible(false);
-                currentColumn.removeTask(TaskPanel.this);
+                IssuesPanel.this.setVisible(false);
+                currentColumn.removeTask(IssuesPanel.this);
+                if (kanbanBoardPanel.getBoard()==projectManager.getBoardByProject(kanbanBoardPanel.getProject()).get(0)){
+                    projectManager.removeIssue(kanbanBoardPanel.getProject(),issue);
+                }
+                boardManager.removeIssueFromBoard(kanbanBoardPanel.getBoard(),issue);
                 kanbanBoardPanel.reset();
             }
         });
@@ -77,9 +77,9 @@ public class TaskPanel extends JPanel {
         title.setFont(new Font("assets/Montserrat-ExtraLight.ttf", Font.BOLD, 13));
         title.setEditable(false);
         title.setFocusable(false);
+        title.setOpaque(false);
         add(title);
 
-        RoundedButton setting = new RoundedButton("⋮", 30, this.getBackground(), Color.BLACK, 22);
         setting.setBounds(160, 5, 15, 18);
         setting.setFont(new Font("assets/Montserrat-ExtraLight.ttf", Font.BOLD, 22));
         setting.addActionListener(new ActionListener() {
@@ -109,28 +109,26 @@ public class TaskPanel extends JPanel {
         theText.setFont(new Font("assets/Montserrat-ExtraLight.ttf", Font.PLAIN, 10));
         theText.setEditable(false);
         theText.setFocusable(false);
+        title.setOpaque(false);
         add(theText);
 
 
-        RoundedButton taskType = new RoundedButton(TaskTypes.values()[currentTask].getName(), 17, TaskTypes.values()[currentTask].getColor(), Color.WHITE, 11);
-        taskType.setBounds(10, 5, 50, 20);
-        taskType.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (isEditable) {
-                    if (currentTask == 3) currentTask = 0;
-                    else currentTask++;
-                    taskType.setBackgroundColor(TaskTypes.values()[currentTask].getColor());
-                    taskType.setText(TaskTypes.values()[currentTask].getName());
-                }
-            }
-        });
-        add(taskType);
+        RoundedPanel issueType = new RoundedPanel(issue.getType().getIssuesTypes().getName(), 17,
+                issue.getType().getIssuesTypes().getColor(), Color.WHITE, 11);
+        issueType.setBounds(10, 5, 50, 20);
+        issueType.setFocusable(false);
+        add(issueType);
+
+        RoundedPanel issuePriority = new RoundedPanel(issue.getPriority().getIssuesPriority().getName(), 17,
+                issue.getPriority().getIssuesPriority().getColor(), Color.WHITE, 11);
+        issuePriority.setBounds(65, 5, 50, 20);
+        issuePriority.setFocusable(false);
+        add(issuePriority);
 
         setComponentZOrder(settingPanel, 0);
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setBackground(Color.WHITE); // Set background color to white
-        setOpaque(false); // Make the panel background transparent
+        setOpaque(false);
 
 
         kanbanBoardPanel.addMouseListener(new MouseAdapter() {
@@ -138,8 +136,8 @@ public class TaskPanel extends JPanel {
             public void mousePressed(MouseEvent e) {
                 Point clickPoint = e.getPoint();
                 SwingUtilities.convertPointToScreen(clickPoint, kanbanBoardPanel);
-                SwingUtilities.convertPointFromScreen(clickPoint, TaskPanel.this);
-                if (!TaskPanel.this.contains(clickPoint)) {
+                SwingUtilities.convertPointFromScreen(clickPoint, IssuesPanel.this);
+                if (!IssuesPanel.this.contains(clickPoint)) {
                     settingPanel.setVisible(false);
                     isSettingOpen = false;
                     isEditable = false;
@@ -148,11 +146,10 @@ public class TaskPanel extends JPanel {
             }
         });
         addMouseListener(new MouseAdapter() {
-
             @Override
             public void mousePressed(MouseEvent e) {
                 offset = e.getPoint();
-                getParent().setComponentZOrder(TaskPanel.this, 0);
+                getParent().setComponentZOrder(IssuesPanel.this, 0);
 
                 double mouseX = e.getXOnScreen();
                 double panelX = kanbanBoardPanel.getLocationOnScreen().getX();
@@ -170,8 +167,6 @@ public class TaskPanel extends JPanel {
                     canMove = false;
                 }
             }
-
-
 
 
             @Override
@@ -196,15 +191,15 @@ public class TaskPanel extends JPanel {
                 } else if (whichColumn >= 3 && whichColumn < 4 && user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE) || user.getRole().hasAccess(FeatureAccess.MOVE_FROM_QA)) {
                     newColumn = kanbanBoardPanel.done;
                     issue.setStatus(Status.DONE);
-                } else kanbanBoardPanel.addTask(TaskPanel.this, currentColumn);
+                } else kanbanBoardPanel.addTask(IssuesPanel.this, currentColumn);
 
 
                 if (currentColumn != null && currentColumn != newColumn) {
-                    kanbanBoardPanel.removeTask(TaskPanel.this, currentColumn);
+                    kanbanBoardPanel.removeTask(IssuesPanel.this, currentColumn);
                 }
                 if (newColumn != null && currentColumn != newColumn) {
                     currentColumn = newColumn;
-                    kanbanBoardPanel.addTask(TaskPanel.this, currentColumn);
+                    kanbanBoardPanel.addTask(IssuesPanel.this, currentColumn);
                 }
 
                 kanbanBoardPanel.reset();
@@ -223,6 +218,8 @@ public class TaskPanel extends JPanel {
                 }
             }
         });
+
+
     }
 
     private void toggleEditMode(boolean editMode) {
@@ -276,15 +273,8 @@ public class TaskPanel extends JPanel {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public void performClick() {
-        MouseEvent e = new MouseEvent(
-                this, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), 0, 0, 0, 1, false
-        );
-        for (MouseListener listener : getMouseListeners()) {
-            listener.mouseClicked(e);
-        }
+        setting.setVisible(user.getRole().hasAccess(FeatureAccess.ADD_ISSUES) ||
+                (issue.getType().equals(Type.BUG) && user.getRole().hasAccess(FeatureAccess.EDIT_BUG)));
     }
 
     public void setCurrentColumn(CategoryPanel currentColumn) {

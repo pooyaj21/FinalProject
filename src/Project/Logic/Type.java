@@ -1,17 +1,19 @@
 package Project.Logic;
 
+import Project.Ui.KanbanBoard.IssuesTypes;
+
 import java.awt.*;
 
 public enum Type {
-    STORY("story"),
-    TASK("task"),
-    BUG("Bug");
-    private final String name;
-    Type(String name) {
-        this.name = name;
+    STORY(IssuesTypes.STORY),
+    TASK(IssuesTypes.TASK),
+    BUG(IssuesTypes.BUG);
+    private final IssuesTypes issuesTypes;
+    Type(IssuesTypes issuesTypes) {
+        this.issuesTypes = issuesTypes;
     }
 
-    public String getName() {
-        return name;
+    public IssuesTypes getIssuesTypes() {
+        return issuesTypes;
     }
 }

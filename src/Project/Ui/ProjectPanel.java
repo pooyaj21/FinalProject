@@ -101,7 +101,7 @@ public class ProjectPanel extends JPanel {
 
         boardsPanel = new BoardsPanel(project,user,this);
         issueTrackerPanel = new IssueTrackerPanel(project, user);
-        kanbanBoardPanel = new KanbanBoardPanel(board,user);
+        kanbanBoardPanel = new KanbanBoardPanel(board,user,project);
         editBoardPanel = new EditBoardPanel(board,this);
         addBoredPanel = new AddBoredPanel(project,this);
     }
@@ -119,7 +119,7 @@ public class ProjectPanel extends JPanel {
     public void showKanBanBoardsPanel(Board board) {
         removeAllPanels();
         update();
-        kanbanBoardPanel = new KanbanBoardPanel(board,user);
+        kanbanBoardPanel = new KanbanBoardPanel(board,user,project);
         kanbanBoardPanel.setBounds(10, 60, 770, 600);
         kanbanBoardPanel.setVisible(true);
         add(kanbanBoardPanel);

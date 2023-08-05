@@ -1,10 +1,7 @@
 package Project.Ui.KanbanBoard;
 
-import Project.Logic.Board;
+import Project.Logic.*;
 import Project.Logic.DataBase.BoardDatabase;
-import Project.Logic.Issue;
-import Project.Logic.Status;
-import Project.Logic.User;
 import Project.Util.GeneralController;
 
 import javax.swing.*;
@@ -24,11 +21,13 @@ public class KanbanBoardPanel extends JPanel {
     int panelWidth = 190;
     Board board;
     User user;
+    Project project;
     private final JPanel extraPanel;
 
-    public KanbanBoardPanel(Board board, User user) {
+    public KanbanBoardPanel(Board board, User user,Project project) {
         this.board = board;
         this.user = user;
+        this.project =project;
         setLayout(null);
         setPreferredSize(new Dimension(770, 600));
         setBackground(new Color(0xf7f7f7));
@@ -81,7 +80,7 @@ public class KanbanBoardPanel extends JPanel {
                 for (Issue issue : issues) {
                     CategoryPanel categoryPanel = getCategoryPanelForStatus(issue.getStatus());
                     if (categoryPanel != null) {
-                        TaskPanel taskPanel = new TaskPanel(categoryPanel, this, issue);
+                        IssuesPanel taskPanel = new IssuesPanel(categoryPanel, this, issue);
                         taskPanel.setTitle(issue.getDescription());
                         taskPanel.setIssue(issue);
                         taskPanel.setUser(user);
@@ -134,17 +133,25 @@ public class KanbanBoardPanel extends JPanel {
         return categoryPanel;
     }
 
-    public void addTask(TaskPanel task, CategoryPanel panel) {
+    public void addTask(IssuesPanel task, CategoryPanel panel) {
         panel.addTask(task);
         reset();
     }
 
-    public void removeTask(TaskPanel task, CategoryPanel panel) {
+    public void removeTask(IssuesPanel task, CategoryPanel panel) {
         panel.removeTask(task);
         reset();
     }
 
     public void setBoard(Board board) {
         this.board = board;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public Project getProject() {
+        return project;
     }
 }

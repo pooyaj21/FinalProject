@@ -138,7 +138,7 @@ public class ProjectManager {
         boardManager.addIssueToBoard(this.getBoardByProject(project).get(0),issue);
     }
 
-    public void deleteIssue(Project project, Issue issue) {
+    public void removeIssue(Project project, Issue issue) {
         if (project == null || issue == null) throw new IllegalArgumentException("Project and Issue cannot be null");
         projectDatabase.getIssuesByProject(project).remove(issue);
     }

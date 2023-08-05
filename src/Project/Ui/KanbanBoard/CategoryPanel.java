@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class CategoryPanel extends JPanel {
-    ArrayList<TaskPanel> tasks;
+    ArrayList<IssuesPanel> tasks;
     int lowestY = 10;
     private Status status;
     public CategoryPanel(Status status) {
@@ -17,11 +17,11 @@ public class CategoryPanel extends JPanel {
         setLayout(null);
     }
 
-    public void addTask(TaskPanel task) {
+    public void addTask(IssuesPanel task) {
         tasks.add(task);
     }
 
-    public void removeTask(TaskPanel task) {
+    public void removeTask(IssuesPanel task) {
         tasks.remove(task);
     }
 
@@ -30,7 +30,7 @@ public class CategoryPanel extends JPanel {
         int categoryPanelX = getX();
         setBackground(null);
 
-        for (TaskPanel task : tasks) {
+        for (IssuesPanel task : tasks) {
             task.setBounds(categoryPanelX + 10, lowestY, 180, 130);
             lowestY += task.getHeight() + 5;
         }
@@ -45,7 +45,7 @@ public class CategoryPanel extends JPanel {
     }
     private int calculateTotalHeight() {
         int totalHeight = 10;
-        for (TaskPanel task : tasks) {
+        for (IssuesPanel task : tasks) {
             totalHeight += task.getHeight() + 5; // Adjust the spacing between tasks
         }
         return totalHeight;
