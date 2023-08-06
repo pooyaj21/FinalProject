@@ -188,7 +188,7 @@ public class ProjectPanel extends JPanel {
     public void showEditBoardsPanel(Board board) {
         removeAllPanels();
         update();
-        editBoardPanel = new EditBoardPanel(board, this);
+        editBoardPanel = new EditBoardPanel(board,this);
         editBoardPanel.setBounds(10, 60, 770, 600);
         editBoardPanel.setProject(project);
         editBoardPanel.update();
@@ -222,7 +222,7 @@ public class ProjectPanel extends JPanel {
         // Remove other panels as you add them in the future.
     }
 
-    public void showKanbanBoardsPanel() {
-
+    public User getUser() {
+        return user;
     }
 }

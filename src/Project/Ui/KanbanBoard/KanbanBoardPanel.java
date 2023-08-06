@@ -78,6 +78,7 @@ public class KanbanBoardPanel extends JPanel {
             ArrayList<Issue> issues = boardIssues.get(board);
             if (issues != null) {
                 for (Issue issue : issues) {
+                    System.out.println(issue.getDescription());
                     CategoryPanel categoryPanel = getCategoryPanelForStatus(issue.getStatus());
                     if (categoryPanel != null) {
                         IssuesPanel taskPanel = new IssuesPanel(categoryPanel, this, issue);

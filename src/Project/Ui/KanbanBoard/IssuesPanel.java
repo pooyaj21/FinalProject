@@ -40,7 +40,6 @@ public class IssuesPanel extends JPanel {
     private CategoryPanel currentColumn;
     private Point offset;
     private boolean isSettingOpen = false;
-    private boolean isEditable = false;
     BoardManager boardManager = BoardManager.getInstance();
 
 
@@ -74,14 +73,12 @@ public class IssuesPanel extends JPanel {
 
 
         title.setBounds(10, 30, 160, 20);
-        title.setFont(new Font("assets/Montserrat-ExtraLight.ttf", Font.BOLD, 13));
         title.setEditable(false);
         title.setFocusable(false);
         title.setOpaque(false);
         add(title);
 
         setting.setBounds(160, 5, 15, 18);
-        setting.setFont(new Font("assets/Montserrat-ExtraLight.ttf", Font.BOLD, 22));
         setting.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -98,10 +95,8 @@ public class IssuesPanel extends JPanel {
                     settingPanel.setVisible(false);
                     isSettingOpen = false;
                 }
-                isEditable = false;
             }
         });
-
 
         add(setting);
 
@@ -140,7 +135,6 @@ public class IssuesPanel extends JPanel {
                 if (!IssuesPanel.this.contains(clickPoint)) {
                     settingPanel.setVisible(false);
                     isSettingOpen = false;
-                    isEditable = false;
                     toggleEditMode(false);
                 }
             }
@@ -273,8 +267,7 @@ public class IssuesPanel extends JPanel {
 
     public void setUser(User user) {
         this.user = user;
-        setting.setVisible(user.getRole().hasAccess(FeatureAccess.ADD_ISSUES) ||
-                (issue.getType().equals(Type.BUG) && user.getRole().hasAccess(FeatureAccess.EDIT_BUG)));
+        setting.setVisible(user.getRole().hasAccess(FeatureAccess.DELETE_ISSUES));
     }
 
     public void setCurrentColumn(CategoryPanel currentColumn) {

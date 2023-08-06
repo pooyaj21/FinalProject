@@ -137,6 +137,8 @@ public class EditProjectPanel extends JPanel {
 
     }
 
+
+    //TODO:DELETE THis
     public EditProjectPanel(UserPanel userPanel) {
         setSize(600, 700);
         setLayout(null);

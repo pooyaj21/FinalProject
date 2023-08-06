@@ -2,9 +2,9 @@ package Project.Logic.DataBase;
 
 import Project.Logic.Board;
 import Project.Logic.Issue;
-import Project.Logic.User;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class BoardManager {
     private static BoardManager instance;
@@ -23,20 +23,6 @@ public class BoardManager {
 
     public ArrayList<Board> getAllBoards() {
         return new ArrayList<>(boardDatabase.getBoards().values());
-    }
-
-    public void addMemberToBoard(Board board, User member) {
-        ArrayList<User> boardMembersList = boardDatabase.getBoardMembers().get(board);
-        if (boardMembersList != null) {
-            boardDatabase.getBoardMembers().get(board).add(member);
-        }
-    }
-
-    public void removeMemberFromBoard(Board board, User member) {
-        ArrayList<User> boardMembersList = boardDatabase.getBoardMembers().get(board);
-        if (boardMembersList != null) {
-            boardDatabase.getBoardMembers().get(board).remove(member);
-        }
     }
 
     public void addIssueToBoard(Board board, Issue issue) {
@@ -58,16 +44,18 @@ public class BoardManager {
             board.setName(newName);
         }
     }
+    public ArrayList<Board> getBoardsWithIssue(Issue issue) {
+        ArrayList<Board> result = new ArrayList<>();
 
-    public void addUserToBoard(Board board, User user) {
-        ArrayList<User> boardMembersList = boardDatabase.getBoardMembers().get(board);
-        if (boardMembersList != null && user != null) {
-            boardMembersList.add(user);
+        for (Map.Entry<Board, ArrayList<Issue>> entry : boardDatabase.getBoardIssues().entrySet()) {
+            Board board = entry.getKey();
+            ArrayList<Issue> issues = entry.getValue();
+
+            if (issues.contains(issue)) {
+                result.add(board);
+            }
         }
-    }
 
-    public ArrayList<User> getMembersOfBoard(Board board) {
-        return boardDatabase.getBoardMembers().getOrDefault(board, new ArrayList<>());
+        return result;
     }
-
 }

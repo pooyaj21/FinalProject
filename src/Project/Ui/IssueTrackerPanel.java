@@ -1,6 +1,7 @@
 package Project.Ui;
 
 import Project.Logic.*;
+import Project.Logic.DataBase.BoardManager;
 import Project.Logic.DataBase.ProjectManager;
 import Project.Util.EnumChanger;
 
@@ -19,6 +20,7 @@ public class IssueTrackerPanel extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
     private final ProjectManager projectManager= ProjectManager.getInstance();
+    private final BoardManager boardManager= BoardManager.getInstance();
     private Project project;
     private User user;
 
@@ -174,6 +176,7 @@ public class IssueTrackerPanel extends JPanel {
         addIssueDialog.setVisible(true);
     }
     private void openEditDialog(String description, String type, String priority, String status,String userName) {
+        Issue issue= projectManager.getIssuesByProject(project).get(table.getSelectedRow());
         JDialog editIssueDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Edit Issue", true);
         editIssueDialog.setLayout(new GridLayout(6, 2));
 
@@ -217,7 +220,6 @@ public class IssueTrackerPanel extends JPanel {
                 String newUserName =null;
                 if (userComboBox.getSelectedItem()!= null) newUserName = userComboBox.getSelectedItem().toString();
 
-                Issue issue= projectManager.getIssuesByProject(project).get(table.getSelectedRow());
                 issue.setDescription(descriptionField.getText());
                 if(user.getRole().hasAccess(FeatureAccess.EDIT_ISSUES)) issue.setType(Type.values()[typeComboBox.getSelectedIndex()]);
                 else if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG))issue.setType(Type.BUG);
@@ -246,9 +248,24 @@ public class IssueTrackerPanel extends JPanel {
             }
         });
 
+        JButton deleteButton = new JButton("Delete");
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                projectManager.removeIssue(project,issue);
+                tableModel.removeRow(table.getSelectedRow());
+                for (Board board : boardManager.getBoardsWithIssue(issue)) boardManager.removeIssueFromBoard(board,issue);
+                editIssueDialog.dispose();
+                table.clearSelection();
+            }
+        });
+        deleteButton.setVisible(user.getRole().hasAccess(FeatureAccess.DELETE_ISSUES));
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(okButton);
         buttonPanel.add(cancelButton);
+        buttonPanel.add(deleteButton); // Add the delete button
+
 
         editIssueDialog.add(buttonPanel);
         editIssueDialog.pack();
