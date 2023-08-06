@@ -98,7 +98,6 @@ public class UserPanel extends JPanel {
             projectButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    projectPanel.editProjectPanel.setVisible(false);
                 }
             });
         } else {
@@ -111,7 +110,6 @@ public class UserPanel extends JPanel {
                     createProjectPanel.setVisible(false);
                     if (projectPanel!=null){
                         projectPanel.setVisible(false);
-                        projectPanel.editProjectPanel.setVisible(false);
                     }
                     projectPanel=new ProjectPanel(UserPanel.this,project,user);
                     projectPanel.setVisible(true);

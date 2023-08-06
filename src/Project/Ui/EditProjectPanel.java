@@ -21,9 +21,11 @@ public class EditProjectPanel extends JPanel {
     JLabel usersLabel = new JLabel("Users:");
     JTextArea descriptionArea = new JTextArea();
     RoundedButton addButton = new RoundedButton("Add+", 15, Color.blue, Color.white, 12);
+    RoundedButton removeButton = new RoundedButton("Remove-", 15, Color.red, Color.white, 12);
     RoundedButton submit = new RoundedButton("Submit", 15, Color.blue, Color.white, 12);
     RoundedButton delete = new RoundedButton("Delete", 15, Color.red, Color.white, 12);
-    JComboBox<String> comboBox = new JComboBox<>();
+    JComboBox<String> addComboBox = new JComboBox<>();
+    JComboBox<String> removeComboBox = new JComboBox<>();
     DefaultListModel<String> UserListModel = new DefaultListModel<>();
     JList<String> userList = new JList<>(UserListModel);
     JScrollPane listScrollPane = new JScrollPane(userList);
@@ -34,6 +36,7 @@ public class EditProjectPanel extends JPanel {
     ArrayList<User> userInList = new ArrayList<>();
     JLabel nameErrorLabel = new JLabel();
     JLabel addErrorLabel = new JLabel();
+    JLabel removeErrorLabel = new JLabel();
     JButton viewButton = new JButton();
 
     public EditProjectPanel(ProjectManagementPanel projectManagementPanel) {
@@ -71,20 +74,39 @@ public class EditProjectPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 addErrorLabel.setText("");
-                if (comboBox.getSelectedIndex() == 0) {
+                if (addComboBox.getSelectedIndex() == 0) {
                     addErrorLabel.setForeground(Color.red);
                     addErrorLabel.setText("First select a Project");
                 } else {
-                    userInList.add(availableUsers.get(comboBox.getSelectedIndex() - 1));
+                    userInList.add(availableUsers.get(addComboBox.getSelectedIndex() - 1));
                     listUpdate();
                 }
             }
         });
 
-        comboBox.setBounds(150, 250, 200, 25);
+        addComboBox.setBounds(150, 250, 200, 25);
         usersLabel.setBounds(50, 250, 200, 25);
 
-        listScrollPane.setBounds(150, 300, 200, 200);
+        removeButton.setBounds(350, 300, 90, 25);
+        removeErrorLabel.setBounds(350, 325, 200, 25);
+        removeErrorLabel.setFont(new Font(null, Font.ITALIC, 10));
+        removeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeErrorLabel.setText("");
+                if (removeComboBox.getSelectedIndex() == 0) {
+                    removeErrorLabel.setForeground(Color.red);
+                    removeErrorLabel.setText("First select a Project");
+                } else {
+                    userInList.remove(removeComboBox.getSelectedIndex()-1);
+                    listUpdate();
+                }
+            }
+        });
+
+        removeComboBox.setBounds(150, 300, 200, 25);
+
+        listScrollPane.setBounds(150, 350, 200, 200);
 
 
         submit.setBounds(490, 550, 100, 25);
@@ -98,6 +120,7 @@ public class EditProjectPanel extends JPanel {
                 } else {
                     projectManager.editProjectName(project, nameField.getText());
                     projectManager.editProjectDescription(project, descriptionArea.getText());
+                    projectManager.removeAllMemberFromProject(project);
                     for (User user : userInList) {
                         projectManager.addMemberToProject(project, user);
                     }
@@ -126,121 +149,37 @@ public class EditProjectPanel extends JPanel {
         add(descriptionLabel);
         add(descriptionArea);
         add(addButton);
-        add(comboBox);
+        add(removeButton);
+        add(addComboBox);
+        add(removeComboBox);
         add(listScrollPane);
         add(submit);
         add(delete);
         add(nameErrorLabel);
         add(addErrorLabel);
+        add(removeErrorLabel);
         add(usersLabel);
         add(viewButton);
 
     }
-
-
-    //TODO:DELETE THis
-    public EditProjectPanel(UserPanel userPanel) {
-        setSize(600, 700);
-        setLayout(null);
-
-        nameLabel.setBounds(50, 50, 100, 25);
-        nameField.setBounds(150, 50, 200, 25);
-        nameErrorLabel.setBounds(150, 75, 200, 25);
-        nameErrorLabel.setFont(new Font(null, Font.ITALIC, 10));
-
-        descriptionLabel.setBounds(50, 100, 100, 25);
-        descriptionArea.setBounds(150, 100, 400, 100);
-        descriptionArea.setLineWrap(true);
-        descriptionArea.setWrapStyleWord(true);
-
-
-        addButton.setBounds(350, 250, 90, 25);
-        addErrorLabel.setBounds(350, 275, 200, 25);
-        addErrorLabel.setFont(new Font(null, Font.ITALIC, 10));
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addErrorLabel.setText("");
-                if (comboBox.getSelectedIndex() == 0) {
-                    addErrorLabel.setForeground(Color.red);
-                    addErrorLabel.setText("First select a Project");
-                } else {
-                    userInList.add(availableUsers.get(comboBox.getSelectedIndex() - 1));
-                    listUpdate();
-                }
-            }
-        });
-
-        comboBox.setBounds(150, 250, 200, 25);
-        usersLabel.setBounds(50, 250, 200, 25);
-
-        listScrollPane.setBounds(150, 300, 200, 200);
-
-
-        submit.setBounds(490, 550, 100, 25);
-        submit.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                nameErrorLabel.setText("");
-                if (GeneralController.getInstance().isEmpty(nameField.getText())) {
-                    nameErrorLabel.setForeground(Color.red);
-                    nameErrorLabel.setText("Enter a name");
-                } else {
-                    projectManager.editProjectName(project, nameField.getText());
-                    projectManager.editProjectDescription(project, descriptionArea.getText());
-                    for (User user : userInList) {
-                        projectManager.addMemberToProject(project, user);
-                    }
-                    update();
-                    userPanel.drawProjects();
-                }
-            }
-        });
-
-
-        delete.setBounds(375, 550, 100, 25);
-        delete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                projectManager.removeProject(project);
-                userPanel.selectedProjectIndex = -1;
-                userPanel.projectPanel.setVisible(false);
-                userPanel.drawProjects();
-                setVisible(false);
-            }
-        });
-
-
-        add(nameLabel);
-        add(nameField);
-        add(descriptionLabel);
-        add(descriptionArea);
-        add(addButton);
-        add(comboBox);
-        add(listScrollPane);
-        add(submit);
-        add(delete);
-        add(nameErrorLabel);
-        add(addErrorLabel);
-        add(usersLabel);
-
-    }
-
     public void listUpdate() {
-        comboBox.removeAllItems();
+        addComboBox.removeAllItems();
         availableUsers.clear();
-        comboBox.addItem(null);
+        addComboBox.addItem(null);
         for (User user : allUsers) {
             if (!userInList.contains(user) && !projectManager.getUsersByProject(project).contains(user)) {
-                comboBox.addItem(user.getFullName());
+                addComboBox.addItem(user.getFullName());
                 availableUsers.add(user);
             }
         }
+        removeComboBox.removeAllItems();
+        removeComboBox.addItem(null);
+        for (User user : userInList) {
+            removeComboBox.addItem(user.getFullName());
+        }
+
 
         UserListModel.clear();
-        for (User user : projectManager.getUsersByProject(project)) {
-            UserListModel.addElement(user.getFullName());
-        }
         for (User user : userInList) {
             UserListModel.addElement(user.getFullName());
         }
@@ -250,19 +189,26 @@ public class EditProjectPanel extends JPanel {
     public void update() {
         nameField.setText(project.getName());
         descriptionArea.setText(project.getDescription());
-        comboBox.removeAllItems();
+        addComboBox.removeAllItems();
         for (int i = 1; i < userDatabase.getUsers().size(); i++) {
             allUsers.add(userDatabase.getUsers().get(i));
         }
-        userInList = new ArrayList<>();
+        userInList = projectManager.getUsersByProject(project);
         availableUsers = new ArrayList<>();
-        comboBox.addItem("");
+        addComboBox.addItem(null);
         for (User user : allUsers) {
             if (!userInList.contains(user) && !projectManager.getUsersByProject(project).contains(user)) {
-                comboBox.addItem(user.getFullName());
+                addComboBox.addItem(user.getFullName());
                 availableUsers.add(user);
             }
         }
+
+        removeComboBox.removeAllItems();
+        removeComboBox.addItem(null);
+        for (User user : projectManager.getUsersByProject(project)) {
+            removeComboBox.addItem(user.getFullName());
+        }
+
         UserListModel.removeAllElements();
         for (User user : projectManager.getUsersByProject(project)) {
             UserListModel.addElement(user.getFullName());

@@ -58,4 +58,10 @@ public class BoardManager {
 
         return result;
     }
+
+    public ArrayList<Issue> getIssuesByBoard(Board board) {
+        if (board == null) throw new IllegalArgumentException("Board cannot be null");
+        return boardDatabase.getBoardIssues().getOrDefault(board, new ArrayList<>());
+    }
+
 }

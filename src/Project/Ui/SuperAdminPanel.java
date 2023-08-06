@@ -85,7 +85,7 @@ public class SuperAdminPanel extends JPanel {
         projectManagementButton.setContentAreaFilled(false);
         projectManagementButton.setBorder(null);
 
-
+        userManagementButton.doClick();
 
 
         add(topPanel);

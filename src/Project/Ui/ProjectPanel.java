@@ -14,11 +14,9 @@ import java.awt.event.ActionListener;
 public class ProjectPanel extends JPanel {
     Project project;
     User user;
-    EditProjectPanel editProjectPanel;
     JButton kanbanButton = new JButton("Kanban Board");
     JButton issueButton = new JButton("Issue Tracker");
     JButton reportButton = new JButton("Reports");
-    JButton settingButton = new JButton("⋮");
     JLabel nameProjectLabel = new JLabel();
     BoardsPanel boardsPanel;
     IssueTrackerPanel issueTrackerPanel;
@@ -36,21 +34,7 @@ public class ProjectPanel extends JPanel {
 
         setSize(800, 700);
 
-        editProjectPanel = new EditProjectPanel(userPanel);
-        editProjectPanel.setBounds(0, 0, getWidth(), getHeight());
-        editProjectPanel.setVisible(false);
 
-        settingButton.setFont(new Font(null, Font.PLAIN, 30));
-        settingButton.setContentAreaFilled(false);
-        settingButton.setBorder(null);
-        settingButton.setBounds(750, 2, 40, 40);
-        settingButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editProjectPanel.setProject(project);
-                editProjectPanel.setVisible(true);
-            }
-        });
 
         kanbanButton.setBounds(50, 30, 200, 30);
         issueButton.setBounds(260, 30, 200, 30);
@@ -62,8 +46,6 @@ public class ProjectPanel extends JPanel {
 
 
         add(nameProjectLabel);
-        add(settingButton);
-        add(editProjectPanel);
         add(kanbanButton);
         add(issueButton);
         add(reportButton);
@@ -142,7 +124,6 @@ public class ProjectPanel extends JPanel {
     }
 
     public void update() {
-        settingButton.setVisible(user.getRole().hasAccess(FeatureAccess.PROJECT_SETTING));
         nameProjectLabel.setText(project.getName());
 
         boardsPanel = new BoardsPanel(project, user, this);

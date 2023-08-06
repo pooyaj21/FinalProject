@@ -91,6 +91,14 @@ public class ProjectManager {
         members.remove(member);
     }
 
+    public void removeAllMemberFromProject(Project project) {
+        if (project == null) throw new IllegalArgumentException("Project cannot be null");
+
+        ArrayList<User> members = projectDatabase.getMembersByProject(project);
+        members.clear();
+    }
+
+
     public void addBoardToProject(Project project, Board board) {
         if (project == null) throw new IllegalArgumentException("Project cannot be null");
 
