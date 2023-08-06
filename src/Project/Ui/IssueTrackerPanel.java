@@ -12,8 +12,6 @@ import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 
@@ -64,9 +62,7 @@ public class IssueTrackerPanel extends JPanel {
                         String userName =null;
                         if (table.getValueAt(selectedRow,4)!=null) userName=table.getValueAt(selectedRow,4).toString();
                         if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG)||user.getRole().hasAccess(FeatureAccess.EDIT_ISSUES)) {
-                            if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG)&&!type.equals("Bug")){
-                                return;
-                            }
+                            if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG)&&!type.equals("Bug"))return;
                             openEditDialog(description, type, priority, status,userName);
                         }
                     }
@@ -262,17 +258,5 @@ public class IssueTrackerPanel extends JPanel {
 
     public void setProject(Project project) {
         this.project = project;
-    }
-    public void setupEnterKeyBinding(JButton button) {
-        InputMap inputMap = getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        ActionMap actionMap = getRootPane().getActionMap();
-        String enterKey = "enterKey";
-        inputMap.put(KeyStroke.getKeyStroke("ENTER"), enterKey);
-        actionMap.put(enterKey, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                button.doClick(); // Replace 'okButton' with the actual reference to your button
-            }
-        });
     }
 }

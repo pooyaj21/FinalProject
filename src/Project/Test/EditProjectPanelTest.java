@@ -2,11 +2,8 @@ package Project.Test;
 
 import Project.Logic.DataBase.ProjectManager;
 import Project.Logic.DataBase.UserManagement;
-import Project.Logic.Project;
 import Project.Logic.Role;
 import Project.Logic.User;
-import Project.Ui.ProjectSettingPanel;
-import Project.Ui.UserPanel;
 
 import javax.swing.*;
 

@@ -1,6 +1,9 @@
 package Project.Ui;
 
 import Project.Logic.DataBase.UserDatabase;
+import Project.Logic.DataBase.UserManagement;
+import Project.Logic.Project;
+import Project.Util.GeneralController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +17,7 @@ public class SuperAdminPanel extends JPanel {
     ProjectManagementPanel projectManagementPanel;
     boolean isUserManagementPanelClicked = false;
     boolean isProjectManagementPanelClicked= false;
+    ProjectPanel projectPanel;
 
     public SuperAdminPanel() {
         setLayout(null);
@@ -27,12 +31,12 @@ public class SuperAdminPanel extends JPanel {
         ImageIcon userIcon = new ImageIcon("Assets/Pfp.png");
         ImageIcon projectIcon = new ImageIcon("Assets/FolderPic.png");
 
-        userManagementButton.setIcon(resizeIcon(userIcon, 30, 30));
+        userManagementButton.setIcon(GeneralController.getInstance().resizeIcon(userIcon, 30, 30));
         userManagementButton.setBounds(0,100,200,50);
         userManagementButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         userManagementButton.setHorizontalAlignment(SwingConstants.LEFT);
 
-        projectManagementButton.setIcon(resizeIcon(projectIcon, 30, 30));
+        projectManagementButton.setIcon(GeneralController.getInstance().resizeIcon(projectIcon, 30, 30));
         projectManagementButton.setBounds(0,150,200,50);
         projectManagementButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         projectManagementButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -44,6 +48,7 @@ public class SuperAdminPanel extends JPanel {
                     isUserManagementPanelClicked=true;
                     isProjectManagementPanelClicked=false;
                     if (projectManagementPanel != null) projectManagementPanel.setVisible(false);
+                    if (projectPanel != null) projectPanel.setVisible(false);
                     userManagementPanel = new UserManagementPanel();
                     userManagementPanel.setBounds(201, 100, getWidth(), getHeight());
                     add(userManagementPanel);
@@ -65,7 +70,8 @@ public class SuperAdminPanel extends JPanel {
                     isUserManagementPanelClicked=false;
                     isProjectManagementPanelClicked=true;
                     if (userManagementPanel != null) userManagementPanel.setVisible(false);
-                    projectManagementPanel = new ProjectManagementPanel();
+                    if (projectPanel != null) projectPanel.setVisible(false);
+                    projectManagementPanel = new ProjectManagementPanel(SuperAdminPanel.this);
                     projectManagementPanel.setBounds(201, 100, getWidth(), getHeight());
                     add(projectManagementPanel);
                     projectManagementPanel.setVisible(true);
@@ -95,9 +101,13 @@ public class SuperAdminPanel extends JPanel {
         g.drawLine(0, 150, 200, 150);
         g.drawLine(0, 200, 200, 200);
     }
-    private ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
-        Image img = icon.getImage();
-        Image resizedImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        return new ImageIcon(resizedImg);
+
+    public void showProjectPanel(Project project){
+        projectManagementPanel.setVisible(false);
+        projectPanel=new ProjectPanel(project, UserDatabase.getInstance().getUsers().get(0));
+        projectPanel.setBounds(201, 100, getWidth(), getHeight());
+        projectPanel.kanbanButton.doClick();
+        add(projectPanel);
+        isProjectManagementPanelClicked=false;
     }
 }

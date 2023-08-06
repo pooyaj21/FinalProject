@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class ProjectSettingPanel extends JPanel {
+public class EditProjectPanel extends JPanel {
     Project project;
     JLabel nameLabel = new JLabel("Name:");
     JTextField nameField = new JTextField();
@@ -34,10 +34,24 @@ public class ProjectSettingPanel extends JPanel {
     ArrayList<User> userInList = new ArrayList<>();
     JLabel nameErrorLabel = new JLabel();
     JLabel addErrorLabel = new JLabel();
+    JButton viewButton = new JButton();
 
-    public ProjectSettingPanel(ProjectManagementPanel projectManagementPanel) {
+    public EditProjectPanel(ProjectManagementPanel projectManagementPanel) {
         setSize(600, 700);
         setLayout(null);
+
+        ImageIcon eyeIcon = new ImageIcon("Assets/eyeIcon.png");
+
+        viewButton.setIcon(GeneralController.getInstance().resizeIcon(eyeIcon, 30, 30));
+        viewButton.setBounds(500,20,50,50);
+        viewButton.setContentAreaFilled(false);
+        viewButton.setBorder(null);
+        viewButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                projectManagementPanel.getSuperAdminPanel().showProjectPanel(project);
+            }
+        });
 
         nameLabel.setBounds(50, 50, 100, 25);
         nameField.setBounds(150, 50, 200, 25);
@@ -119,10 +133,11 @@ public class ProjectSettingPanel extends JPanel {
         add(nameErrorLabel);
         add(addErrorLabel);
         add(usersLabel);
+        add(viewButton);
 
     }
 
-    public ProjectSettingPanel(UserPanel userPanel) {
+    public EditProjectPanel(UserPanel userPanel) {
         setSize(600, 700);
         setLayout(null);
 

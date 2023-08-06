@@ -23,9 +23,11 @@ public class ProjectManagementPanel extends JPanel {
     };
     JScrollPane projectScrollPane;
     JButton projectButton;
-    ProjectSettingPanel projectSettingPanel;
+    EditProjectPanel projectSettingPanel;
+   private SuperAdminPanel superAdminPanel;
 
-    public ProjectManagementPanel() {
+    public ProjectManagementPanel(SuperAdminPanel superAdminPanel) {
+        this.superAdminPanel=superAdminPanel;
         setSize( 800, 700);
         setLayout(null);
 
@@ -45,7 +47,7 @@ public class ProjectManagementPanel extends JPanel {
         createProjectPanel.setVisible(false);
         add(createProjectPanel);
 
-        projectSettingPanel= new ProjectSettingPanel(this);
+        projectSettingPanel= new EditProjectPanel(this);
         projectSettingPanel.setBounds(200,0,getWidth(),getHeight());
         projectSettingPanel.setVisible(false);
         add(projectSettingPanel);
@@ -129,5 +131,9 @@ public class ProjectManagementPanel extends JPanel {
             projectScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         }
         projectScrollPane.revalidate();
+    }
+
+    public SuperAdminPanel getSuperAdminPanel() {
+        return superAdminPanel;
     }
 }

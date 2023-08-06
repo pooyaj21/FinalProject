@@ -1,5 +1,8 @@
 package Project.Util;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class GeneralController {
     private static GeneralController instance;
 
@@ -73,6 +76,11 @@ public class GeneralController {
         return highest;
     }
 
+    public ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
+        Image img = icon.getImage();
+        Image resizedImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(resizedImg);
+    }
 
     public boolean isEmpty(String a) {
         return a.trim().isEmpty();
