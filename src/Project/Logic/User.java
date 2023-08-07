@@ -3,11 +3,10 @@ package Project.Logic;
 import java.util.HashMap;
 
 public class User {
+    private int id;
     private String Email;
     private String password;
     private String fullName;
-    private HashMap<String, Role> projects;
-    //you can put Project class instead of String
     private Role role;
 
     public User(String Email, String password, String fullName, Role role) {
@@ -15,7 +14,13 @@ public class User {
         this.password = password;
         this.fullName = fullName;
         this.role=role;
-        this.projects = new HashMap<>();
+    }
+    public User(int id,String Email, String password, String fullName, Role role) {
+        this.id=id;
+        this.Email = Email;
+        this.password = password;
+        this.fullName = fullName;
+        this.role=role;
     }
 
     public String getEmail() {
@@ -42,17 +47,6 @@ public class User {
         this.fullName = fullName;
     }
 
-    public HashMap<String, Role> getProjects() {
-        return projects;
-    }
-
-    public void setProjects(HashMap<String, Role> projects) {
-        this.projects = projects;
-    }
-
-    public void addProject(String project, Role position){
-        projects.put(project,position);
-    }
 
     public Role getRole() {
         return role;
@@ -60,5 +54,13 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
