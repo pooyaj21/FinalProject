@@ -1,6 +1,7 @@
 package Project.Util;
 
 import Project.Logic.Priority;
+import Project.Logic.Role;
 import Project.Logic.Status;
 import Project.Logic.Type;
 
@@ -38,6 +39,20 @@ public class EnumChanger {
                 return "QA";
             case DONE:
                 return "Done";
+            default:throw new IllegalArgumentException("Enum didn't found");
+        }
+    }
+
+    public static Role toEnum(String role) {
+        switch (role) {
+            case "SUPER_ADMIN":
+                return Role.SUPER_ADMIN;
+            case "PROJECT_OWNER":
+                return Role.PROJECT_OWNER;
+            case "QA":
+                return Role.QA;
+            case "DEVELOPER":
+                return Role.DEVELOPER;
             default:throw new IllegalArgumentException("Enum didn't found");
         }
     }

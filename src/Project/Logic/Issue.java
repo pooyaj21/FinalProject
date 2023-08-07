@@ -3,21 +3,33 @@ package Project.Logic;
 import Project.Util.DateUtil;
 
 public class Issue {
-    private final long addTime;
+    private int id;
+    private int projectId;
+    private int boardId;
+    private User user;
     private String description;
+    private final long addTime;
     private long LastUpdateTime;
     private Type type;
     private Priority priority;
     private Status status;
-    private final int id;
-    private static int counter;
 
-    private User user;
     public Issue( String description) {
-        counter++;
         this.addTime = DateUtil.timeOfNow();
         this.description = description;
-        id=counter;
+    }
+
+    public Issue(int id, int projectId, int boardId, int userId, String description, long addTime, long lastUpdateTime, String type, String priority, String status) {
+        this.id = id;
+        this.projectId = projectId;
+        this.boardId = boardId;
+        this.user = userId;
+        this.description = description;
+        this.addTime = addTime;
+        LastUpdateTime = lastUpdateTime;
+        this.type = type;
+        this.priority = priority;
+        this.status = status;
     }
 
     public long getAddTime() {
