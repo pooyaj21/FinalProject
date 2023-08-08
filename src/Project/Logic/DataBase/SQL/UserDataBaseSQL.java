@@ -1,4 +1,4 @@
-package Project.Logic.DataBase;
+package Project.Logic.DataBase.SQL;
 
 import Project.Logic.Role;
 import Project.Logic.User;
@@ -8,13 +8,20 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class UserDataBaseSQL {
+    static UserDataBaseSQL instance;
     String url = "jdbc:mysql://localhost:3306/FinalProject";
     String username = "root";
     String password = "pooya1234";
 
-    public static void main(String[] args) {
-        UserDataBaseSQL userDataBase = new UserDataBaseSQL();
+    private UserDataBaseSQL() {
     }
+
+    public static UserDataBaseSQL getInstance() {
+        if (instance == null) {
+            return instance = new UserDataBaseSQL();
+        } else return instance;
+    }
+
     private Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, username, password);
     }
@@ -28,7 +35,7 @@ public class UserDataBaseSQL {
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
                 preparedStatement.setString(1, name);
-                preparedStatement.setString(2, email);
+                preparedStatement.setString(2, email.toLowerCase());
                 preparedStatement.setString(3, password);
                 preparedStatement.setString(4, role.toString());
 
@@ -56,7 +63,7 @@ public class UserDataBaseSQL {
             try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
                 // Set the new values for the user
                 preparedStatement.setString(1, name);
-                preparedStatement.setString(2, email);
+                preparedStatement.setString(2, email.toLowerCase());
                 preparedStatement.setString(3, password);
                 preparedStatement.setString(4, role.toString());
                 preparedStatement.setInt(5, userId); // Provide the user_id of the user to update
@@ -120,7 +127,7 @@ public class UserDataBaseSQL {
 
                     Role role = Role.valueOf(roleName); // Assuming Role is an enum
 
-                    User user = new User(userId, name, email,password, role);
+                    User user = new User(userId, name, email, password, role);
                     users.add(user);
                 }
             }
@@ -160,6 +167,7 @@ public class UserDataBaseSQL {
 
         return exists;
     }
+
     public User getUserFromId(int userId) {
         User user = null;
 
@@ -176,7 +184,7 @@ public class UserDataBaseSQL {
                                 resultSet.getString("user_name"),
                                 resultSet.getString("user_email"),
                                 resultSet.getString("user_password"),
-                                EnumChanger.toEnum(resultSet.getString("user_role"))
+                                EnumChanger.toEnumRole(resultSet.getString("user_role"))
                         );
                     }
                 }
@@ -187,6 +195,50 @@ public class UserDataBaseSQL {
 
         return user;
     }
+
+    public int getUserIdByEmail(String userEmail) {
+        int userId = -1;
+
+        try (Connection connection = getConnection()) {
+            String selectQuery = "SELECT user_id FROM User WHERE user_email = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+                preparedStatement.setString(1, userEmail.toLowerCase());
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        userId = resultSet.getInt("user_id");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (userId == -1) throw new IllegalArgumentException("Email Didn't Found");
+        else return userId;
+    }
+
+    public boolean doesEmailAndPasswordMatch(String userEmail, String userPassword) {
+        try (Connection connection = getConnection()) {
+            String selectQuery = "SELECT COUNT(*) AS count FROM User WHERE user_email = ? AND user_password = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+                preparedStatement.setString(1, userEmail);
+                preparedStatement.setString(2, userPassword);
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        int count = resultSet.getInt("count");
+                        return count > 0;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }
 
 

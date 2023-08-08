@@ -1,7 +1,7 @@
 package Project.Ui;
 
+import Project.Logic.DataBase.SQL.ProjectDatabaseSQL;
 import Project.Logic.Project;
-import Project.Logic.DataBase.ProjectManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,13 +10,12 @@ import java.awt.event.ActionListener;
 
 public class ProjectManagementPanel extends JPanel {
     CreateProjectPanel createProjectPanel;
-    ProjectManager projectManager = ProjectManager.getInstance();
     int selectedProjectIndex = -1;
     JPanel projectPanel = new JPanel() {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            for (int i = 0; i < projectManager.getAllProjects().size(); i++) {
+            for (int i = 0; i < ProjectDatabaseSQL.getInstance().getAllProjects().size(); i++) {
                 g.drawLine(0, (100 * (i + 1)), 200, (100 * (i + 1)));
             }
         }
@@ -102,8 +101,7 @@ public class ProjectManagementPanel extends JPanel {
                 createProjectPanel.setVisible(false);
                 selectedProjectIndex = index;
                 drawProjects();
-
-                projectSettingPanel.setProject(project);
+                projectSettingPanel.setProject(project.getId());
                 projectSettingPanel.update();
                 projectSettingPanel.setVisible(true);
 
@@ -116,16 +114,16 @@ public class ProjectManagementPanel extends JPanel {
     public void drawProjects() {
         projectPanel.removeAll();
 
-        for (int i = 0; i < projectManager.getAllProjects().size(); i++) {
-            Project project = projectManager.getAllProjects().get(i);
+        for (int i = 0; i < ProjectDatabaseSQL.getInstance().getAllProjects().size(); i++) {
+            Project project = ProjectDatabaseSQL.getInstance().getAllProjects().get(i);
             drawProjectButton(project, i);
         }
 
         // Repaint the projectPanelMaker and update the scroll pane
         projectPanel.revalidate();
         projectPanel.repaint();
-        projectPanel.setPreferredSize(new Dimension(199, projectManager.getAllProjects().size() * 100));
-        if (projectManager.getAllProjects().size() > 6) {
+        projectPanel.setPreferredSize(new Dimension(199, ProjectDatabaseSQL.getInstance().getAllProjects().size() * 100));
+        if (ProjectDatabaseSQL.getInstance().getAllProjects().size() > 6) {
             projectScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         } else {
             projectScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);

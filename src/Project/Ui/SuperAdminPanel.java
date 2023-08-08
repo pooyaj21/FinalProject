@@ -1,8 +1,9 @@
 package Project.Ui;
 
-import Project.Logic.DataBase.UserDatabase;
-import Project.Logic.DataBase.UserManagement;
+import Project.Logic.DataBase.SQL.UserDataBaseSQL;
 import Project.Logic.Project;
+import Project.Logic.Role;
+import Project.Logic.User;
 import Project.Util.GeneralController;
 
 import javax.swing.*;
@@ -18,14 +19,15 @@ public class SuperAdminPanel extends JPanel {
     boolean isUserManagementPanelClicked = false;
     boolean isProjectManagementPanelClicked= false;
     ProjectPanel projectPanel;
+    User admin = null;
 
     public SuperAdminPanel() {
         setLayout(null);
         setSize(1000,700);
 
+        for (User user:UserDataBaseSQL.getInstance().getAllUsers())if (user.getRole()== Role.SUPER_ADMIN) admin=user;
 
-
-        TopPanel topPanel =new TopPanel(UserDatabase.getInstance().getUsers().get(0));
+        TopPanel topPanel =new TopPanel(admin);
         topPanel.setBounds(0,0,getWidth(),100);
 
         ImageIcon userIcon = new ImageIcon("Assets/Pfp.png");
@@ -104,7 +106,7 @@ public class SuperAdminPanel extends JPanel {
 
     public void showProjectPanel(Project project){
         projectManagementPanel.setVisible(false);
-        projectPanel=new ProjectPanel(project, UserDatabase.getInstance().getUsers().get(0));
+        projectPanel=new ProjectPanel(project, admin);
         projectPanel.setBounds(201, 100, getWidth(), getHeight());
         projectPanel.kanbanButton.doClick();
         add(projectPanel);

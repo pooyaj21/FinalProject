@@ -1,8 +1,8 @@
 package Project.Ui;
 
 
+import Project.Logic.DataBase.SQL.UserDataBaseSQL;
 import Project.Logic.User;
-import Project.Logic.DataBase.UserDatabase;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,13 +12,12 @@ import java.awt.event.ActionListener;
 public class UserManagementPanel extends JPanel {
     CreateUserPanel createUserPanel;
     EditUserPanel editUserPanel;
-    UserDatabase userDataBase = UserDatabase.getInstance();
     int selectedUserIndex = -1;
     JPanel userPanel = new JPanel() {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            for (int i = 0; i < userDataBase.getUsers().size() - 1; i++) {
+            for (int i = 0; i < UserDataBaseSQL.getInstance().getAllUsers().size() - 1; i++) {
                 g.drawLine(0, (100 * (i + 1)), 200, (100 * (i + 1)));
             }
         }
@@ -114,16 +113,16 @@ public class UserManagementPanel extends JPanel {
     public void drawUsers() {
         userPanel.removeAll();
 
-        for (int i = 1; i < userDataBase.getUsers().size(); i++) {
-            User user = userDataBase.getUsers().get(i);
+        for (int i = 1; i < UserDataBaseSQL.getInstance().getAllUsers().size(); i++) {
+            User user = UserDataBaseSQL.getInstance().getAllUsers().get(i);
             drawUserButton(user, i-1);
         }
 
         // Repaint the userPanel and update the scroll pane
         userPanel.revalidate();
         userPanel.repaint();
-        userPanel.setPreferredSize(new Dimension(199, userDataBase.getUsers().size() * 100));
-        if (userDataBase.getUsers().size() > 6) {
+        userPanel.setPreferredSize(new Dimension(199, UserDataBaseSQL.getInstance().getAllUsers().size() * 100));
+        if (UserDataBaseSQL.getInstance().getAllUsers().size() > 6) {
             userScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         } else {
             userScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);

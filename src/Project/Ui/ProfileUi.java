@@ -1,6 +1,6 @@
 package Project.Ui;
 
-import Project.Logic.DataBase.UserManagement;
+import Project.Logic.DataBase.SQL.UserDataBaseSQL;
 import Project.Logic.Role;
 import Project.Logic.User;
 import Project.Util.CircleLabel;
@@ -13,7 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ProfileUi extends JPanel {
-    private final UserManagement userManagement = UserManagement.getInstance();
 
     private JLabel nameLabel = new JLabel("Name:");
     private JLabel emailLabel = new JLabel("Email:");
@@ -100,6 +99,9 @@ public class ProfileUi extends JPanel {
                 boolean isNameChange = false;
                 boolean isPasswordChange = false;
 
+                String newEmail;
+                String newPassword;
+
                 if (GeneralController.getInstance().isEmpty(nameField.getText())) {
                     nameErrorLabel.setForeground(Color.red);
                     nameErrorLabel.setText("Enter Name");
@@ -109,15 +111,16 @@ public class ProfileUi extends JPanel {
                     passwordErrorLabel.setText("Enter Password");
                 } else isPasswordFine = true;
                 if (isNameFine && isPasswordFine) {
+                    newEmail= emailLField.getText();
+                    newPassword= emailLField.getText();
                     if (!user.getEmail().equalsIgnoreCase(emailLField.getText())) {
-                        userManagement.editUserEmail(user, emailLField.getText());
                         isNameChange=true;
                     }
                     if (!user.getPassword().equalsIgnoreCase(passwordField.getText())) {
-                        userManagement.editUserPassword(user, passwordField.getText());
                         isPasswordChange=true;
                     }
                     if (isNameChange||isPasswordChange) {
+                        UserDataBaseSQL.getInstance().editUser(user.getId(),user.getFullName(),newEmail,newPassword,user.getRole());
                         changeSuccessfulLabel.setForeground(Color.green);
                         changeSuccessfulLabel.setText("Change Successful");
                     }else{

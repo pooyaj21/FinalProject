@@ -3,17 +3,21 @@ package Project.Logic;
 import Project.Util.DateUtil;
 
 public class Project {
+    private int id;
     private String name;
     private String description;
     private final long addDate;
-    private final int id;
-    private static int counter = 0;
 
     public Project(String name) {
-        counter++;
-        this.id = counter;
         this.name = name;
         this.addDate = DateUtil.timeOfNow();
+    }
+
+    public Project(int id, String name, String description, long addDate) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.addDate = addDate;
     }
 
     public String getName() {

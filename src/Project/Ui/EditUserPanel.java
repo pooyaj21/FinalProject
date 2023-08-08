@@ -1,10 +1,11 @@
 package Project.Ui;
 
-import Project.Logic.DataBase.ProjectManager;
+import Project.Logic.DataBase.SQL.CrossTabel.UserProjectDataBaseSql;
+import Project.Logic.DataBase.SQL.ProjectDatabaseSQL;
+import Project.Logic.DataBase.SQL.UserDataBaseSQL;
 import Project.Logic.Project;
 import Project.Logic.Role;
 import Project.Logic.User;
-import Project.Logic.DataBase.UserManagement;
 import Project.Util.GeneralController;
 import Project.Util.RoundedButton;
 
@@ -15,8 +16,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class EditUserPanel extends JPanel {
-    UserManagement userManagement = UserManagement.getInstance();
-    ProjectManager projectManager = ProjectManager.getInstance();
     JLabel emailLabel = new JLabel("Email:");
     JLabel nameLabel = new JLabel("Name:");
     JLabel passwordLabel = new JLabel("Password:");
@@ -29,7 +28,7 @@ public class EditUserPanel extends JPanel {
     JComboBox<String> projectsComboBox = new JComboBox<>();
     RoundedButton submit = new RoundedButton("Submit", 15, Color.blue, Color.white, 12);
     RoundedButton delete = new RoundedButton("Delete", 15, Color.red, Color.white, 12);
-    RoundedButton addProject = new RoundedButton("Add+",15, Color.blue, Color.white, 12);
+    RoundedButton addProject = new RoundedButton("Add+", 15, Color.blue, Color.white, 12);
     JLabel emailErrorLabel = new JLabel();
     JLabel nameErrorLabel = new JLabel();
     JLabel passwordErrorLabel = new JLabel();
@@ -40,8 +39,8 @@ public class EditUserPanel extends JPanel {
     DefaultListModel<String> projectListModel = new DefaultListModel<>();
     JList<String> userList = new JList<>(projectListModel);
     JScrollPane listScrollPane = new JScrollPane(userList);
-    ArrayList<Project> projectsInList = new ArrayList<>();
-    ArrayList<Project> projectAvailable = new ArrayList<>();
+    ArrayList<Integer> projectsInList = new ArrayList<>();
+    ArrayList<Integer> projectAvailable = new ArrayList<>();
 
     public EditUserPanel(int x, int y, UserManagementPanel userManagementPanel) {
         this.userManagementPanel = userManagementPanel;
@@ -122,10 +121,10 @@ public class EditUserPanel extends JPanel {
                 if (GeneralController.getInstance().isEmpty(emailField.getText())) {
                     emailErrorLabel.setForeground(Color.red);
                     emailErrorLabel.setText("Enter Email");
-                } else if (!userManagement.emailAuthentication(user.getEmail().toLowerCase())) {
+                } else if (!GeneralController.emailAuthentication(user.getEmail().toLowerCase())) {
                     emailErrorLabel.setForeground(Color.red);
                     emailErrorLabel.setText("Enter a Correct Email");
-                } else if (!user.getEmail().equalsIgnoreCase(emailField.getText()) && userManagement.isEmailExist(emailField.getText().toLowerCase())) {
+                } else if (!user.getEmail().equalsIgnoreCase(emailField.getText()) && UserDataBaseSQL.getInstance().isEmailExist(emailField.getText().toLowerCase())) {
                     // Check if the new email is different from the current email and if it already exists in the database
                     emailErrorLabel.setForeground(Color.red);
                     emailErrorLabel.setText("This Email already exists");
@@ -143,15 +142,7 @@ public class EditUserPanel extends JPanel {
                     roleErrorLabel.setText("Select a role");
                 } else isRoleFine = true;
                 if (isEmailFine && isNameFine && isPasswordFine && isRoleFine) {
-                    if (!user.getEmail().equals(emailField.getText())) {
-                        userManagement.editUserEmail(user, emailField.getText());
-                    }
-                    for (Project project : projectsInList) {
-                        projectManager.addMemberToProject(project,user);
-                    }
-                    userManagement.editUserName(user, nameField.getText());
-                    userManagement.editUserPassword(user, passwordField.getText());
-                    userManagement.editUserRole(user, Role.values()[roleComboBox.getSelectedIndex()]);
+                    UserDataBaseSQL.getInstance().editUser(user.getId(), nameField.getText(), emailField.getText(), passwordField.getText(), Role.values()[roleComboBox.getSelectedIndex()]);
                     userManagementPanel.drawUsers();
                 }
             }
@@ -161,7 +152,7 @@ public class EditUserPanel extends JPanel {
         delete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                userManagement.deleteUser(user);
+                UserDataBaseSQL.getInstance().deleteUser(user.getId());
                 userManagementPanel.selectedUserIndex = -1;
                 userManagementPanel.drawUsers();
                 setVisible(false);
@@ -174,11 +165,11 @@ public class EditUserPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 projectErrorLabel.setText("");
-                if (projectsComboBox.getSelectedIndex()==0) {
+                if (projectsComboBox.getSelectedIndex() == 0) {
                     projectErrorLabel.setForeground(Color.red);
                     projectErrorLabel.setText("First select a Project");
-                }else{
-                    projectsInList.add(projectAvailable.get(projectsComboBox.getSelectedIndex() - 1));
+                } else {
+                    UserProjectDataBaseSql.getInstance().addUserToProject(projectAvailable.get(projectsComboBox.getSelectedIndex()-1),user.getId());
                     listUpdate();
                 }
             }
@@ -232,40 +223,34 @@ public class EditUserPanel extends JPanel {
             roleComboBox.setSelectedIndex(index);
         }
         projectsComboBox.removeAllItems();
-        ArrayList<Project> allProjects = projectManager.getAllProjects();
-        projectAvailable =new ArrayList<>();
-        projectsInList= new ArrayList<>();
-        projectsComboBox.addItem("");
-        for (Project project : allProjects) {
-            if(!projectManager.getProjectsByUser(user).contains(project)) {
-                projectsComboBox.addItem(project.getName());
-                projectAvailable.add(project);
-            }
-        }
-        projectListModel.removeAllElements();
-        for (Project project : projectManager.getProjectsByUser(user)) {
-            projectListModel.addElement(project.getName());
-        }
+        listUpdate();
     }
 
-    public void listUpdate(){
+    public void listUpdate() {
+        projectsInList.clear();
+        projectListModel.clear();
+        for (Project project : UserProjectDataBaseSql.getInstance().getAllProjectsOfUser(user.getId())) {
+            projectListModel.addElement(project.getName());
+            projectsInList.add(project.getId());
+        }
+
         projectsComboBox.removeAllItems();
-        ArrayList<Project> allProjects = projectManager.getAllProjects();
-        projectAvailable =new ArrayList<>();
-        projectsComboBox.addItem("");
-        for (Project project : allProjects) {
-            if (!projectsInList.contains(project)&&!projectManager.getProjectsByUser(user).contains(project)) {
-                projectsComboBox.addItem(project.getName());
-                projectAvailable.add(project);
+        projectAvailable.clear();
+        projectsComboBox.addItem(null);
+        for (Project Project : ProjectDatabaseSQL.getInstance().getAllProjects()) {
+            if (!projectsInList.contains(Project.getId())) {
+                projectsComboBox.addItem(Project.getName());
+                projectAvailable.add(Project.getId());
             }
         }
 
-        projectListModel.removeAllElements();
-        for (Project project :projectManager.getProjectsByUser(user)){
-            projectListModel.addElement(project.getName());
-        }
-        for (Project project : projectsInList) {
-            projectListModel.addElement(project.getName());
-        }
+//        removeComboBox.removeAllItems();
+//        removeComboBox.addItem(null);
+//        for (User user : UserProjectDataBaseSql.getInstance().getAllUsersOfProject(projectId)) {
+//            removeComboBox.addItem(user.getFullName());
+//        }
+
+        //TODO:add remove combo
     }
+
 }

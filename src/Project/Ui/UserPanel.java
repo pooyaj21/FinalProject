@@ -1,6 +1,6 @@
 package Project.Ui;
 
-import Project.Logic.DataBase.ProjectManager;
+import Project.Logic.DataBase.SQL.CrossTabel.UserProjectDataBaseSql;
 import Project.Logic.FeatureAccess;
 import Project.Logic.Project;
 import Project.Logic.User;
@@ -16,16 +16,14 @@ public class UserPanel extends JPanel {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            for (int i = 0; i < projectManager.getProjectsByUser(user).size(); i++) {
+            for (int i = 0; i < UserProjectDataBaseSql.getInstance().getAllProjectsOfUser(user.getId()).size(); i++) {
                 g.drawLine(0, (100 * (i + 1)), 200, (100 * (i + 1)));
             }
         }
     };
-    CreateProjectPanel createProjectPanel;
      JButton projectButton;
     int selectedProjectIndex = -1;
     JScrollPane projectScrollPane;
-    ProjectManager projectManager = ProjectManager.getInstance();
     private User user;
     ProjectPanel projectPanel;
 
@@ -38,27 +36,12 @@ public class UserPanel extends JPanel {
         setBounds(0,0,getWidth(),getHeight());
         add(topPanel);
 
-        createProjectPanel=new CreateProjectPanel(this);
-        createProjectPanel.setBounds(200,100,getWidth(),getHeight());
-        createProjectPanel.setVisible(false);
-        add(createProjectPanel);
-
         projectPanelMaker.setBounds(0, 150, 200, getHeight());
         projectPanelMaker.setLayout(null);
         add(projectPanelMaker);
 
         JButton addButton = new JButton();
-        if (user.getRole().hasAccess(FeatureAccess.CREATE_PROJECT)){
-            addButton.setText("Add+");
-            addButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    selectedProjectIndex=-1;
-                    drawProjects();
-                    createProjectPanel.setVisible(true);
-                }
-            });
-        }
+        if (user.getRole().hasAccess(FeatureAccess.CREATE_PROJECT))addButton.setText("Add+");
         else addButton.setText("Your Projects");
         addButton.setBounds(0, 100, 200, 50);
         addButton.setContentAreaFilled(false);
@@ -107,7 +90,6 @@ public class UserPanel extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     selectedProjectIndex = index;
                     drawProjects();
-                    createProjectPanel.setVisible(false);
                     if (projectPanel!=null){
                         projectPanel.setVisible(false);
                     }
@@ -128,15 +110,15 @@ public class UserPanel extends JPanel {
     public void drawProjects() {
         projectPanelMaker.removeAll();
 
-        for (int i = 0; i < projectManager.getProjectsByUser(user).size(); i++) {
-            Project project = projectManager.getProjectsByUser(user).get(i);
+        for (int i = 0; i < UserProjectDataBaseSql.getInstance().getAllProjectsOfUser(user.getId()).size(); i++) {
+            Project project = UserProjectDataBaseSql.getInstance().getAllProjectsOfUser(user.getId()).get(i);
             drawProjectButton(project, i);
         }
 
         projectPanelMaker.revalidate();
         projectPanelMaker.repaint();
-        projectPanelMaker.setPreferredSize(new Dimension(200, projectManager.getProjectsByUser(user).size() * 100));
-        if (projectManager.getProjectsByUser(user).size() > 6) {
+        projectPanelMaker.setPreferredSize(new Dimension(200, UserProjectDataBaseSql.getInstance().getAllProjectsOfUser(user.getId()).size() * 100));
+        if (UserProjectDataBaseSql.getInstance().getAllProjectsOfUser(user.getId()).size() > 6) {
             projectScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         } else {
             projectScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);

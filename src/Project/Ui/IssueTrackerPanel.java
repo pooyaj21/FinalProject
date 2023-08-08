@@ -1,8 +1,11 @@
 package Project.Ui;
 
 import Project.Logic.*;
-import Project.Logic.DataBase.BoardManager;
-import Project.Logic.DataBase.ProjectManager;
+import Project.Logic.DataBase.SQL.CrossTabel.BoardIssuesDataBaseSql;
+import Project.Logic.DataBase.SQL.CrossTabel.UserProjectDataBaseSql;
+import Project.Logic.DataBase.SQL.IssueDataBaseSql;
+import Project.Logic.DataBase.SQL.ProjectDatabaseSQL;
+import Project.Util.DateUtil;
 import Project.Util.EnumChanger;
 
 import javax.swing.*;
@@ -19,8 +22,6 @@ import java.util.ArrayList;
 public class IssueTrackerPanel extends JPanel {
     private JTable table;
     private DefaultTableModel tableModel;
-    private final ProjectManager projectManager= ProjectManager.getInstance();
-    private final BoardManager boardManager= BoardManager.getInstance();
     private Project project;
     private User user;
 
@@ -89,7 +90,7 @@ public class IssueTrackerPanel extends JPanel {
     }
 
     public void addFirstTime(){
-        ArrayList<Issue> issues = projectManager.getIssuesByProject(project);
+        ArrayList<Issue> issues = IssueDataBaseSql.getInstance().getAllIssuesOfProject(project.getId());
         for (Issue issue : issues) {
             String userName=null;
             if (issue.getUser()!=null)userName=issue.getUser().getFullName();
@@ -115,7 +116,7 @@ public class IssueTrackerPanel extends JPanel {
         JComboBox<String> priorityComboBox = new JComboBox<>(EnumChanger.toStringArray(Priority.values()));
         JComboBox<String> userComboBox = new JComboBox<>();
         userComboBox.addItem(null);
-        for (User u : projectManager.getUsersByProject(project)) {userComboBox.addItem(u.getFullName());}
+        for (User u : UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId())) {userComboBox.addItem(u.getFullName());}
 
 
         addIssueDialog.add(new JLabel("Description:"));
@@ -140,13 +141,13 @@ public class IssueTrackerPanel extends JPanel {
                 else if (user.getRole().hasAccess(FeatureAccess.ADD_BUG)) type=Type.BUG;
                 Priority priority =  Priority.values()[priorityComboBox.getSelectedIndex()];
                 User selectedUser = null;
-                if (userComboBox.getSelectedIndex()>0) selectedUser=projectManager.getUsersByProject(project).get(userComboBox.getSelectedIndex()-1);
+                if (userComboBox.getSelectedIndex()>0) selectedUser= UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId()).get(userComboBox.getSelectedIndex()-1);
                 Issue issue = new Issue(description);
                 issue.setType(type);
                 issue.setPriority(priority);
                 issue.setStatus(Status.TODO);
                 issue.setUser(selectedUser);
-                projectManager.createIssue(project,issue);
+                IssueDataBaseSql.getInstance().createIssue(issue,project.getId());
                 String userName=null;
                 if (selectedUser!=null)userName=selectedUser.getFullName();
 
@@ -176,7 +177,7 @@ public class IssueTrackerPanel extends JPanel {
         addIssueDialog.setVisible(true);
     }
     private void openEditDialog(String description, String type, String priority, String status,String userName) {
-        Issue issue= projectManager.getIssuesByProject(project).get(table.getSelectedRow());
+        Issue issue= IssueDataBaseSql.getInstance().getAllIssuesOfProject(project.getId()).get(table.getSelectedRow());
         JDialog editIssueDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Edit Issue", true);
         editIssueDialog.setLayout(new GridLayout(6, 2));
 
@@ -186,7 +187,7 @@ public class IssueTrackerPanel extends JPanel {
         JComboBox<String> statusComboBox = new JComboBox<>(EnumChanger.toStringArray(Status.values()));
         JComboBox<String> userComboBox = new JComboBox<>();
         userComboBox.addItem(null);
-        for (User u : projectManager.getUsersByProject(project)) {userComboBox.addItem(u.getFullName());}
+        for (User u : UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId())) {userComboBox.addItem(u.getFullName());}
 
 
         if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG)&&!type.equals(EnumChanger.toString(Type.BUG)))editIssueDialog.dispose();
@@ -225,8 +226,9 @@ public class IssueTrackerPanel extends JPanel {
                 else if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG))issue.setType(Type.BUG);
                 issue.setPriority(Priority.values()[ priorityComboBox.getSelectedIndex()]);
                 issue.setStatus(Status.values()[ statusComboBox.getSelectedIndex()]);
-                if (userComboBox.getSelectedIndex()>0)issue.setUser(projectManager.getUsersByProject(project).get(userComboBox.getSelectedIndex()-1));
+                if (userComboBox.getSelectedIndex()>0)issue.setUser(UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId()).get(userComboBox.getSelectedIndex()-1));
                 else issue.setUser(null);
+                issue.setLastUpdateTime(DateUtil.timeOfNow());
 
                 // Update the table with the edited data
                 table.setValueAt(newDescription, table.getSelectedRow(), 0);
@@ -235,9 +237,13 @@ public class IssueTrackerPanel extends JPanel {
                 table.setValueAt(newStatus, table.getSelectedRow(), 3);
                 table.setValueAt(newUserName, table.getSelectedRow(), 4);
 
+                IssueDataBaseSql.getInstance().editIssue(issue.getId(),issue.getDescription(),issue.getLastUpdateTime()
+                ,issue.getType().toString(),issue.getPriority().toString(),issue.getStatus().toString());
+
                 editIssueDialog.dispose();
                 table.clearSelection();
             }
+
         });
         editIssueDialog.setResizable(false);
         JButton cancelButton = new JButton("Cancel");
@@ -252,9 +258,8 @@ public class IssueTrackerPanel extends JPanel {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                projectManager.removeIssue(project,issue);
+                IssueDataBaseSql.getInstance().removeIssue(issue.getId());
                 tableModel.removeRow(table.getSelectedRow());
-                for (Board board : boardManager.getBoardsWithIssue(issue)) boardManager.removeIssueFromBoard(board,issue);
                 editIssueDialog.dispose();
                 table.clearSelection();
             }

@@ -85,5 +85,7 @@ public class GeneralController {
     public boolean isEmpty(String a) {
         return a.trim().isEmpty();
     }
-
+    public static boolean emailAuthentication(String email) {
+        return email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+    }
 }

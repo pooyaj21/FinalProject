@@ -1,9 +1,10 @@
 package Project.Ui.KanbanBoard;
 
 import Project.Logic.*;
-import Project.Logic.DataBase.BoardDatabase;
-import Project.Logic.DataBase.BoardManager;
-import Project.Logic.DataBase.ProjectManager;
+import Project.Logic.DataBase.SQL.BoardDataBaseSql;
+import Project.Logic.DataBase.SQL.CrossTabel.BoardIssuesDataBaseSql;
+import Project.Logic.DataBase.SQL.CrossTabel.ProjectIssuesDataBaseSql;
+import Project.Logic.DataBase.SQL.IssueDataBaseSql;
 import Project.Util.GeneralController;
 import Project.Util.RoundedButton;
 
@@ -30,8 +31,6 @@ public class KanbanBoardPanel extends JPanel {
     User user;
     Project project;
     JPanel extraPanel;
-    ProjectManager projectManager = ProjectManager.getInstance();
-    BoardManager boardManager = BoardManager.getInstance();
     ArrayList<Issue> availableIssues;
 
     public KanbanBoardPanel(Board board, User user, Project project) {
@@ -43,7 +42,7 @@ public class KanbanBoardPanel extends JPanel {
         setPreferredSize(new Dimension(770, 600));
         setBackground(new Color(0xf7f7f7));
         int panelHeight = getHeight();
-        if (board != projectManager.getBoardByProject(project).get(0)) {
+      if (board!=null && board.getId() != BoardDataBaseSql.getInstance().getAllBoardsOfProject(project.getId()).get(0).getId()) {
             addIssuePanel.setBounds(25, 25, 200, 55);
             addIssuePanel.setLayout(new GridLayout(2,1));
             JComboBox<String> issuesComboBox = new JComboBox<>();
@@ -54,9 +53,9 @@ public class KanbanBoardPanel extends JPanel {
                 }
             });
 
-            for (Issue issue : projectManager.getIssuesByProject(project)) {
+            for (Issue issue : IssueDataBaseSql.getInstance().getAllIssuesOfProject(project.getId())) {
               if (board!=null){
-                  if (!boardManager.getIssuesByBoard(board).contains(issue)){
+                  if (!BoardIssuesDataBaseSql.getInstance().getAllIssuesOfBoard(board.getId()).contains(issue)){
                       issuesComboBox.addItem(issue.getDescription());
                       availableIssues.add(issue);
                   }
@@ -68,7 +67,7 @@ public class KanbanBoardPanel extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     if (issuesComboBox.getSelectedItem() != null) {
                         Issue newIssue = availableIssues.get(issuesComboBox.getSelectedIndex());
-                        boardManager.addIssueToBoard(board, newIssue);
+                        BoardIssuesDataBaseSql.getInstance().assignIssueToBoard(board.getId(),newIssue.getId());
                         CategoryPanel categoryPanel = getCategoryPanelForStatus(newIssue.getStatus());
                         if (categoryPanel != null) {
                             IssuesPanel taskPanel = new IssuesPanel(categoryPanel, KanbanBoardPanel.this, newIssue);
@@ -147,8 +146,7 @@ public class KanbanBoardPanel extends JPanel {
 
     public void drawFirstTime() {
         if (board != null) {
-            Map<Board, ArrayList<Issue>> boardIssues = BoardDatabase.getInstance().getBoardIssues();
-            ArrayList<Issue> issues = boardIssues.get(board);
+            ArrayList<Issue> issues = BoardIssuesDataBaseSql.getInstance().getAllIssuesOfBoard(board.getId());
             if (issues != null) {
                 for (Issue issue : issues) {
                     CategoryPanel categoryPanel = getCategoryPanelForStatus(issue.getStatus());

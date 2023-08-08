@@ -1,9 +1,7 @@
 package Project.Ui;
 
 import Project.Logic.Board;
-import Project.Logic.DataBase.BoardDatabase;
-import Project.Logic.DataBase.BoardManager;
-import Project.Logic.DataBase.ProjectManager;
+import Project.Logic.DataBase.SQL.BoardDataBaseSql;
 import Project.Logic.FeatureAccess;
 import Project.Logic.Project;
 import Project.Util.GeneralController;
@@ -18,8 +16,6 @@ public class EditBoardPanel extends JPanel {
     Board board;
     Project project;
     ProjectPanel projectPanel;
-    ProjectManager projectManager = ProjectManager.getInstance();
-    BoardManager boardManager = BoardManager.getInstance();
     JLabel nameLabel = new JLabel("Name:");
     JTextField nameField = new JTextField();
     RoundedButton submit = new RoundedButton("Submit", 15, Color.blue, Color.white, 12);
@@ -41,8 +37,7 @@ public class EditBoardPanel extends JPanel {
         delete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                BoardDatabase.getInstance().removeBoard(board);
-                projectManager.removeBoardFromProject(project, board);
+                BoardDataBaseSql.getInstance().deleteBoard(board.getId());
                 projectPanel.kanbanButton.doClick();
                 setVisible(false);
             }
@@ -57,7 +52,7 @@ public class EditBoardPanel extends JPanel {
                     nameErrorLabel.setForeground(Color.red);
                     nameErrorLabel.setText("Enter a name");
                 } else {
-                    boardManager.editBoardName(board, nameField.getText());
+                    BoardDataBaseSql.getInstance().editBoard(board.getId(),nameField.getText());
                     update();
                     projectPanel.kanbanButton.doClick();
                 }

@@ -43,7 +43,7 @@ public class EnumChanger {
         }
     }
 
-    public static Role toEnum(String role) {
+    public static Role toEnumRole(String role) {
         switch (role) {
             case "SUPER_ADMIN":
                 return Role.SUPER_ADMIN;
@@ -53,6 +53,42 @@ public class EnumChanger {
                 return Role.QA;
             case "DEVELOPER":
                 return Role.DEVELOPER;
+            default:throw new IllegalArgumentException("Enum didn't found");
+        }
+    }
+    public static Type toEnumType(String type) {
+        switch (type) {
+            case "STORY":
+                return Type.STORY;
+            case "TASK":
+                return Type.TASK;
+            case "BUG":
+                return Type.BUG;
+            default:throw new IllegalArgumentException("Enum didn't found");
+        }
+    }
+    public static Priority toEnumPriority(String priority) {
+        switch (priority) {
+            case "LOW":
+                return Priority.LOW;
+            case "MEDIUM":
+                return Priority.MEDIUM;
+            case "HIGH":
+                return Priority.HIGH;
+            default:throw new IllegalArgumentException("Enum didn't found");
+        }
+    }
+
+    public static Status toEnumStatus(String status) {
+        switch (status) {
+            case "TODO":
+                return Status.TODO;
+            case "IN_PROGRESS":
+                return Status.IN_PROGRESS;
+            case "QA":
+                return Status.QA;
+            case "DONE":
+                return Status.DONE;
             default:throw new IllegalArgumentException("Enum didn't found");
         }
     }

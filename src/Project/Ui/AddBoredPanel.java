@@ -1,9 +1,7 @@
 package Project.Ui;
 
 import Project.Logic.Board;
-import Project.Logic.DataBase.BoardDatabase;
-import Project.Logic.DataBase.BoardManager;
-import Project.Logic.DataBase.ProjectManager;
+import Project.Logic.DataBase.SQL.BoardDataBaseSql;
 import Project.Logic.Project;
 import Project.Util.RoundedButton;
 
@@ -16,7 +14,6 @@ public class AddBoredPanel extends JPanel {
     JLabel nameLabel = new JLabel("Name:");
     JTextField nameField = new JTextField();
     RoundedButton submit = new RoundedButton("Submit", 15, Color.blue, Color.white, 12);
-    ProjectManager projectManager =ProjectManager.getInstance();
 
     public AddBoredPanel(Project project,ProjectPanel projectPanel) {
         setSize(770, 680);
@@ -28,9 +25,7 @@ public class AddBoredPanel extends JPanel {
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Board board =new Board(nameField.getText());
-                BoardDatabase.getInstance().addBoard(board);
-                projectManager.addBoardToProject(project,board);
+                BoardDataBaseSql.getInstance().createBoard(project.getId(),nameField.getText());
                 projectPanel.kanbanButton.doClick();
             }
         });

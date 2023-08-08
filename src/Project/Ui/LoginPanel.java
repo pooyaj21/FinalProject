@@ -1,8 +1,7 @@
 package Project.Ui;
 
 
-import Project.Logic.DataBase.UserManagement;
-import Project.Logic.User;
+import Project.Logic.DataBase.SQL.UserDataBaseSQL;
 import Project.Util.GeneralController;
 import Project.Util.RoundedButton;
 
@@ -50,7 +49,7 @@ public class LoginPanel extends JPanel {
                     emailErrorLabel.setText("Enter Email");
                 }else{
                     try{
-                        UserManagement.getInstance().checkEmail(userEmailField.getText().toLowerCase());
+                        UserDataBaseSQL.getInstance().getUserIdByEmail(userEmailField.getText().toLowerCase());
                     }catch (IllegalArgumentException exception){
                         emailErrorLabel.setForeground(Color.red);
                         emailErrorLabel.setText("Wrong Email");
@@ -61,17 +60,15 @@ public class LoginPanel extends JPanel {
                     passwordErrorLabel.setText("Enter Password");
                     return;
                 }else {
-                    try {
-                        UserManagement.getInstance().checkPassword(userEmailField.getText(), userPasswordField.getText());
-                    } catch (Exception exception) {
-                        passwordErrorLabel.setForeground(Color.red);
-                        passwordErrorLabel.setText("Wrong Password");
-                        return;
-                    }
+                   if (!UserDataBaseSQL.getInstance().doesEmailAndPasswordMatch(userEmailField.getText().toLowerCase(),userPasswordField.getText())) {
+                       passwordErrorLabel.setForeground(Color.red);
+                       passwordErrorLabel.setText("Wrong Password");
+                       return;
+                   }
                 }
                 AppFrame.getInstance().loginPanel.setVisible(false);
-                User selectedUser = UserManagement.getInstance().getUser(userEmailField.getText().toLowerCase());
-                AppFrame.getInstance().updateLoggedInUser(selectedUser);
+                int selectedUserId = UserDataBaseSQL.getInstance().getUserIdByEmail(userEmailField.getText().toLowerCase());
+                AppFrame.getInstance().updateLoggedInUser(selectedUserId);
             }
         });
 

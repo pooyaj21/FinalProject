@@ -1,14 +1,19 @@
 package Project.Logic;
 
 public class Board {
+
+    private int id;
+    private int projectId;
     private String name;
-    private final int id;
-    private static int counter;
 
     public Board(String title) {
-        counter++;
         this.name = title;
-        id=counter;
+    }
+
+    public Board(int id, int projectId, String name) {
+        this.id = id;
+        this.projectId = projectId;
+        this.name = name;
     }
 
     public String getName() {
@@ -21,5 +26,18 @@ public class Board {
 
     public int getId() {
         return id;
+    }
+
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 }

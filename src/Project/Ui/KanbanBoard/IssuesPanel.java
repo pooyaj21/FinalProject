@@ -1,8 +1,9 @@
 package Project.Ui.KanbanBoard;
 
-import Project.Logic.DataBase.BoardManager;
-import Project.Logic.DataBase.ProjectManager;
 import Project.Logic.*;
+import Project.Logic.DataBase.SQL.BoardDataBaseSql;
+import Project.Logic.DataBase.SQL.CrossTabel.BoardIssuesDataBaseSql;
+import Project.Logic.DataBase.SQL.IssueDataBaseSql;
 import Project.Util.RoundedButton;
 import Project.Util.RoundedPanel;
 
@@ -35,12 +36,10 @@ public class IssuesPanel extends JPanel {
     Issue issue;
     private final RoundedButton setting = new RoundedButton("⋮", 30, Color.white, Color.BLACK, 22);
     User user;
-    ProjectManager projectManager = ProjectManager.getInstance();
     private boolean canMove = false;
     private CategoryPanel currentColumn;
     private Point offset;
     private boolean isSettingOpen = false;
-    BoardManager boardManager = BoardManager.getInstance();
 
 
     public IssuesPanel(CategoryPanel categoryPanel, KanbanBoardPanel kanbanBoardPanel, Issue issue) {
@@ -62,10 +61,10 @@ public class IssuesPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 IssuesPanel.this.setVisible(false);
                 currentColumn.removeTask(IssuesPanel.this);
-                if (kanbanBoardPanel.getBoard()==projectManager.getBoardByProject(kanbanBoardPanel.getProject()).get(0)){
-                    projectManager.removeIssue(kanbanBoardPanel.getProject(),issue);
+                if (kanbanBoardPanel.getBoard().getId()== BoardDataBaseSql.getInstance().getAllBoardsOfProject(kanbanBoardPanel.getProject().getId()).get(0).getId()){
+                    IssueDataBaseSql.getInstance().removeIssue(issue.getId());
                 }
-                boardManager.removeIssueFromBoard(kanbanBoardPanel.getBoard(),issue);
+                BoardIssuesDataBaseSql.getInstance().removeIssueFromAllBoards(issue.getId());
                 kanbanBoardPanel.reset();
             }
         });

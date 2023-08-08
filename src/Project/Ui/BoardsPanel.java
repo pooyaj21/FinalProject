@@ -1,7 +1,8 @@
 package Project.Ui;
 
 import Project.Logic.Board;
-import Project.Logic.DataBase.ProjectManager;
+import Project.Logic.DataBase.SQL.BoardDataBaseSql;
+import Project.Logic.DataBase.SQL.CrossTabel.ProjectBoardDataBaseSql;
 import Project.Logic.FeatureAccess;
 import Project.Logic.Project;
 import Project.Logic.User;
@@ -15,7 +16,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class BoardsPanel extends JScrollPane {
-    ProjectManager projectManager = ProjectManager.getInstance();
 
     public BoardsPanel(Project project, User user, ProjectPanel projectPanel) {
         setSize(new Dimension(780, 600));
@@ -28,7 +28,7 @@ public class BoardsPanel extends JScrollPane {
 
         JPanel contentPanel = new JPanel(null);
 
-        int numberOfPanels = projectManager.getBoardByProject(project).size() + 1;
+        int numberOfPanels = BoardDataBaseSql.getInstance().getAllBoardsOfProject(project.getId()).size() + 1;
         for (int i = 0; i < numberOfPanels; i++) {
             int row = i / cols;
             int colum = i % cols;
@@ -48,8 +48,8 @@ public class BoardsPanel extends JScrollPane {
                     }
                 });
             } else {
-                Board board = projectManager.getBoardByProject(project).get(i);
-                RoundedButton boardButton = new RoundedButton(projectManager.getBoardByProject(project).get(i).getName(),
+                Board board = BoardDataBaseSql.getInstance().getAllBoardsOfProject(project.getId()).get(i);
+                RoundedButton boardButton = new RoundedButton(board.getName(),
                         15, Color.LIGHT_GRAY, Color.BLACK, 12);
                 boardButton.setBounds(x, y, panelWidth, panelHeight);
                 contentPanel.add(boardButton);
@@ -60,7 +60,7 @@ public class BoardsPanel extends JScrollPane {
                     }
 
                 });
-                if (user.getRole().hasAccess(FeatureAccess.EDIT_BOARD)&&board!=projectManager.getBoardByProject(project).get(0)) {
+                if (user.getRole().hasAccess(FeatureAccess.EDIT_BOARD)&&board!=BoardDataBaseSql.getInstance().getAllBoardsOfProject(project.getId()).get(0)) {
                     boardButton.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {

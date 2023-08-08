@@ -1,11 +1,11 @@
 package Project.Logic;
 
+import Project.Logic.DataBase.SQL.UserDataBaseSQL;
 import Project.Util.DateUtil;
 
 public class Issue {
     private int id;
     private int projectId;
-    private int boardId;
     private User user;
     private String description;
     private final long addTime;
@@ -19,11 +19,10 @@ public class Issue {
         this.description = description;
     }
 
-    public Issue(int id, int projectId, int boardId, int userId, String description, long addTime, long lastUpdateTime, String type, String priority, String status) {
+    public Issue(int id, int projectId, int userId, String description, long addTime, long lastUpdateTime, Type type, Priority priority, Status status) {
         this.id = id;
         this.projectId = projectId;
-        this.boardId = boardId;
-        this.user = userId;
+        this.user = UserDataBaseSQL.getInstance().getUserFromId(userId);
         this.description = description;
         this.addTime = addTime;
         LastUpdateTime = lastUpdateTime;
@@ -86,5 +85,9 @@ public class Issue {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public int getProjectId() {
+        return projectId;
     }
 }

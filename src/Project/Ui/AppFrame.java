@@ -1,6 +1,6 @@
 package Project.Ui;
 
-import Project.Logic.DataBase.ProjectDatabase;
+import Project.Logic.DataBase.SQL.UserDataBaseSQL;
 import Project.Logic.Role;
 import Project.Logic.User;
 
@@ -39,10 +39,10 @@ public class AppFrame extends JFrame {
         return instance;
     }
 
-    public void updateLoggedInUser(User loggedInUser) {
-        this.user = loggedInUser;
+    public void updateLoggedInUser(int loggedInUser) {
+        this.user = UserDataBaseSQL.getInstance().getUserFromId(loggedInUser);
         hiddenEveryThing();
-        if (loggedInUser.getRole()== Role.SUPER_ADMIN){
+        if (user.getRole()== Role.SUPER_ADMIN){
             superAdminPanel = new SuperAdminPanel();
             superAdminPanel.setBounds(0,0,getWidth(),getHeight());
             add(superAdminPanel);

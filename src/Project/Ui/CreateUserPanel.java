@@ -1,8 +1,8 @@
 package Project.Ui;
 
+import Project.Logic.DataBase.SQL.UserDataBaseSQL;
 import Project.Logic.Role;
 import Project.Logic.User;
-import Project.Logic.DataBase.UserManagement;
 import Project.Util.GeneralController;
 import Project.Util.RoundedButton;
 
@@ -97,10 +97,10 @@ public class CreateUserPanel extends JPanel {
                 if (GeneralController.getInstance().isEmpty(emailField.getText())) {
                     emailErrorLabel.setForeground(Color.red);
                     emailErrorLabel.setText("Enter Email");
-                } else if (!UserManagement.getInstance().emailAuthentication(emailField.getText().toLowerCase())) {
+                } else if (!GeneralController.emailAuthentication(emailField.getText().toLowerCase())) {
                     emailErrorLabel.setForeground(Color.red);
                     emailErrorLabel.setText("Enter a Correct Email");
-                } else if (UserManagement.getInstance().isEmailExist(emailField.getText().toLowerCase())) {
+                } else if (UserDataBaseSQL.getInstance().isEmailExist(emailField.getText().toLowerCase())) {
                     emailErrorLabel.setForeground(Color.red);
                     emailErrorLabel.setText("This Email already Exist");
                 } else isEmailFine = true;
@@ -117,8 +117,8 @@ public class CreateUserPanel extends JPanel {
                     roleErrorLabel.setText("Select a role");
                 }else isRoleFine=true;
                 if (isEmailFine && isNameFine && isPasswordFine&&isRoleFine) {
-                    UserManagement.getInstance().makeAccount(new User(emailField.getText().toLowerCase(), passwordField.getText()
-                            , nameField.getText(), Role.values()[roleComboBox.getSelectedIndex()]));
+                    UserDataBaseSQL.getInstance().addUser(nameField.getText(),emailField.getText()
+                            ,passwordField.getText(),Role.values()[roleComboBox.getSelectedIndex()]);
                     userManagementPanel.repaint();
                     userManagementPanel.drawUsers();
                     emailField.setText("");

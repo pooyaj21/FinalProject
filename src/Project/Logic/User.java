@@ -4,9 +4,9 @@ import java.util.HashMap;
 
 public class User {
     private int id;
+    private String fullName;
     private String Email;
     private String password;
-    private String fullName;
     private Role role;
 
     public User(String Email, String password, String fullName, Role role) {
@@ -15,12 +15,13 @@ public class User {
         this.fullName = fullName;
         this.role=role;
     }
-    public User(int id,String Email, String password, String fullName, Role role) {
-        this.id=id;
-        this.Email = Email;
-        this.password = password;
+
+    public User(int id, String fullName, String email, String password, Role role) {
+        this.id = id;
         this.fullName = fullName;
-        this.role=role;
+        Email = email;
+        this.password = password;
+        this.role = role;
     }
 
     public String getEmail() {
