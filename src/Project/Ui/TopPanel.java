@@ -10,12 +10,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class TopPanel extends JPanel {
+    JLabel nameLabel;
     public TopPanel(User user) {
         setSize(1000, 100);
         setLayout(null);
         setBackground(new Color(0xBEBEBE));
-
-        JLabel nameLabel = new JLabel(user.getFullName());
+        nameLabel= new JLabel(user.getFullName());
         nameLabel.setBounds(70, 15, 600, 25);
         String roleName = "";
         for (Role role : Role.values()) {
@@ -59,4 +59,5 @@ public class TopPanel extends JPanel {
         add(roleLabel);
         add(settingButton);
     }
+
 }

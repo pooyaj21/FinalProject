@@ -20,14 +20,15 @@ public class SuperAdminPanel extends JPanel {
     boolean isProjectManagementPanelClicked= false;
     ProjectPanel projectPanel;
     User admin = null;
+    TopPanel topPanel;
 
     public SuperAdminPanel() {
         setLayout(null);
         setSize(1000,700);
 
         for (User user:UserDataBaseSQL.getInstance().getAllUsers())if (user.getRole()== Role.SUPER_ADMIN) admin=user;
+        topPanel =new TopPanel(admin);
 
-        TopPanel topPanel =new TopPanel(admin);
         topPanel.setBounds(0,0,getWidth(),100);
 
         ImageIcon userIcon = new ImageIcon("Assets/Pfp.png");

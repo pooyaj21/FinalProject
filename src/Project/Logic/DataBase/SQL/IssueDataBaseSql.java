@@ -55,7 +55,7 @@ public class IssueDataBaseSql {
 
     public void createIssue(Issue issue, int projectId) {
         try (Connection connection = getConnection()) {
-            String insertQuery = "INSERT INTO Issues (project_id, user_id, issue_title, issue_addTime, issue_updateTime, issue_type, issue_priority, issue_status) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertQuery = "INSERT INTO Issues (project_id, user_id, issue_title, issue_addTime, issue_updateTime, issue_type, issue_priority, issue_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
                 preparedStatement.setInt(1, projectId);
@@ -76,7 +76,7 @@ public class IssueDataBaseSql {
 
                 int rowsAffected = preparedStatement.executeUpdate();
                 if (rowsAffected > 0) {
-                    System.out.println("Issue created successfully.");
+                    System.out.println("Issue created successfully and assigned to project and board.");
                 } else {
                     throw new IllegalArgumentException("Issue creation failed.");
                 }
@@ -85,6 +85,7 @@ public class IssueDataBaseSql {
             e.printStackTrace();
         }
     }
+
 
     // Edit issue details
     public void editIssue(int issueId, String newTitle, long newUpdateTime, String newType, String newPriority, String newStatus) {

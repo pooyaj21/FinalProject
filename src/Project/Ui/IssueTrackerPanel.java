@@ -1,7 +1,9 @@
 package Project.Ui;
 
 import Project.Logic.*;
+import Project.Logic.DataBase.SQL.BoardDataBaseSql;
 import Project.Logic.DataBase.SQL.CrossTabel.BoardIssuesDataBaseSql;
+import Project.Logic.DataBase.SQL.CrossTabel.ProjectBoardDataBaseSql;
 import Project.Logic.DataBase.SQL.CrossTabel.UserProjectDataBaseSql;
 import Project.Logic.DataBase.SQL.IssueDataBaseSql;
 import Project.Logic.DataBase.SQL.ProjectDatabaseSQL;
@@ -148,6 +150,10 @@ public class IssueTrackerPanel extends JPanel {
                 issue.setStatus(Status.TODO);
                 issue.setUser(selectedUser);
                 IssueDataBaseSql.getInstance().createIssue(issue,project.getId());
+                BoardIssuesDataBaseSql.getInstance().assignIssueToBoard(BoardDataBaseSql.getInstance().getAllBoardsOfProject(project.getId()).get(0).getId()
+                        ,IssueDataBaseSql.getInstance().getAllIssuesOfProject(project.getId())
+                                .get(IssueDataBaseSql.getInstance().getAllIssuesOfProject(project.getId()).size()-1).getId()
+                );
                 String userName=null;
                 if (selectedUser!=null)userName=selectedUser.getFullName();
 

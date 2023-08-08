@@ -99,7 +99,7 @@ public class ProfileUi extends JPanel {
                 boolean isNameChange = false;
                 boolean isPasswordChange = false;
 
-                String newEmail;
+                String newName;
                 String newPassword;
 
                 if (GeneralController.getInstance().isEmpty(nameField.getText())) {
@@ -111,18 +111,19 @@ public class ProfileUi extends JPanel {
                     passwordErrorLabel.setText("Enter Password");
                 } else isPasswordFine = true;
                 if (isNameFine && isPasswordFine) {
-                    newEmail= emailLField.getText();
-                    newPassword= emailLField.getText();
-                    if (!user.getEmail().equalsIgnoreCase(emailLField.getText())) {
+                    newName= nameField.getText();
+                    newPassword= passwordField.getText();
+                    if (!user.getFullName().equalsIgnoreCase(nameField.getText())) {
                         isNameChange=true;
                     }
                     if (!user.getPassword().equalsIgnoreCase(passwordField.getText())) {
                         isPasswordChange=true;
                     }
                     if (isNameChange||isPasswordChange) {
-                        UserDataBaseSQL.getInstance().editUser(user.getId(),user.getFullName(),newEmail,newPassword,user.getRole());
+                        UserDataBaseSQL.getInstance().editUser(user.getId(),newName, user.getEmail(), newPassword,user.getRole());
                         changeSuccessfulLabel.setForeground(Color.green);
                         changeSuccessfulLabel.setText("Change Successful");
+                        topPanel.nameLabel.setText(newName);
                     }else{
                         changeSuccessfulLabel.setForeground(Color.red);
                         changeSuccessfulLabel.setText("There is no Changes");
@@ -142,7 +143,7 @@ public class ProfileUi extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AppFrame.getInstance().hiddenEveryThing();
-                AppFrame.getInstance().backFun();
+                AppFrame.getInstance().updateLoggedInUser(user.getId());
             }
         });
 

@@ -4,6 +4,7 @@ import Project.Logic.*;
 import Project.Logic.DataBase.SQL.BoardDataBaseSql;
 import Project.Logic.DataBase.SQL.CrossTabel.BoardIssuesDataBaseSql;
 import Project.Logic.DataBase.SQL.IssueDataBaseSql;
+import Project.Util.DateUtil;
 import Project.Util.RoundedButton;
 import Project.Util.RoundedPanel;
 
@@ -53,51 +54,11 @@ public class IssuesPanel extends JPanel {
         settingPanel.setVisible(false);
         settingPanel.setLayout(null);
 
-
-        RoundedButton removeButton = new RoundedButton("Remove", 0, getBackground(), getForeground(), 13);
-        removeButton.setBounds(0, 30, 100, 30);
-        removeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                IssuesPanel.this.setVisible(false);
-                currentColumn.removeTask(IssuesPanel.this);
-                if (kanbanBoardPanel.getBoard().getId()== BoardDataBaseSql.getInstance().getAllBoardsOfProject(kanbanBoardPanel.getProject().getId()).get(0).getId()){
-                    IssueDataBaseSql.getInstance().removeIssue(issue.getId());
-                }
-                BoardIssuesDataBaseSql.getInstance().removeIssueFromAllBoards(issue.getId());
-                kanbanBoardPanel.reset();
-            }
-        });
-        settingPanel.add(removeButton);
-
-
         title.setBounds(10, 30, 160, 20);
         title.setEditable(false);
         title.setFocusable(false);
         title.setOpaque(false);
         add(title);
-
-        setting.setBounds(160, 5, 15, 18);
-        setting.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!isSettingOpen) {
-                    Point buttonLocation = setting.getLocationOnScreen();
-                    Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
-                    int mouseX = mouseLocation.x - buttonLocation.x;
-                    int mouseY = mouseLocation.y - buttonLocation.y;
-
-                    settingPanel.setBounds(mouseX + 60, mouseY, 100, 60);
-                    settingPanel.setVisible(true);
-                    isSettingOpen = true;
-                } else {
-                    settingPanel.setVisible(false);
-                    isSettingOpen = false;
-                }
-            }
-        });
-
-        add(setting);
 
         theText.setBounds(10, 50, 160, 70);
         theText.setFont(new Font("assets/Montserrat-ExtraLight.ttf", Font.PLAIN, 10));
@@ -174,16 +135,20 @@ public class IssuesPanel extends JPanel {
 
                 if (whichColumn < 1 && canMove) {
                     newColumn = kanbanBoardPanel.toDo;
-                    issue.setStatus(Status.TODO);
+                    IssueDataBaseSql.getInstance().editIssue(issue.getId(),issue.getDescription(), DateUtil.timeOfNow(),
+                            issue.getType().toString(),issue.getPriority().toString(),Status.TODO.toString());
                 } else if (whichColumn >= 1 && whichColumn < 2 && canMove) {
                     newColumn = kanbanBoardPanel.inProgress;
-                    issue.setStatus(Status.IN_PROGRESS);
+                    IssueDataBaseSql.getInstance().editIssue(issue.getId(),issue.getDescription(), DateUtil.timeOfNow(),
+                            issue.getType().toString(),issue.getPriority().toString(),Status.IN_PROGRESS.toString());
                 } else if (whichColumn >= 2 && whichColumn < 3 && canMove) {
                     newColumn = kanbanBoardPanel.qa;
-                    issue.setStatus(Status.QA);
+                    IssueDataBaseSql.getInstance().editIssue(issue.getId(),issue.getDescription(), DateUtil.timeOfNow(),
+                            issue.getType().toString(),issue.getPriority().toString(),Status.QA.toString());
                 } else if (whichColumn >= 3 && whichColumn < 4 && user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE) || user.getRole().hasAccess(FeatureAccess.MOVE_FROM_QA)) {
                     newColumn = kanbanBoardPanel.done;
-                    issue.setStatus(Status.DONE);
+                    IssueDataBaseSql.getInstance().editIssue(issue.getId(),issue.getDescription(), DateUtil.timeOfNow(),
+                            issue.getType().toString(),issue.getPriority().toString(),Status.DONE.toString());
                 } else kanbanBoardPanel.addTask(IssuesPanel.this, currentColumn);
 
 

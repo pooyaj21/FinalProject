@@ -21,6 +21,7 @@ public class AppFrame extends JFrame {
         setTitle("App");
         setLayout(null);
         setVisible(true);
+        setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 800);
         setLocationRelativeTo(null);
@@ -68,21 +69,6 @@ public class AppFrame extends JFrame {
        if (profileUi!=null)profileUi.setVisible(false);
        if (superAdminPanel!=null)superAdminPanel.setVisible(false);
        if (userPanel!=null)userPanel.setVisible(false);
-    }
-
-    public void backFun(){
-        hiddenEveryThing();
-        if (user.getRole()==Role.SUPER_ADMIN){
-            superAdminPanel = new SuperAdminPanel();
-            superAdminPanel.setBounds(0,0,getWidth(),getHeight());
-            add(superAdminPanel);
-            repaint();
-        }else {
-            userPanel = new UserPanel(user);
-            userPanel.setBounds(0,0,getWidth(),getHeight());
-            add(userPanel);
-            repaint();
-        }
     }
 
 

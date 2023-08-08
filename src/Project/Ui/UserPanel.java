@@ -25,6 +25,7 @@ public class UserPanel extends JPanel {
     int selectedProjectIndex = -1;
     JScrollPane projectScrollPane;
     private User user;
+    TopPanel topPanel;
     ProjectPanel projectPanel;
 
     public UserPanel(User user) {
@@ -32,7 +33,7 @@ public class UserPanel extends JPanel {
         setSize(1000, 700);
         setLayout(null);
 
-        TopPanel topPanel = new TopPanel(user);
+        topPanel = new TopPanel(user);
         setBounds(0,0,getWidth(),getHeight());
         add(topPanel);
 
