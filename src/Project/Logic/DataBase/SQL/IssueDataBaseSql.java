@@ -212,6 +212,26 @@ public class IssueDataBaseSql {
         return issues;
     }
 
+    public int countIssuesInStatusForProject(int projectId, String status) {
+        int issueCount = 0;
+        try (Connection connection = getConnection()) {
+            String selectQuery = "SELECT COUNT(*) FROM Issues WHERE project_id = ? AND issue_status = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
+                preparedStatement.setInt(1, projectId);
+                preparedStatement.setString(2, status);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        issueCount = resultSet.getInt(1);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return issueCount;
+    }
 
 
 }

@@ -6,11 +6,11 @@ import org.knowm.xchart.demo.charts.ExampleChart;
 
 import java.awt.*;
 
-public class TheChart implements ExampleChart<PieChart> {
-    private int completedTasks;
-    private int rejectedTasks;
+public class UserChart implements ExampleChart<PieChart> {
+    private final int completedTasks;
+    private final int rejectedTasks;
 
-    public TheChart(int completedTasks, int rejectedTasks) {
+    public UserChart(int completedTasks, int rejectedTasks) {
         this.completedTasks = completedTasks;
         this.rejectedTasks = rejectedTasks;
     }
