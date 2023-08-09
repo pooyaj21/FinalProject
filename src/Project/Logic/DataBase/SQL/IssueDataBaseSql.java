@@ -1,8 +1,6 @@
 package Project.Logic.DataBase.SQL;
 
-import Project.Logic.DataBase.SQL.BoardDataBaseSql;
 import Project.Logic.DataBase.SQL.CrossTabel.BoardIssuesDataBaseSql;
-import Project.Logic.DataBase.SQL.CrossTabel.UserProjectDataBaseSql;
 import Project.Logic.Issue;
 import Project.Util.EnumChanger;
 
@@ -10,9 +8,6 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class IssueDataBaseSql {
-    String url = "jdbc:mysql://localhost:3306/FinalProject";
-    String username = "root";
-    String password = "pooya1234";
     static IssueDataBaseSql instance;
     private IssueDataBaseSql() {
     }
@@ -23,7 +18,7 @@ public class IssueDataBaseSql {
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, username, password);
+        return SqlConnection.getConnection();
     }
 
     public void createIssue(int projectId, int boardId, int userId, String title, long addTime, long updateTime, String type, String priority, String status) {

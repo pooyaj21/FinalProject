@@ -9,9 +9,6 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class IssuesTransitionSql {
-    String url = "jdbc:mysql://localhost:3306/FinalProject";
-    String username = "root";
-    String password = "pooya1234";
     static IssuesTransitionSql instance;
     private IssuesTransitionSql() {
     }
@@ -22,7 +19,7 @@ public class IssuesTransitionSql {
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, username, password);
+        return SqlConnection.getConnection();
     }
 
     public void createIssueTransition(int issueId, Status previousState, Status newState, long transitionTime) {

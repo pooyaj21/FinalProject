@@ -1,5 +1,6 @@
 package Project.Logic.DataBase.SQL.CrossTabel;
 
+import Project.Logic.DataBase.SQL.SqlConnection;
 import Project.Logic.Project;
 import Project.Logic.User;
 import Project.Util.EnumChanger;
@@ -8,9 +9,6 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class UserProjectDataBaseSql {
-    String url = "jdbc:mysql://localhost:3306/FinalProject";
-    String username = "root";
-    String password = "pooya1234";
     static UserProjectDataBaseSql instance;
 
     private UserProjectDataBaseSql() {
@@ -23,7 +21,7 @@ public class UserProjectDataBaseSql {
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, username, password);
+        return SqlConnection.getConnection();
     }
 
     // Add user to project

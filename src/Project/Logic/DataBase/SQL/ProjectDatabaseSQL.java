@@ -1,17 +1,12 @@
 package Project.Logic.DataBase.SQL;
 
-import Project.Logic.Board;
 import Project.Logic.Project;
-import Project.Util.DateUtil;
 
 
 import java.sql.*;
 import java.util.ArrayList;
 
 public class ProjectDatabaseSQL {
-    String url = "jdbc:mysql://localhost:3306/FinalProject";
-    String username = "root";
-    String password = "pooya1234";
     static ProjectDatabaseSQL instance;
     private ProjectDatabaseSQL() {
     }
@@ -21,7 +16,7 @@ public class ProjectDatabaseSQL {
         }else return instance;
     }
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, username, password);
+        return SqlConnection.getConnection();
     }
 
 

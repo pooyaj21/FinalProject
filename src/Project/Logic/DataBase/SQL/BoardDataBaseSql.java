@@ -9,9 +9,6 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class BoardDataBaseSql {
-    String url = "jdbc:mysql://localhost:3306/FinalProject";
-    String username = "root";
-    String password = "pooya1234";
     static BoardDataBaseSql instance;
     private BoardDataBaseSql() {
     }
@@ -22,7 +19,7 @@ public class BoardDataBaseSql {
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, username, password);
+        return SqlConnection.getConnection();
     }
     public void createBoard(int projectId, String boardName) {
         try (Connection connection = getConnection()) {
@@ -75,7 +72,6 @@ public class BoardDataBaseSql {
 
                 int rowsAffected = preparedStatement.executeUpdate();
                 if (rowsAffected > 0) {
-                    BoardIssuesDataBaseSql.getInstance().removeBoardAndAssociations(boardId);
                     System.out.println("Board deleted successfully.");
                 } else {
                     throw new IllegalArgumentException("Board deletion failed.");

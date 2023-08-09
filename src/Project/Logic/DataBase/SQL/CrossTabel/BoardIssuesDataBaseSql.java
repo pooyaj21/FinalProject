@@ -1,7 +1,7 @@
 package Project.Logic.DataBase.SQL.CrossTabel;
 
 import Project.Logic.Board;
-import Project.Logic.DataBase.SQL.UserDataBaseSQL;
+import Project.Logic.DataBase.SQL.SqlConnection;
 import Project.Logic.Issue;
 import Project.Util.EnumChanger;
 
@@ -9,9 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class BoardIssuesDataBaseSql {
-    String url = "jdbc:mysql://localhost:3306/FinalProject";
-    String username = "root";
-    String password = "pooya1234";
+
     static BoardIssuesDataBaseSql instance;
 
     private BoardIssuesDataBaseSql() {
@@ -23,12 +21,12 @@ public class BoardIssuesDataBaseSql {
         } else return instance;
     }
 
-    private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, username, password);
+    private java.sql.Connection getConnection() throws SQLException {
+        return SqlConnection.getConnection();
     }
     //Add Issue to Board
     public void assignIssueToBoard(int boardId, int issueId) {
-        try (Connection connection = getConnection()) {
+        try (java.sql.Connection connection = getConnection()) {
             String insertQuery = "INSERT INTO Board_Issues (board_id, issue_id) VALUES (?, ?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
@@ -48,7 +46,7 @@ public class BoardIssuesDataBaseSql {
     }
 
     public void removeIssueFromBoard(int issueId, int boardId) {
-        try (Connection connection = getConnection()) {
+        try (java.sql.Connection connection = getConnection()) {
             String deleteQuery = "DELETE FROM Board_Issues WHERE issue_id = ? AND board_id = ?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
@@ -70,7 +68,7 @@ public class BoardIssuesDataBaseSql {
     public ArrayList<Board> getAllBoardsWithIssue(int issueId) {
         ArrayList<Board> boards = new ArrayList<>();
 
-        try (Connection connection = getConnection()) {
+        try (java.sql.Connection connection = getConnection()) {
             String selectQuery = "SELECT Board.* FROM Board " +
                     "INNER JOIN Board_Issues ON Board.board_id = Board_Issues.board_id " +
                     "WHERE Board_Issues.issue_id = ?";
@@ -97,7 +95,7 @@ public class BoardIssuesDataBaseSql {
     }
 
     public void removeBoardAndAssociations(int boardId) {
-        try (Connection connection = getConnection()) {
+        try (java.sql.Connection connection = getConnection()) {
             String deleteQuery = "DELETE FROM Board_Issues WHERE board_id = ?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
@@ -115,7 +113,7 @@ public class BoardIssuesDataBaseSql {
         }
     }
     public void removeIssueFromAllBoards(int issueId) {
-        try (Connection connection = getConnection()) {
+        try (java.sql.Connection connection = getConnection()) {
             String deleteQuery = "DELETE FROM Board_Issues WHERE issue_id = ?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
@@ -132,7 +130,7 @@ public class BoardIssuesDataBaseSql {
     public ArrayList<Issue> getAllIssuesOfBoard(int boardId) {
         ArrayList<Issue> issues = new ArrayList<>();
 
-        try (Connection connection = getConnection()) {
+        try (java.sql.Connection connection = getConnection()) {
             String selectQuery = "SELECT * FROM Issues WHERE issue_id IN (SELECT issue_id FROM Board_Issues WHERE board_id = ?)";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {

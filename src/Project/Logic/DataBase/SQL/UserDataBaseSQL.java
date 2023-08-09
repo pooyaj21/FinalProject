@@ -9,9 +9,6 @@ import java.util.ArrayList;
 
 public class UserDataBaseSQL {
     static UserDataBaseSQL instance;
-    String url = "jdbc:mysql://localhost:3306/FinalProject";
-    String username = "root";
-    String password = "pooya1234";
 
     private UserDataBaseSQL() {
     }
@@ -23,13 +20,13 @@ public class UserDataBaseSQL {
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, username, password);
+        return SqlConnection.getConnection();
     }
 
     public void addUser(String name, String email, String password, Role role) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection(url, this.username, this.password);
+            Connection connection = getConnection();
 
             String insertQuery = "INSERT INTO User (user_name, user_email, user_password, user_role) VALUES (?, ?, ?, ?)";
 
@@ -56,7 +53,7 @@ public class UserDataBaseSQL {
     public void editUser(int userId, String name, String email, String password, Role role) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection(url, this.username, this.password);
+            Connection connection = getConnection();
 
             String updateQuery = "UPDATE User SET user_name = ?, user_email = ?, user_password = ?, user_role = ? WHERE user_id = ?";
 
@@ -86,7 +83,7 @@ public class UserDataBaseSQL {
     public void deleteUser(int userId) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection(url, this.username, this.password);
+            Connection connection = getConnection();
 
             String deleteQuery = "DELETE FROM User WHERE user_id = ?";
 
@@ -112,7 +109,7 @@ public class UserDataBaseSQL {
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection(url, this.username, this.password);
+            Connection connection = getConnection();
 
             String selectQuery = "SELECT * FROM User";
 
@@ -145,7 +142,7 @@ public class UserDataBaseSQL {
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection(url, this.username, this.password);
+            Connection connection = getConnection();
 
             String selectQuery = "SELECT COUNT(*) FROM User WHERE user_email = ?";
 

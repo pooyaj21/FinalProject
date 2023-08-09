@@ -1,16 +1,12 @@
 package Project.Ui.KanbanBoard;
 
 import Project.Logic.*;
-import Project.Logic.DataBase.SQL.BoardDataBaseSql;
 import Project.Logic.DataBase.SQL.CrossTabel.BoardIssuesDataBaseSql;
-import Project.Logic.DataBase.SQL.IssueDataBaseSql;
 import Project.Util.GeneralController;
 import Project.Util.RoundedButton;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class KanbanBoardPanel extends JPanel {
@@ -22,8 +18,6 @@ public class KanbanBoardPanel extends JPanel {
     final DesignedColumn qaD = new DesignedColumn("QA", Color.YELLOW);
     final CategoryPanel done = new CategoryPanel(Status.DONE);
     final DesignedColumn doneD = new DesignedColumn("Done", Color.GREEN);
-    final JPanel addIssuePanel = new JPanel();
-    private final RoundedButton addIssueButton = new RoundedButton("+", 14, Color.white, Color.BLACK, 20);
     int panelWidth = 190;
     Board board;
     User user;
@@ -40,68 +34,68 @@ public class KanbanBoardPanel extends JPanel {
         setPreferredSize(new Dimension(770, 600));
         setBackground(new Color(0xf7f7f7));
         int panelHeight = getHeight();
-      if (board!=null && board.getId() != BoardDataBaseSql.getInstance().getAllBoardsOfProject(project.getId()).get(0).getId()) {
-            addIssuePanel.setBounds(25, 25, 200, 55);
-            addIssuePanel.setLayout(new GridLayout(2,1));
-            JComboBox<String> issuesComboBox = new JComboBox<>();
-            addIssueButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    addIssuePanel.setVisible(true);
-                }
-            });
-
-            for (Issue issue : IssueDataBaseSql.getInstance().getAllIssuesOfProject(project.getId())) {
-              if (board!=null){
-                  if (!BoardIssuesDataBaseSql.getInstance().getAllIssuesOfBoard(board.getId()).contains(issue)){
-                      issuesComboBox.addItem(issue.getDescription());
-                      availableIssues.add(issue);
-                  }
-              }
-            }
-            RoundedButton addButton = new RoundedButton("Add+", 15, Color.blue, Color.white, 12);
-            addButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (issuesComboBox.getSelectedItem() != null) {
-                        Issue newIssue = availableIssues.get(issuesComboBox.getSelectedIndex());
-                        BoardIssuesDataBaseSql.getInstance().assignIssueToBoard(board.getId(),newIssue.getId());
-                        CategoryPanel categoryPanel = getCategoryPanelForStatus(newIssue.getStatus());
-                        if (categoryPanel != null) {
-                            IssuesPanel taskPanel = new IssuesPanel(categoryPanel, KanbanBoardPanel.this, newIssue);
-                            taskPanel.setTitle(newIssue.getDescription());
-                            taskPanel.setIssue(newIssue);
-                            taskPanel.setUser(user);
-                            categoryPanel.addTask(taskPanel);
-                            extraPanel.add(taskPanel);
-                        }
-                        issuesComboBox.removeItem(issuesComboBox.getSelectedItem());
-                        KanbanBoardPanel.this.reset();
-                        addIssuePanel.setVisible(false);
-                    }else addIssuePanel.setVisible(false);
-                }
-            });
-
-            RoundedButton cancelButton = new RoundedButton("Cancel", 15, Color.RED, Color.white, 12);
-            cancelButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    addIssuePanel.setVisible(false);
-                }
-            });
-
-            JPanel buttonPanel = new JPanel();
-            buttonPanel.setLayout(new GridLayout(1,2));
-            buttonPanel.add(addButton);
-            buttonPanel.add(cancelButton);
-
-            addIssuePanel.add(issuesComboBox);
-            addIssuePanel.add(buttonPanel);
-            addIssueButton.setBounds(0, 0, 25, 25);
-            addIssuePanel.setVisible(false);
-            add(addIssueButton);
-            add(addIssuePanel);
-        }
+//      if (board!=null && board.getId() != BoardDataBaseSql.getInstance().getAllBoardsOfProject(project.getId()).get(0).getId()) {
+//            addIssuePanel.setBounds(25, 25, 200, 55);
+//            addIssuePanel.setLayout(new GridLayout(2,1));
+//            JComboBox<String> issuesComboBox = new JComboBox<>();
+//            addIssueButton.addActionListener(new ActionListener() {
+//                @Override
+//                public void actionPerformed(ActionEvent e) {
+//                    addIssuePanel.setVisible(true);
+//                }
+//            });
+//
+//            for (Issue issue : IssueDataBaseSql.getInstance().getAllIssuesOfProject(project.getId())) {
+//              if (board!=null){
+//                  if (!BoardIssuesDataBaseSql.getInstance().getAllIssuesOfBoard(board.getId()).contains(issue)){
+//                      issuesComboBox.addItem(issue.getDescription());
+//                      availableIssues.add(issue);
+//                  }
+//              }
+//            }
+//            RoundedButton addButton = new RoundedButton("Add+", 15, Color.blue, Color.white, 12);
+//            addButton.addActionListener(new ActionListener() {
+//                @Override
+//                public void actionPerformed(ActionEvent e) {
+//                    if (issuesComboBox.getSelectedItem() != null) {
+//                        Issue newIssue = availableIssues.get(issuesComboBox.getSelectedIndex());
+//                        BoardIssuesDataBaseSql.getInstance().assignIssueToBoard(board.getId(),newIssue.getId());
+//                        CategoryPanel categoryPanel = getCategoryPanelForStatus(newIssue.getStatus());
+//                        if (categoryPanel != null) {
+//                            IssuesPanel taskPanel = new IssuesPanel(categoryPanel, KanbanBoardPanel.this, newIssue);
+//                            taskPanel.setTitle(newIssue.getDescription());
+//                            taskPanel.setIssue(newIssue);
+//                            taskPanel.setUser(user);
+//                            categoryPanel.addTask(taskPanel);
+//                            extraPanel.add(taskPanel);
+//                        }
+//                        issuesComboBox.removeItem(issuesComboBox.getSelectedItem());
+//                        KanbanBoardPanel.this.reset();
+//                        addIssuePanel.setVisible(false);
+//                    }else addIssuePanel.setVisible(false);
+//                }
+//            });
+//
+//            RoundedButton cancelButton = new RoundedButton("Cancel", 15, Color.RED, Color.white, 12);
+//            cancelButton.addActionListener(new ActionListener() {
+//                @Override
+//                public void actionPerformed(ActionEvent e) {
+//                    addIssuePanel.setVisible(false);
+//                }
+//            });
+//
+//            JPanel buttonPanel = new JPanel();
+//            buttonPanel.setLayout(new GridLayout(1,2));
+//            buttonPanel.add(addButton);
+//            buttonPanel.add(cancelButton);
+//
+//            addIssuePanel.add(issuesComboBox);
+//            addIssuePanel.add(buttonPanel);
+//            addIssueButton.setBounds(0, 0, 25, 25);
+//            addIssuePanel.setVisible(false);
+//            add(addIssueButton);
+//            add(addIssuePanel);
+//        }
 
         toDo.setBounds(0, 40, panelWidth, panelHeight);
         inProgress.setBounds(panelWidth, 40, panelWidth, panelHeight);
