@@ -1,46 +1,28 @@
 package Project.Ui.KanbanBoard;
 
-import Project.Logic.*;
-import Project.Logic.DataBase.SQL.BoardDataBaseSql;
-import Project.Logic.DataBase.SQL.CrossTabel.BoardIssuesDataBaseSql;
 import Project.Logic.DataBase.SQL.IssueDataBaseSql;
+import Project.Logic.DataBase.SQL.IssuesTransitionSql;
+import Project.Logic.FeatureAccess;
+import Project.Logic.Issue;
+import Project.Logic.Status;
+import Project.Logic.User;
 import Project.Util.DateUtil;
-import Project.Util.RoundedButton;
 import Project.Util.RoundedPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
 public class IssuesPanel extends JPanel {
-    private final JTextArea title = new JTextArea();
-    private final JTextArea theText = new JTextArea();
-
-    private final JPanel settingPanel = new JPanel() {
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            int width = getWidth();
-            int height = getHeight();
-            Shape shape = new RoundRectangle2D.Double(0, 0, width, height, 30, 30);
-            g2.setColor(Color.white);
-            g2.fill(shape);
-            g2.setColor(Color.BLACK);
-            g2.dispose();
-        }
-    };
+    private final JLabel title = new JLabel();
+    private final JLabel assignedUser = new JLabel();
     Issue issue;
-    private final RoundedButton setting = new RoundedButton("⋮", 30, Color.white, Color.BLACK, 22);
     User user;
     private boolean canMove = false;
     private CategoryPanel currentColumn;
     private Point offset;
-    private boolean isSettingOpen = false;
 
 
     public IssuesPanel(CategoryPanel categoryPanel, KanbanBoardPanel kanbanBoardPanel, Issue issue) {
@@ -48,24 +30,14 @@ public class IssuesPanel extends JPanel {
         currentColumn = categoryPanel;
         setBackground(Color.white);
         setLayout(null);
-        setTitle("The Title");
-        setText("");
-        add(settingPanel);
-        settingPanel.setVisible(false);
-        settingPanel.setLayout(null);
 
-        title.setBounds(10, 30, 160, 20);
-        title.setEditable(false);
-        title.setFocusable(false);
-        title.setOpaque(false);
+        title.setBounds(10, 60, 160, 20);
+        assignedUser.setFont(new Font(null,Font.BOLD,12));
         add(title);
 
-        theText.setBounds(10, 50, 160, 70);
-        theText.setFont(new Font("assets/Montserrat-ExtraLight.ttf", Font.PLAIN, 10));
-        theText.setEditable(false);
-        theText.setFocusable(false);
-        title.setOpaque(false);
-        add(theText);
+        assignedUser.setBounds(90, 100, 80, 25);
+        assignedUser.setFont(new Font(null,Font.PLAIN,10));
+        add(assignedUser);
 
 
         RoundedPanel issueType = new RoundedPanel(issue.getType().getIssuesTypes().getName(), 17,
@@ -80,25 +52,9 @@ public class IssuesPanel extends JPanel {
         issuePriority.setFocusable(false);
         add(issuePriority);
 
-        setComponentZOrder(settingPanel, 0);
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        setBackground(Color.WHITE); // Set background color to white
         setOpaque(false);
 
-
-        kanbanBoardPanel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                Point clickPoint = e.getPoint();
-                SwingUtilities.convertPointToScreen(clickPoint, kanbanBoardPanel);
-                SwingUtilities.convertPointFromScreen(clickPoint, IssuesPanel.this);
-                if (!IssuesPanel.this.contains(clickPoint)) {
-                    settingPanel.setVisible(false);
-                    isSettingOpen = false;
-                    toggleEditMode(false);
-                }
-            }
-        });
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -135,20 +91,28 @@ public class IssuesPanel extends JPanel {
 
                 if (whichColumn < 1 && canMove) {
                     newColumn = kanbanBoardPanel.toDo;
-                    IssueDataBaseSql.getInstance().editIssue(issue.getId(),issue.getDescription(), DateUtil.timeOfNow(),
-                            issue.getType().toString(),issue.getPriority().toString(),Status.TODO.toString());
+                    IssuesTransitionSql.getInstance().createIssueTransition(issue.getId()
+                            ,issue.getStatus(),Status.TODO, DateUtil.timeOfNow());
+                    issue.setStatus(Status.TODO);
+                    IssueDataBaseSql.getInstance().editIssue(issue);
                 } else if (whichColumn >= 1 && whichColumn < 2 && canMove) {
                     newColumn = kanbanBoardPanel.inProgress;
-                    IssueDataBaseSql.getInstance().editIssue(issue.getId(),issue.getDescription(), DateUtil.timeOfNow(),
-                            issue.getType().toString(),issue.getPriority().toString(),Status.IN_PROGRESS.toString());
+                    IssuesTransitionSql.getInstance().createIssueTransition(issue.getId()
+                            ,issue.getStatus(),Status.IN_PROGRESS, DateUtil.timeOfNow());
+                    issue.setStatus(Status.IN_PROGRESS);
+                    IssueDataBaseSql.getInstance().editIssue(issue);
                 } else if (whichColumn >= 2 && whichColumn < 3 && canMove) {
                     newColumn = kanbanBoardPanel.qa;
-                    IssueDataBaseSql.getInstance().editIssue(issue.getId(),issue.getDescription(), DateUtil.timeOfNow(),
-                            issue.getType().toString(),issue.getPriority().toString(),Status.QA.toString());
+                    IssuesTransitionSql.getInstance().createIssueTransition(issue.getId()
+                            ,issue.getStatus(),Status.QA, DateUtil.timeOfNow());
+                    issue.setStatus(Status.QA);
+                    IssueDataBaseSql.getInstance().editIssue(issue);
                 } else if (whichColumn >= 3 && whichColumn < 4 && user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE) || user.getRole().hasAccess(FeatureAccess.MOVE_FROM_QA)) {
                     newColumn = kanbanBoardPanel.done;
-                    IssueDataBaseSql.getInstance().editIssue(issue.getId(),issue.getDescription(), DateUtil.timeOfNow(),
-                            issue.getType().toString(),issue.getPriority().toString(),Status.DONE.toString());
+                    IssuesTransitionSql.getInstance().createIssueTransition(issue.getId()
+                            ,issue.getStatus(),Status.DONE, DateUtil.timeOfNow());
+                    issue.setStatus(Status.DONE);
+                    IssueDataBaseSql.getInstance().editIssue(issue);
                 } else kanbanBoardPanel.addTask(IssuesPanel.this, currentColumn);
 
 
@@ -180,19 +144,6 @@ public class IssuesPanel extends JPanel {
 
     }
 
-    private void toggleEditMode(boolean editMode) {
-        if (editMode) {
-            title.setEditable(true);
-            theText.setEditable(true);
-            title.setFocusable(true);
-            theText.setFocusable(true);
-        } else {
-            title.setEditable(false);
-            theText.setEditable(false);
-            title.setFocusable(false);
-            theText.setFocusable(false);
-        }
-    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -221,23 +172,18 @@ public class IssuesPanel extends JPanel {
         title.setText(theTitle);
     }
 
-    public void setText(String text) {
-        theText.setText(text);
-    }
-
     public void setIssue(Issue issue) {
         this.issue = issue;
     }
 
     public void setUser(User user) {
         this.user = user;
-        setting.setVisible(user.getRole().hasAccess(FeatureAccess.DELETE_ISSUES));
-    }
-
-    public void setCurrentColumn(CategoryPanel currentColumn) {
-        this.currentColumn = currentColumn;
+        if (issue.getUser() != null) assignedUser.setText(issue.getUser().getFullName());
     }
 }
+
+
+
 
 
 

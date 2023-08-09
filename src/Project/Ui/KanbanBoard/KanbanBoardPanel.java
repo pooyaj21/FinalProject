@@ -149,12 +149,12 @@ public class KanbanBoardPanel extends JPanel {
                 for (Issue issue : issues) {
                     CategoryPanel categoryPanel = getCategoryPanelForStatus(issue.getStatus());
                     if (categoryPanel != null) {
-                        IssuesPanel taskPanel = new IssuesPanel(categoryPanel, this, issue);
-                        taskPanel.setTitle(issue.getDescription());
-                        taskPanel.setIssue(issue);
-                        taskPanel.setUser(user);
-                        categoryPanel.addTask(taskPanel);
-                        extraPanel.add(taskPanel);
+                        IssuesPanel issuesPanel = new IssuesPanel(categoryPanel, this, issue);
+                        issuesPanel.setTitle(issue.getDescription());
+                        issuesPanel.setIssue(issue);
+                        issuesPanel.setUser(user);
+                        categoryPanel.addTask(issuesPanel);
+                        extraPanel.add(issuesPanel);
                     }
                 }
             }

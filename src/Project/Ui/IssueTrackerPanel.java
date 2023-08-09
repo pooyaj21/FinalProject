@@ -5,6 +5,7 @@ import Project.Logic.DataBase.SQL.BoardDataBaseSql;
 import Project.Logic.DataBase.SQL.CrossTabel.BoardIssuesDataBaseSql;
 import Project.Logic.DataBase.SQL.CrossTabel.UserProjectDataBaseSql;
 import Project.Logic.DataBase.SQL.IssueDataBaseSql;
+import Project.Logic.DataBase.SQL.IssuesTransitionSql;
 import Project.Util.DateUtil;
 import Project.Util.EnumChanger;
 
@@ -224,7 +225,10 @@ public class IssueTrackerPanel extends JPanel {
                 String newStatus = statusComboBox.getSelectedItem().toString();
                 String newUserName =null;
                 if (userComboBox.getSelectedItem()!= null) newUserName = userComboBox.getSelectedItem().toString();
-
+                if (issue.getStatus()!=Status.values()[statusComboBox.getSelectedIndex()]){
+                    IssuesTransitionSql.getInstance().createIssueTransition(issue.getId(),issue.getStatus()
+                            ,Status.values()[statusComboBox.getSelectedIndex()],DateUtil.timeOfNow());
+                }
                 issue.setDescription(descriptionField.getText());
                 if(user.getRole().hasAccess(FeatureAccess.EDIT_ISSUES)) issue.setType(Type.values()[typeComboBox.getSelectedIndex()]);
                 else if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG))issue.setType(Type.BUG);
@@ -241,8 +245,7 @@ public class IssueTrackerPanel extends JPanel {
                 table.setValueAt(newStatus, table.getSelectedRow(), 3);
                 table.setValueAt(newUserName, table.getSelectedRow(), 4);
 
-                IssueDataBaseSql.getInstance().editIssue(issue.getId(),issue.getDescription(),issue.getLastUpdateTime()
-                ,issue.getType().toString(),issue.getPriority().toString(),issue.getStatus().toString());
+                IssueDataBaseSql.getInstance().editIssue(issue);
 
                 editIssueDialog.dispose();
                 table.clearSelection();

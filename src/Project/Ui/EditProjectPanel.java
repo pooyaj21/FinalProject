@@ -1,11 +1,12 @@
 package Project.Ui;
 
+import Project.Logic.*;
+import Project.Logic.DataBase.SQL.BoardDataBaseSql;
+import Project.Logic.DataBase.SQL.CrossTabel.BoardIssuesDataBaseSql;
 import Project.Logic.DataBase.SQL.CrossTabel.UserProjectDataBaseSql;
+import Project.Logic.DataBase.SQL.IssueDataBaseSql;
 import Project.Logic.DataBase.SQL.ProjectDatabaseSQL;
 import Project.Logic.DataBase.SQL.UserDataBaseSQL;
-import Project.Logic.Project;
-import Project.Logic.Role;
-import Project.Logic.User;
 import Project.Util.GeneralController;
 import Project.Util.RoundedButton;
 
@@ -133,6 +134,8 @@ public class EditProjectPanel extends JPanel {
                 projectManagementPanel.selectedProjectIndex = -1;
                 projectManagementPanel.drawProjects();
                 projectManagementPanel.projectPanel.setVisible(false);
+                projectManagementPanel.superAdminPanel.userManagementButton.doClick();
+                projectManagementPanel.superAdminPanel.projectManagementButton.doClick();
                 setVisible(false);
             }
         });

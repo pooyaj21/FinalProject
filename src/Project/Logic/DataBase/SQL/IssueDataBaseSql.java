@@ -88,17 +88,27 @@ public class IssueDataBaseSql {
 
 
     // Edit issue details
-    public void editIssue(int issueId, String newTitle, long newUpdateTime, String newType, String newPriority, String newStatus) {
+    public void editIssue(Issue issue) {
         try (Connection connection = getConnection()) {
-            String updateQuery = "UPDATE Issues SET issue_title = ?, issue_updateTime = ?, issue_type = ?, issue_priority = ?, issue_status = ? WHERE issue_id = ?";
+            String updateQuery = "UPDATE Issues SET project_id = ?, user_id = ?, issue_title = ?, issue_addTime = ?, issue_updateTime = ?, issue_type = ?, issue_priority = ?, issue_status = ? WHERE issue_id = ?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
-                preparedStatement.setString(1, newTitle);
-                preparedStatement.setLong(2, newUpdateTime);
-                preparedStatement.setString(3, newType);
-                preparedStatement.setString(4, newPriority);
-                preparedStatement.setString(5, newStatus);
-                preparedStatement.setInt(6, issueId);
+                preparedStatement.setInt(1, issue.getProjectId());
+
+                // Set user_id only if the user is not null
+                if (issue.getUser() != null) {
+                    preparedStatement.setInt(2, issue.getUser().getId());
+                } else {
+                    preparedStatement.setNull(2, java.sql.Types.INTEGER);
+                }
+
+                preparedStatement.setString(3, issue.getDescription());
+                preparedStatement.setLong(4, issue.getAddTime());
+                preparedStatement.setLong(5, issue.getLastUpdateTime());
+                preparedStatement.setString(6, issue.getType().toString());
+                preparedStatement.setString(7, issue.getPriority().toString());
+                preparedStatement.setString(8, issue.getStatus().toString());
+                preparedStatement.setInt(9, issue.getId());
 
                 int rowsAffected = preparedStatement.executeUpdate();
                 if (rowsAffected > 0) {

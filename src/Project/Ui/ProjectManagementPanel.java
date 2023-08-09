@@ -23,7 +23,7 @@ public class ProjectManagementPanel extends JPanel {
     JScrollPane projectScrollPane;
     JButton projectButton;
     EditProjectPanel projectSettingPanel;
-   private SuperAdminPanel superAdminPanel;
+    SuperAdminPanel superAdminPanel;
 
     public ProjectManagementPanel(SuperAdminPanel superAdminPanel) {
         this.superAdminPanel=superAdminPanel;
