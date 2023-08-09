@@ -21,6 +21,7 @@ public class ProjectPanel extends JPanel {
     BoardsPanel boardsPanel;
     IssueTrackerPanel issueTrackerPanel;
     KanbanBoardPanel kanbanBoardPanel;
+    ReportPanel reportPanel;
     AddBoredPanel addBoredPanel;
     EditBoardPanel editBoardPanel;
     Board board;
@@ -191,7 +192,14 @@ public class ProjectPanel extends JPanel {
     }
 
     private void showReportsPanel() {
-        // You can implement the Reports panel or handle the logic accordingly.
+        removeAllPanels();
+        update();
+        reportPanel = new ReportPanel(project);
+        reportPanel.setBounds(10, 60, 770, 600);
+        reportPanel.setVisible(true);
+        add(reportPanel);
+        revalidate();
+        repaint();
     }
 
     void removeAllPanels() {
@@ -200,7 +208,7 @@ public class ProjectPanel extends JPanel {
         if (kanbanBoardPanel != null) kanbanBoardPanel.setVisible(false);
         if (editBoardPanel != null) editBoardPanel.setVisible(false);
         if (addBoredPanel != null) addBoredPanel.setVisible(false);
-        // Remove other panels as you add them in the future.
+        if (reportPanel != null) reportPanel.setVisible(false);
     }
 
     public User getUser() {

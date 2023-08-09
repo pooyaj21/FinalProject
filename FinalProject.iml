@@ -8,5 +8,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="mysql-connector-j-8.0.32" level="project" />
+    <orderEntry type="library" name="xchart-3.8.5" level="project" />
+    <orderEntry type="library" name="jfreechart-demo-1.5.2-jar-with-dependencies" level="project" />
+    <orderEntry type="library" name="java" level="project" />
   </component>
 </module>

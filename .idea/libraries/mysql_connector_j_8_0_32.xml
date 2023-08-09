@@ -2,8 +2,12 @@
   <library name="mysql-connector-j-8.0.32">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/mysql-connector-j-8.0.32.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jfreechart-demo-1.5.2-jar-with-dependencies.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
+    <excluded>
+      <root url="jar://$PROJECT_DIR$/jfreechart-demo-1.5.2-jar-with-dependencies.jar!/" />
+    </excluded>
   </library>
 </component>
