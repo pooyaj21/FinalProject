@@ -3,10 +3,8 @@ package Project.Ui;
 import Project.Logic.*;
 import Project.Logic.DataBase.SQL.BoardDataBaseSql;
 import Project.Logic.DataBase.SQL.CrossTabel.BoardIssuesDataBaseSql;
-import Project.Logic.DataBase.SQL.CrossTabel.ProjectBoardDataBaseSql;
 import Project.Logic.DataBase.SQL.CrossTabel.UserProjectDataBaseSql;
 import Project.Logic.DataBase.SQL.IssueDataBaseSql;
-import Project.Logic.DataBase.SQL.ProjectDatabaseSQL;
 import Project.Util.DateUtil;
 import Project.Util.EnumChanger;
 

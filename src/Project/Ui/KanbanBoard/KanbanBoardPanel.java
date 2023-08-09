@@ -3,7 +3,6 @@ package Project.Ui.KanbanBoard;
 import Project.Logic.*;
 import Project.Logic.DataBase.SQL.BoardDataBaseSql;
 import Project.Logic.DataBase.SQL.CrossTabel.BoardIssuesDataBaseSql;
-import Project.Logic.DataBase.SQL.CrossTabel.ProjectIssuesDataBaseSql;
 import Project.Logic.DataBase.SQL.IssueDataBaseSql;
 import Project.Util.GeneralController;
 import Project.Util.RoundedButton;
@@ -13,7 +12,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class KanbanBoardPanel extends JPanel {
     final CategoryPanel toDo = new CategoryPanel(Status.TODO);

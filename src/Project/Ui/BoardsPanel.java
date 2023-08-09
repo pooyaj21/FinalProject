@@ -2,7 +2,6 @@ package Project.Ui;
 
 import Project.Logic.Board;
 import Project.Logic.DataBase.SQL.BoardDataBaseSql;
-import Project.Logic.DataBase.SQL.CrossTabel.ProjectBoardDataBaseSql;
 import Project.Logic.FeatureAccess;
 import Project.Logic.Project;
 import Project.Logic.User;
