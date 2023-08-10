@@ -5,6 +5,7 @@ import Project.Logic.FeatureAccess;
 import Project.Logic.Project;
 import Project.Logic.User;
 import Project.Ui.KanbanBoard.KanbanBoardPanel;
+import Project.Util.DateUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +19,7 @@ public class ProjectPanel extends JPanel {
     JButton issueButton = new JButton("Issue Tracker");
     JButton reportButton = new JButton("Reports");
     JLabel nameProjectLabel = new JLabel();
+    JLabel dateProjectLabel = new JLabel();
     BoardsPanel boardsPanel;
     IssueTrackerPanel issueTrackerPanel;
     KanbanBoardPanel kanbanBoardPanel;
@@ -45,8 +47,13 @@ public class ProjectPanel extends JPanel {
         nameProjectLabel.setBounds(250, 5, 200, 30);
         nameProjectLabel.setHorizontalAlignment(JLabel.CENTER);
 
+        dateProjectLabel.setFont(new Font(null, Font.PLAIN, 12));
+        dateProjectLabel.setBounds(600, 5, 200, 30);
+        dateProjectLabel.setHorizontalAlignment(JLabel.CENTER);
+        dateProjectLabel.setText(DateUtil.formatDate(project.getAddDate()));
 
         add(nameProjectLabel);
+        add(dateProjectLabel);
         add(kanbanButton);
         add(issueButton);
         add(reportButton);
@@ -88,8 +95,14 @@ public class ProjectPanel extends JPanel {
         nameProjectLabel.setBounds(250, 5, 200, 30);
         nameProjectLabel.setHorizontalAlignment(JLabel.CENTER);
 
+        dateProjectLabel.setFont(new Font(null, Font.PLAIN, 12));
+        dateProjectLabel.setBounds(600, 5, 200, 30);
+        dateProjectLabel.setHorizontalAlignment(JLabel.CENTER);
+        dateProjectLabel.setText(DateUtil.formatDate(project.getAddDate()));
+
 
         add(nameProjectLabel);
+        add(dateProjectLabel);
         add(kanbanButton);
         add(issueButton);
         add(reportButton);

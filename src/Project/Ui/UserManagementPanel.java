@@ -2,12 +2,14 @@ package Project.Ui;
 
 
 import Project.Logic.DataBase.SQL.UserDataBaseSQL;
+import Project.Logic.Role;
 import Project.Logic.User;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class UserManagementPanel extends JPanel {
     CreateUserPanel createUserPanel;
@@ -112,12 +114,12 @@ public class UserManagementPanel extends JPanel {
 
     public void drawUsers() {
         userPanel.removeAll();
-
-        for (int i = 1; i < UserDataBaseSQL.getInstance().getAllUsers().size(); i++) {
+        ArrayList<User> users = new ArrayList<>();
+        for (int i = 0; i < UserDataBaseSQL.getInstance().getAllUsers().size(); i++) {
             User user = UserDataBaseSQL.getInstance().getAllUsers().get(i);
-            drawUserButton(user, i-1);
+            if (user.getRole()!= Role.SUPER_ADMIN) users.add(user);
         }
-
+        for (int i = 0; i < users.size(); i++) drawUserButton(users.get(i),i);
         // Repaint the userPanel and update the scroll pane
         userPanel.revalidate();
         userPanel.repaint();

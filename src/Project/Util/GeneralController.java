@@ -88,4 +88,12 @@ public class GeneralController {
     public static boolean emailAuthentication(String email) {
         return email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
     }
+
+    public static Color generateRandomColor() {
+        int red = (int) (Math.random() * 256);
+        int green = (int) (Math.random() * 256);
+        int blue = (int) (Math.random() * 256);
+
+        return new Color(red, green, blue);
+    }
 }

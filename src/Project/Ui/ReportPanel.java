@@ -3,6 +3,7 @@ package Project.Ui;
 import Project.Logic.DataBase.SQL.CrossTabel.UserProjectDataBaseSql;
 import Project.Logic.Project;
 import Project.Logic.User;
+import Project.Ui.Charts.MultiUserPieChart;
 import Project.Ui.Charts.ProjectPieChart;
 import Project.Ui.Charts.UserPieChart;
 
@@ -29,6 +30,7 @@ public class ReportPanel extends JPanel {
         selectComboBox.setBounds(10, 75, 150, 50);
         selectComboBox.addItem(null);
         selectComboBox.addItem(project.getName());
+        selectComboBox.addItem("All Users");
         for (User user : UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId())) {
             selectComboBox.addItem(user.getFullName());
             users.add(user);
@@ -47,16 +49,22 @@ public class ReportPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 selectErrorLabel.setVisible(false);
                 if (pieChart != null) remove(pieChart);
-                if(selectComboBox.getSelectedIndex() ==1){
+                if (selectComboBox.getSelectedIndex() == 1) {
                     pieChart = new ProjectPieChart(project);
                     pieChart.setBounds(0, 0, 780, 400);
                     pieChart.setVisible(true);
                     pieChart.revalidate();
                     pieChart.repaint();
                     add(pieChart);
-                }
-                else if (selectComboBox.getSelectedIndex() > 1) {
-                    pieChart = new UserPieChart(project, users.get(selectComboBox.getSelectedIndex() - 2));
+                } else if (selectComboBox.getSelectedIndex() == 2) {
+                    pieChart = new MultiUserPieChart(project);
+                    pieChart.setBounds(0, 0, 780, 400);
+                    pieChart.setVisible(true);
+                    pieChart.revalidate();
+                    pieChart.repaint();
+                    add(pieChart);
+                } else if (selectComboBox.getSelectedIndex() > 2) {
+                    pieChart = new UserPieChart(project, users.get(selectComboBox.getSelectedIndex() - 3));
                     pieChart.setBounds(0, 0, 780, 400);
                     pieChart.setVisible(true);
                     pieChart.revalidate();
