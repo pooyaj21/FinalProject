@@ -2,6 +2,9 @@ package Project.Logic.DataBase.SQL;
 
 import Project.Logic.DataBase.SQL.CrossTabel.BoardIssuesDataBaseSql;
 import Project.Logic.Issue;
+import Project.Logic.Priority;
+import Project.Logic.Status;
+import Project.Logic.Type;
 import Project.Util.EnumChanger;
 
 import java.sql.*;
@@ -229,4 +232,57 @@ public class IssueDataBaseSql {
     }
 
 
-}
+    public ArrayList<Issue> filterIssues(int projectId, Priority priority, Type type, Status status) {
+        ArrayList<Issue> filteredIssues = new ArrayList<>();
+
+        try (Connection connection = getConnection()) {
+            StringBuilder queryBuilder = new StringBuilder("SELECT * FROM Issues WHERE project_id = ?");
+
+            if (priority != null) {
+                queryBuilder.append(" AND issue_priority = ?");
+            }
+            if (type != null) {
+                queryBuilder.append(" AND issue_type = ?");
+            }
+            if (status != null) {
+                queryBuilder.append(" AND issue_status = ?");
+            }
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(queryBuilder.toString())) {
+                int paramIndex = 1;
+                preparedStatement.setInt(paramIndex++, projectId);
+
+                if (priority != null) {
+                    preparedStatement.setString(paramIndex++, priority.toString());
+                }
+                if (type != null) {
+                    preparedStatement.setString(paramIndex++, type.toString());
+                }
+                if (status != null) {
+                    preparedStatement.setString(paramIndex, status.toString());
+                }
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        Issue issue = new Issue(
+                                resultSet.getInt("issue_id"),
+                                resultSet.getInt("project_id"),
+                                resultSet.getInt("user_id"),
+                                resultSet.getString("issue_title"),
+                                resultSet.getLong("issue_addTime"),
+                                resultSet.getLong("issue_updateTime"),
+                                EnumChanger.toEnumType(resultSet.getString("issue_type")),
+                                EnumChanger.toEnumPriority(resultSet.getString("issue_priority")),
+                                EnumChanger.toEnumStatus(resultSet.getString("issue_status"))
+                        );
+                        filteredIssues.add(issue);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return filteredIssues;
+    }
+    }

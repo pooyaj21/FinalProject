@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="FinalProject:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/FinalProject_jar</output-path>
+    <output-path>$PROJECT_DIR$/FinalProject App</output-path>
     <root id="archive" name="FinalProject.jar">
       <element id="module-output" name="FinalProject" />
       <element id="extracted-dir" path="$USER_HOME$/Downloads/xchart-3.8.5/xchart-demo-3.8.5.jar" path-in-jar="/" />

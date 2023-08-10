@@ -1,11 +1,11 @@
 package Project.Ui;
 
-import Project.Logic.*;
 import Project.Logic.DataBase.SQL.BoardDataBaseSql;
 import Project.Logic.DataBase.SQL.CrossTabel.BoardIssuesDataBaseSql;
 import Project.Logic.DataBase.SQL.CrossTabel.UserProjectDataBaseSql;
 import Project.Logic.DataBase.SQL.IssueDataBaseSql;
 import Project.Logic.DataBase.SQL.IssuesTransitionSql;
+import Project.Logic.*;
 import Project.Util.DateUtil;
 import Project.Util.EnumChanger;
 
@@ -21,28 +21,107 @@ import java.util.ArrayList;
 
 
 public class IssueTrackerPanel extends JPanel {
-    private JTable table;
+    ArrayList<Issue> issues;
+    private final JTable table;
     private DefaultTableModel tableModel;
     private Project project;
-    private User user;
+    private final User user;
 
-    public IssueTrackerPanel(Project project,User user) {
-        this.project=project;
-        this.user=user;
+    public IssueTrackerPanel(Project project, User user) {
+        this.project = project;
+        this.user = user;
+        issues = IssueDataBaseSql.getInstance().getAllIssuesOfProject(project.getId());
 
         setSize(780, 600);
         setLayout(new BorderLayout());
-        tableModel = new DefaultTableModel(new Object[]{"Description", "Type", "Priority", "Status","User"}, 0) {
+
+        JComboBox<String> typeFilterComboBox = new JComboBox<>(EnumChanger.toStringArray(Type.values()));
+        JComboBox<String> priorityFilterComboBox = new JComboBox<>(EnumChanger.toStringArray(Priority.values()));
+        JComboBox<String> statusFilterComboBox = new JComboBox<>(EnumChanger.toStringArray(Status.values()));
+
+
+        typeFilterComboBox.insertItemAt(null, 0);
+        typeFilterComboBox.setSelectedIndex(0);
+        typeFilterComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Type type = null;
+                Priority priority = null;
+                Status status = null;
+                if (typeFilterComboBox.getSelectedIndex() > 0)
+                    type = Type.values()[typeFilterComboBox.getSelectedIndex() - 1];
+                if (priorityFilterComboBox.getSelectedIndex() > 0)
+                    priority = Priority.values()[priorityFilterComboBox.getSelectedIndex() - 1];
+                if (statusFilterComboBox.getSelectedIndex() > 0)
+                    status = Status.values()[statusFilterComboBox.getSelectedIndex() - 1];
+
+               issues =IssueDataBaseSql.getInstance().filterIssues(project.getId(),priority,type,status);
+               addToTable();
+            }
+        });
+
+        priorityFilterComboBox.insertItemAt(null, 0);
+        priorityFilterComboBox.setSelectedIndex(0);
+        priorityFilterComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Type type = null;
+                Priority priority = null;
+                Status status = null;
+                if (typeFilterComboBox.getSelectedIndex() > 0)
+                    type = Type.values()[typeFilterComboBox.getSelectedIndex() - 1];
+                if (priorityFilterComboBox.getSelectedIndex() > 0)
+                    priority = Priority.values()[priorityFilterComboBox.getSelectedIndex() - 1];
+                if (statusFilterComboBox.getSelectedIndex() > 0)
+                    status = Status.values()[statusFilterComboBox.getSelectedIndex() - 1];
+
+                issues =IssueDataBaseSql.getInstance().filterIssues(project.getId(),priority,type,status);
+                addToTable();
+            }
+        });
+
+        statusFilterComboBox.insertItemAt(null, 0);
+        statusFilterComboBox.setSelectedIndex(0);
+        statusFilterComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Type type = null;
+                Priority priority = null;
+                Status status = null;
+                if (typeFilterComboBox.getSelectedIndex() > 0)
+                    type = Type.values()[typeFilterComboBox.getSelectedIndex() - 1];
+                if (priorityFilterComboBox.getSelectedIndex() > 0)
+                    priority = Priority.values()[priorityFilterComboBox.getSelectedIndex() - 1];
+                if (statusFilterComboBox.getSelectedIndex() > 0)
+                    status = Status.values()[statusFilterComboBox.getSelectedIndex() - 1];
+
+                issues =IssueDataBaseSql.getInstance().filterIssues(project.getId(),priority,type,status);
+                addToTable();
+            }
+        });
+
+        JPanel filterPanel = new JPanel();
+        filterPanel.add(new JLabel("Filter by Type:"));
+        filterPanel.add(typeFilterComboBox);
+        filterPanel.add(new JLabel("Filter by Priority:"));
+        filterPanel.add(priorityFilterComboBox);
+        filterPanel.add(new JLabel("Filter by Status:"));
+        filterPanel.add(statusFilterComboBox);
+
+        // Add the filter panel to the IssueTrackerPanel
+        add(filterPanel, BorderLayout.NORTH);
+
+        tableModel = new DefaultTableModel(new Object[]{"Description", "Type", "Priority", "Status", "User"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return true;
+                return false;
             }
         };
         table = new JTable(tableModel) {
             @Override
             public TableCellEditor getCellEditor(int row, int column) {
                 int modelColumn = convertColumnIndexToModel(column);
-                if (modelColumn == 1 || modelColumn == 2 || modelColumn == 3|| modelColumn == 4) {
+                if (modelColumn == 1 || modelColumn == 2 || modelColumn == 3 || modelColumn == 4) {
                     return null;
                 }
                 return super.getCellEditor(row, column);
@@ -63,11 +142,12 @@ public class IssueTrackerPanel extends JPanel {
                         String type = table.getValueAt(selectedRow, 1).toString();
                         String priority = table.getValueAt(selectedRow, 2).toString();
                         String status = table.getValueAt(selectedRow, 3).toString();
-                        String userName =null;
-                        if (table.getValueAt(selectedRow,4)!=null) userName=table.getValueAt(selectedRow,4).toString();
-                        if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG)||user.getRole().hasAccess(FeatureAccess.EDIT_ISSUES)) {
-                            if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG)&&!type.equals("Bug"))return;
-                            openEditDialog(description, type, priority, status,userName);
+                        String userName = null;
+                        if (table.getValueAt(selectedRow, 4) != null)
+                            userName = table.getValueAt(selectedRow, 4).toString();
+                        if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG) || user.getRole().hasAccess(FeatureAccess.EDIT_ISSUES)) {
+                            if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG) && !type.equals("Bug")) return;
+                            openEditDialog(description, type, priority, status, userName);
                         }
                     }
                 }
@@ -76,7 +156,7 @@ public class IssueTrackerPanel extends JPanel {
 
         JPanel buttonPanel = new JPanel();
         JButton addButton = new JButton("Add Issue");
-        addButton.setVisible(user.getRole().hasAccess(FeatureAccess.ADD_ISSUES)||user.getRole().hasAccess(FeatureAccess.ADD_BUG));
+        addButton.setVisible(user.getRole().hasAccess(FeatureAccess.ADD_ISSUES) || user.getRole().hasAccess(FeatureAccess.ADD_BUG));
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -87,14 +167,14 @@ public class IssueTrackerPanel extends JPanel {
         add(buttonPanel, BorderLayout.SOUTH);
         addButton.requestFocusInWindow();
 
-        addFirstTime();
+        addToTable();
     }
 
-    public void addFirstTime(){
-        ArrayList<Issue> issues = IssueDataBaseSql.getInstance().getAllIssuesOfProject(project.getId());
+    public void addToTable() {
+        tableModel.setRowCount(0);
         for (Issue issue : issues) {
-            String userName=null;
-            if (issue.getUser()!=null)userName=issue.getUser().getFullName();
+            String userName = null;
+            if (issue.getUser() != null) userName = issue.getUser().getFullName();
             String[] rowData = {
                     issue.getDescription(),
                     EnumChanger.toString(issue.getType()),
@@ -105,6 +185,7 @@ public class IssueTrackerPanel extends JPanel {
             tableModel.addRow(rowData);
         }
     }
+
 
     private void addIssue() {
         // Create a dialog to get issue details
@@ -117,14 +198,17 @@ public class IssueTrackerPanel extends JPanel {
         JComboBox<String> priorityComboBox = new JComboBox<>(EnumChanger.toStringArray(Priority.values()));
         JComboBox<String> userComboBox = new JComboBox<>();
         userComboBox.addItem(null);
-        for (User u : UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId())) {userComboBox.addItem(u.getFullName());}
+        for (User u : UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId())) {
+            userComboBox.addItem(u.getFullName());
+        }
 
 
         addIssueDialog.add(new JLabel("Description:"));
         addIssueDialog.add(descriptionField);
         addIssueDialog.add(new JLabel("Type:"));
-        if(user.getRole().hasAccess(FeatureAccess.ADD_ISSUES))addIssueDialog.add(typeComboBox);
-        else if (user.getRole().hasAccess(FeatureAccess.ADD_BUG))addIssueDialog.add(new JLabel(EnumChanger.toString(Type.BUG)));
+        if (user.getRole().hasAccess(FeatureAccess.ADD_ISSUES)) addIssueDialog.add(typeComboBox);
+        else if (user.getRole().hasAccess(FeatureAccess.ADD_BUG))
+            addIssueDialog.add(new JLabel(EnumChanger.toString(Type.BUG)));
         addIssueDialog.add(new JLabel("Priority:"));
         addIssueDialog.add(priorityComboBox);
         addIssueDialog.add(new JLabel("Status:"));
@@ -138,26 +222,28 @@ public class IssueTrackerPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String description = descriptionField.getText();
                 Type type = null;
-                if(user.getRole().hasAccess(FeatureAccess.ADD_ISSUES)) type= Type.values()[typeComboBox.getSelectedIndex()];
-                else if (user.getRole().hasAccess(FeatureAccess.ADD_BUG)) type=Type.BUG;
-                Priority priority =  Priority.values()[priorityComboBox.getSelectedIndex()];
+                if (user.getRole().hasAccess(FeatureAccess.ADD_ISSUES))
+                    type = Type.values()[typeComboBox.getSelectedIndex()];
+                else if (user.getRole().hasAccess(FeatureAccess.ADD_BUG)) type = Type.BUG;
+                Priority priority = Priority.values()[priorityComboBox.getSelectedIndex()];
                 User selectedUser = null;
-                if (userComboBox.getSelectedIndex()>0) selectedUser= UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId()).get(userComboBox.getSelectedIndex()-1);
+                if (userComboBox.getSelectedIndex() > 0)
+                    selectedUser = UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId()).get(userComboBox.getSelectedIndex() - 1);
                 Issue issue = new Issue(description);
                 issue.setType(type);
                 issue.setPriority(priority);
                 issue.setStatus(Status.TODO);
                 issue.setUser(selectedUser);
-                IssueDataBaseSql.getInstance().createIssue(issue,project.getId());
+                IssueDataBaseSql.getInstance().createIssue(issue, project.getId());
                 BoardIssuesDataBaseSql.getInstance().assignIssueToBoard(BoardDataBaseSql.getInstance().getAllBoardsOfProject(project.getId()).get(0).getId()
-                        ,IssueDataBaseSql.getInstance().getAllIssuesOfProject(project.getId())
-                                .get(IssueDataBaseSql.getInstance().getAllIssuesOfProject(project.getId()).size()-1).getId()
+                        , IssueDataBaseSql.getInstance().getAllIssuesOfProject(project.getId())
+                                .get(IssueDataBaseSql.getInstance().getAllIssuesOfProject(project.getId()).size() - 1).getId()
                 );
-                String userName=null;
-                if (selectedUser!=null)userName=selectedUser.getFullName();
+                String userName = null;
+                if (selectedUser != null) userName = selectedUser.getFullName();
 
                 String[] rowData = {description, EnumChanger.toString(type),
-                        EnumChanger.toString(priority), EnumChanger.toString(Status.TODO),userName};
+                        EnumChanger.toString(priority), EnumChanger.toString(Status.TODO), userName};
                 tableModel.addRow(rowData);
                 addIssueDialog.dispose();
             }
@@ -181,8 +267,9 @@ public class IssueTrackerPanel extends JPanel {
         addIssueDialog.setLocationRelativeTo(this);
         addIssueDialog.setVisible(true);
     }
-    private void openEditDialog(String description, String type, String priority, String status,String userName) {
-        Issue issue= IssueDataBaseSql.getInstance().getAllIssuesOfProject(project.getId()).get(table.getSelectedRow());
+
+    private void openEditDialog(String description, String type, String priority, String status, String userName) {
+        Issue issue = IssueDataBaseSql.getInstance().getAllIssuesOfProject(project.getId()).get(table.getSelectedRow());
         JDialog editIssueDialog = new JDialog((Frame) SwingUtilities.getWindowAncestor(this), "Edit Issue", true);
         editIssueDialog.setLayout(new GridLayout(6, 2));
 
@@ -192,10 +279,13 @@ public class IssueTrackerPanel extends JPanel {
         JComboBox<String> statusComboBox = new JComboBox<>(EnumChanger.toStringArray(Status.values()));
         JComboBox<String> userComboBox = new JComboBox<>();
         userComboBox.addItem(null);
-        for (User u : UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId())) {userComboBox.addItem(u.getFullName());}
+        for (User u : UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId())) {
+            userComboBox.addItem(u.getFullName());
+        }
 
 
-        if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG)&&!type.equals(EnumChanger.toString(Type.BUG)))editIssueDialog.dispose();
+        if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG) && !type.equals(EnumChanger.toString(Type.BUG)))
+            editIssueDialog.dispose();
 
         typeComboBox.setSelectedItem(type);
         priorityComboBox.setSelectedItem(priority);
@@ -205,12 +295,14 @@ public class IssueTrackerPanel extends JPanel {
         editIssueDialog.add(new JLabel("Description:"));
         editIssueDialog.add(descriptionField);
         editIssueDialog.add(new JLabel("Type:"));
-        if(user.getRole().hasAccess(FeatureAccess.EDIT_ISSUES))editIssueDialog.add(typeComboBox);
-        else if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG))editIssueDialog.add(new JLabel(EnumChanger.toString(Type.BUG)));
+        if (user.getRole().hasAccess(FeatureAccess.EDIT_ISSUES)) editIssueDialog.add(typeComboBox);
+        else if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG))
+            editIssueDialog.add(new JLabel(EnumChanger.toString(Type.BUG)));
         editIssueDialog.add(new JLabel("Priority:"));
         editIssueDialog.add(priorityComboBox);
         editIssueDialog.add(new JLabel("Status:"));
-        if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG)&& !status.equals(EnumChanger.toString(Status.QA))) editIssueDialog.add(new JLabel(status));
+        if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG) && !status.equals(EnumChanger.toString(Status.QA)))
+            editIssueDialog.add(new JLabel(status));
         else editIssueDialog.add(statusComboBox);
         editIssueDialog.add(new JLabel("User:"));
         editIssueDialog.add(userComboBox);
@@ -223,18 +315,20 @@ public class IssueTrackerPanel extends JPanel {
                 String newType = typeComboBox.getSelectedItem().toString();
                 String newPriority = priorityComboBox.getSelectedItem().toString();
                 String newStatus = statusComboBox.getSelectedItem().toString();
-                String newUserName =null;
-                if (userComboBox.getSelectedItem()!= null) newUserName = userComboBox.getSelectedItem().toString();
-                if (issue.getStatus()!=Status.values()[statusComboBox.getSelectedIndex()]){
-                    IssuesTransitionSql.getInstance().createIssueTransition(issue.getId(),issue.getStatus()
-                            ,Status.values()[statusComboBox.getSelectedIndex()],DateUtil.timeOfNow());
+                String newUserName = null;
+                if (userComboBox.getSelectedItem() != null) newUserName = userComboBox.getSelectedItem().toString();
+                if (issue.getStatus() != Status.values()[statusComboBox.getSelectedIndex()]) {
+                    IssuesTransitionSql.getInstance().createIssueTransition(issue.getId(), issue.getStatus()
+                            , Status.values()[statusComboBox.getSelectedIndex()], DateUtil.timeOfNow());
                 }
                 issue.setDescription(descriptionField.getText());
-                if(user.getRole().hasAccess(FeatureAccess.EDIT_ISSUES)) issue.setType(Type.values()[typeComboBox.getSelectedIndex()]);
-                else if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG))issue.setType(Type.BUG);
-                issue.setPriority(Priority.values()[ priorityComboBox.getSelectedIndex()]);
-                issue.setStatus(Status.values()[ statusComboBox.getSelectedIndex()]);
-                if (userComboBox.getSelectedIndex()>0)issue.setUser(UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId()).get(userComboBox.getSelectedIndex()-1));
+                if (user.getRole().hasAccess(FeatureAccess.EDIT_ISSUES))
+                    issue.setType(Type.values()[typeComboBox.getSelectedIndex()]);
+                else if (user.getRole().hasAccess(FeatureAccess.EDIT_BUG)) issue.setType(Type.BUG);
+                issue.setPriority(Priority.values()[priorityComboBox.getSelectedIndex()]);
+                issue.setStatus(Status.values()[statusComboBox.getSelectedIndex()]);
+                if (userComboBox.getSelectedIndex() > 0)
+                    issue.setUser(UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId()).get(userComboBox.getSelectedIndex() - 1));
                 else issue.setUser(null);
                 issue.setLastUpdateTime(DateUtil.timeOfNow());
 
