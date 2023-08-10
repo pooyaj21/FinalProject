@@ -1,7 +1,6 @@
 package Project.Logic;
 
-import Project.Ui.KanbanBoard.IssuesPriority;
-import Project.Ui.KanbanBoard.IssuesTypes;
+import Project.Ui.Board.KanbanBoard.IssuesPriority;
 
 public enum Priority {
     LOW(IssuesPriority.LOW),

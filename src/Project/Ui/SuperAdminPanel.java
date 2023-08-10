@@ -4,6 +4,9 @@ import Project.Logic.DataBase.SQL.UserDataBaseSQL;
 import Project.Logic.Project;
 import Project.Logic.Role;
 import Project.Logic.User;
+import Project.Ui.Project.ProjectManagementPanel;
+import Project.Ui.Project.ProjectPanel;
+import Project.Ui.User.UserManagementPanel;
 import Project.Util.GeneralController;
 
 import javax.swing.*;
@@ -12,8 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SuperAdminPanel extends JPanel {
-    JButton userManagementButton = new JButton("Users Management");
-    JButton projectManagementButton = new JButton("Projects Management");
+    public JButton userManagementButton = new JButton("Users Management");
+    public JButton projectManagementButton = new JButton("Projects Management");
     UserManagementPanel userManagementPanel;
     ProjectManagementPanel projectManagementPanel;
     boolean isUserManagementPanelClicked = false;

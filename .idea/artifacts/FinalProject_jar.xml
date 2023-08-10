@@ -3,14 +3,12 @@
     <output-path>$PROJECT_DIR$/out/artifacts/FinalProject_jar</output-path>
     <root id="archive" name="FinalProject.jar">
       <element id="module-output" name="FinalProject" />
-      <element id="extracted-dir" path="$USER_HOME$/Downloads/xchart-3.8.5/xchart-3.8.5.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$USER_HOME$/Downloads/xchart-3.8.5/xchart-demo-3.8.5.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/xchart-3.8.5.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/mysql-connector-j-8.0.32.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/jfreechart-demo-1.5.2-jar-with-dependencies.jar" path-in-jar="/" />
       <element id="library" level="project" name="java" />
-      <element id="extracted-dir" path="$USER_HOME$/Downloads/sqlite-jdbc-3.42.0.0.jar" path-in-jar="/" />
-      <element id="dir-copy" path="$PROJECT_DIR$/Assets" />
-      <element id="dir-copy" path="$PROJECT_DIR$/DB" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/sqlite-jdbc-3.42.0.0.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

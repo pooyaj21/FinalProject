@@ -1,8 +1,6 @@
 package Project.Logic;
 
-import Project.Ui.KanbanBoard.IssuesTypes;
-
-import java.awt.*;
+import Project.Ui.Board.KanbanBoard.IssuesTypes;
 
 public enum Type {
     STORY(IssuesTypes.STORY),

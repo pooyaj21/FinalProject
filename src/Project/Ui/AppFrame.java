@@ -3,6 +3,7 @@ package Project.Ui;
 import Project.Logic.DataBase.SQL.UserDataBaseSQL;
 import Project.Logic.Role;
 import Project.Logic.User;
+import Project.Ui.User.UserPanel;
 
 import javax.swing.*;
 

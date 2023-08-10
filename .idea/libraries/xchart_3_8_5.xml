@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="xchart-3.8.5">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Downloads/xchart-3.8.5/xchart-3.8.5.jar!/" />
       <root url="jar://$USER_HOME$/Downloads/xchart-3.8.5/xchart-demo-3.8.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/xchart-3.8.5.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
