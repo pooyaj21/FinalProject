@@ -1,0 +1,21 @@
+1.Download and Install Java 8:
+.Visit the Java download page at https://www.java.com/en/download/.
+.Follow the instructions to download the Java 8 version suitable for your operating system (Windows, macOS, Linux).
+.Run the installer and follow the installation prompts.
+
+2.Open a Terminal:
+
+.Depending on your operating system:
+ .On Windows: Press Win + R, type "cmd", and press Enter.
+ .On macOS: Press Cmd + Space, type "Terminal," and press Enter.
+ .On Linux: Open the Terminal from your applications.
+
+3.Navigate to the FinalProject App Folder:
+
+.Assuming the "FinalProject.jar" file is located in a folder called "FinalProject App," use the cd command to navigate to that folder. For example:
+cd /path/to/FinalProject App
+
+4.Run the Java Application:
+
+.Once you are in the "FinalProject App" folder, run the following command to start the Java application:
+java -jar FinalProject.jar
