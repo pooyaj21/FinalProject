@@ -1,6 +1,8 @@
 package Project.Test;
 
 import Project.Logic.DataBase.SQL.ProjectDatabaseSQL;
+import Project.Logic.DataBase.SQL.UserDataBaseSQL;
+import Project.Logic.Role;
 import Project.Ui.Charts.MultiUserChart;
 import Project.Ui.Charts.ProjectChart;
 import Project.Util.DateUtil;
@@ -15,19 +17,8 @@ public class TestDataBase {
 
     public static void main(String[] args) {
 
-        // Create and configure the frame
-        JFrame frame = new JFrame("Multi-User Pie Chart");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
+        UserDataBaseSQL.getInstance().addUser("The Almighty Admin","admin@a.com","admin", Role.SUPER_ADMIN);
 
-        // Add the chart to the frame
-        ExampleChart<PieChart> exampleChart =new MultiUserChart(ProjectDatabaseSQL.getInstance().getProjectById(13));
-        PieChart chart = exampleChart.getChart();
-        JPanel panel= new XChartPanel<>(chart);
 
-        frame.getContentPane().add(panel, BorderLayout.CENTER);
-
-        // Display the frame
-        frame.setVisible(true);
     }
 }
