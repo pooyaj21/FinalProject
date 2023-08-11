@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="mysql-connector-j-8.0.32">
+  <library name="xchart-demo-3.8.5">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/mysql-connector-j-8.0.32.jar!/" />
+      <root url="jar://$PROJECT_DIR$/xchart-demo-3.8.5.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

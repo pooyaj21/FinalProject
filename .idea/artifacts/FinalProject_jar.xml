@@ -7,7 +7,6 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/xchart-3.8.5.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/mysql-connector-j-8.0.32.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/jfreechart-demo-1.5.2-jar-with-dependencies.jar" path-in-jar="/" />
-      <element id="library" level="project" name="java" />
       <element id="extracted-dir" path="$PROJECT_DIR$/sqlite-jdbc-3.42.0.0.jar" path-in-jar="/" />
     </root>
   </artifact>

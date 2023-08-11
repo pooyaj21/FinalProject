@@ -1,7 +1,6 @@
 package Project.Ui.Charts;
 
 import Project.Logic.DataBase.SQL.CrossTabel.UserProjectDataBaseSql;
-import Project.Logic.DataBase.SQL.IssueDataBaseSql;
 import Project.Logic.Project;
 import Project.Logic.User;
 import Project.Util.GeneralController;
