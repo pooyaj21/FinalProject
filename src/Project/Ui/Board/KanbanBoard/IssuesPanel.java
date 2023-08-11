@@ -65,10 +65,14 @@ public class IssuesPanel extends JPanel {
                 double panelX = kanbanBoardPanel.getLocationOnScreen().getX();
                 double columnWidth = kanbanBoardPanel.getWidth() / 4.0;
                 double whichColumn = (mouseX - panelX) / columnWidth;
+                int issuesUser = -1;
+                if (issue.getUser()!=null)issuesUser=issue.getUser().getId();
                 if (whichColumn < 1) {
-                    canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE) || user.getId() == issue.getUser().getId();
+                    canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE);
+                  if (issue.getUser()==null) canMove= user.getId() == issuesUser;
                 } else if (whichColumn >= 1 && whichColumn < 2) {
-                    canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE) || user.getId() == issue.getUser().getId();
+                    canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE);
+                    if (issue.getUser()==null) canMove= user.getId() == issuesUser;
                 } else if (whichColumn >= 2 && whichColumn < 3) {
                     canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE) || user.getRole().hasAccess(FeatureAccess.MOVE_FROM_QA);
                 } else if (whichColumn >= 3 && whichColumn < 4) {
