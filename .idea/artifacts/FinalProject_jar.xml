@@ -8,7 +8,7 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/jfreechart-demo-1.5.2-jar-with-dependencies.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/xchart-demo-3.8.5.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/xchart-3.8.5.jar" path-in-jar="/" />
-      <element id="dir-copy" path="$PROJECT_DIR$/FinalProject App/Assets" />
+      <element id="dir-copy" path="$PROJECT_DIR$/Assets" />
       <element id="dir-copy" path="$PROJECT_DIR$/DB" />
     </root>
   </artifact>
