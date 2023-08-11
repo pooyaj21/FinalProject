@@ -38,6 +38,7 @@ public class IssueTrackerPanel extends JPanel {
         JComboBox<String> typeFilterComboBox = new JComboBox<>(EnumChanger.toStringArray(Type.values()));
         JComboBox<String> priorityFilterComboBox = new JComboBox<>(EnumChanger.toStringArray(Priority.values()));
         JComboBox<String> statusFilterComboBox = new JComboBox<>(EnumChanger.toStringArray(Status.values()));
+        JComboBox<String> userFilterComboBox = new JComboBox<>();
 
 
         typeFilterComboBox.insertItemAt(null, 0);
@@ -48,15 +49,17 @@ public class IssueTrackerPanel extends JPanel {
                 Type type = null;
                 Priority priority = null;
                 Status status = null;
+                User userName = null;
                 if (typeFilterComboBox.getSelectedIndex() > 0)
                     type = Type.values()[typeFilterComboBox.getSelectedIndex() - 1];
                 if (priorityFilterComboBox.getSelectedIndex() > 0)
                     priority = Priority.values()[priorityFilterComboBox.getSelectedIndex() - 1];
                 if (statusFilterComboBox.getSelectedIndex() > 0)
                     status = Status.values()[statusFilterComboBox.getSelectedIndex() - 1];
-
-               issues =IssueDataBaseSql.getInstance().filterIssues(project.getId(),priority,type,status);
-               addToTable();
+                if (userFilterComboBox.getSelectedIndex() > 0)
+                    userName = UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId()).get(userFilterComboBox.getSelectedIndex()-1);
+                issues = IssueDataBaseSql.getInstance().filterIssues(project.getId(), priority, type, status, userName);
+                addToTable();
             }
         });
 
@@ -68,14 +71,16 @@ public class IssueTrackerPanel extends JPanel {
                 Type type = null;
                 Priority priority = null;
                 Status status = null;
+                User userName = null;
                 if (typeFilterComboBox.getSelectedIndex() > 0)
                     type = Type.values()[typeFilterComboBox.getSelectedIndex() - 1];
                 if (priorityFilterComboBox.getSelectedIndex() > 0)
                     priority = Priority.values()[priorityFilterComboBox.getSelectedIndex() - 1];
                 if (statusFilterComboBox.getSelectedIndex() > 0)
                     status = Status.values()[statusFilterComboBox.getSelectedIndex() - 1];
-
-                issues =IssueDataBaseSql.getInstance().filterIssues(project.getId(),priority,type,status);
+                if (userFilterComboBox.getSelectedIndex() > 0)
+                    userName = UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId()).get(userFilterComboBox.getSelectedIndex()-1);
+                issues = IssueDataBaseSql.getInstance().filterIssues(project.getId(), priority, type, status, userName);
                 addToTable();
             }
         });
@@ -88,25 +93,54 @@ public class IssueTrackerPanel extends JPanel {
                 Type type = null;
                 Priority priority = null;
                 Status status = null;
+                User userName = null;
                 if (typeFilterComboBox.getSelectedIndex() > 0)
                     type = Type.values()[typeFilterComboBox.getSelectedIndex() - 1];
                 if (priorityFilterComboBox.getSelectedIndex() > 0)
                     priority = Priority.values()[priorityFilterComboBox.getSelectedIndex() - 1];
                 if (statusFilterComboBox.getSelectedIndex() > 0)
                     status = Status.values()[statusFilterComboBox.getSelectedIndex() - 1];
-
-                issues =IssueDataBaseSql.getInstance().filterIssues(project.getId(),priority,type,status);
+                if (userFilterComboBox.getSelectedIndex() > 0)
+                    userName = UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId()).get(userFilterComboBox.getSelectedIndex()-1);
+                issues = IssueDataBaseSql.getInstance().filterIssues(project.getId(), priority, type, status, userName);
+                addToTable();;
+            }
+        });
+        userFilterComboBox.insertItemAt(null, 0);
+        for (User u : UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId())) {
+            userFilterComboBox.addItem(u.getFullName());
+        }
+        userFilterComboBox.setSelectedIndex(0);
+        userFilterComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Type type = null;
+                Priority priority = null;
+                Status status = null;
+                User userName = null;
+                if (typeFilterComboBox.getSelectedIndex() > 0)
+                    type = Type.values()[typeFilterComboBox.getSelectedIndex() - 1];
+                if (priorityFilterComboBox.getSelectedIndex() > 0)
+                    priority = Priority.values()[priorityFilterComboBox.getSelectedIndex() - 1];
+                if (statusFilterComboBox.getSelectedIndex() > 0)
+                    status = Status.values()[statusFilterComboBox.getSelectedIndex() - 1];
+                if (userFilterComboBox.getSelectedIndex() > 0)
+                    userName = UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId()).get(userFilterComboBox.getSelectedIndex()-1);
+                issues = IssueDataBaseSql.getInstance().filterIssues(project.getId(), priority, type, status, userName);
                 addToTable();
             }
         });
 
         JPanel filterPanel = new JPanel();
-        filterPanel.add(new JLabel("Filter by Type:"));
+        filterPanel.add(new JLabel("Filter Type:"));
         filterPanel.add(typeFilterComboBox);
-        filterPanel.add(new JLabel("Filter by Priority:"));
+        filterPanel.add(new JLabel("Filter Priority:"));
         filterPanel.add(priorityFilterComboBox);
-        filterPanel.add(new JLabel("Filter by Status:"));
+        filterPanel.add(new JLabel("Filter Status:"));
         filterPanel.add(statusFilterComboBox);
+        filterPanel.add(new JLabel("Filter User:"));
+        filterPanel.add(userFilterComboBox);
+
 
         // Add the filter panel to the IssueTrackerPanel
         add(filterPanel, BorderLayout.NORTH);

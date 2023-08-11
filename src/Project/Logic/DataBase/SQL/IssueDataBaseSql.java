@@ -1,10 +1,7 @@
 package Project.Logic.DataBase.SQL;
 
+import Project.Logic.*;
 import Project.Logic.DataBase.SQL.CrossTabel.BoardIssuesDataBaseSql;
-import Project.Logic.Issue;
-import Project.Logic.Priority;
-import Project.Logic.Status;
-import Project.Logic.Type;
 import Project.Util.EnumChanger;
 
 import java.sql.*;
@@ -232,7 +229,7 @@ public class IssueDataBaseSql {
     }
 
 
-    public ArrayList<Issue> filterIssues(int projectId, Priority priority, Type type, Status status) {
+    public ArrayList<Issue> filterIssues(int projectId, Priority priority, Type type, Status status, User user) {
         ArrayList<Issue> filteredIssues = new ArrayList<>();
 
         try (Connection connection = getConnection()) {
@@ -247,6 +244,9 @@ public class IssueDataBaseSql {
             if (status != null) {
                 queryBuilder.append(" AND issue_status = ?");
             }
+            if (user != null) {
+                queryBuilder.append(" AND user_id = ?");
+            }
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(queryBuilder.toString())) {
                 int paramIndex = 1;
@@ -259,7 +259,10 @@ public class IssueDataBaseSql {
                     preparedStatement.setString(paramIndex++, type.toString());
                 }
                 if (status != null) {
-                    preparedStatement.setString(paramIndex, status.toString());
+                    preparedStatement.setString(paramIndex++, status.toString());
+                }
+                if (user != null) {
+                    preparedStatement.setInt(paramIndex, user.getId());
                 }
 
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {

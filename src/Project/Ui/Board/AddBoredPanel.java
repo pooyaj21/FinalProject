@@ -1,13 +1,12 @@
 package Project.Ui.Board;
 
+import Project.Logic.*;
 import Project.Logic.DataBase.SQL.BoardDataBaseSql;
 import Project.Logic.DataBase.SQL.CrossTabel.BoardIssuesDataBaseSql;
 import Project.Logic.DataBase.SQL.CrossTabel.UserProjectDataBaseSql;
 import Project.Logic.DataBase.SQL.IssueDataBaseSql;
-import Project.Logic.Issue;
-import Project.Logic.Project;
-import Project.Logic.User;
 import Project.Ui.Project.ProjectPanel;
+import Project.Util.EnumChanger;
 import Project.Util.GeneralController;
 import Project.Util.RoundedButton;
 
@@ -24,50 +23,73 @@ public class AddBoredPanel extends JPanel {
     ArrayList<User> users = new ArrayList<>();
     JLabel userLabel = new JLabel("User:");
     RoundedButton submit = new RoundedButton("Submit", 15, Color.blue, Color.white, 12);
-    JLabel userErrorLabel = new JLabel("Chose a User");
     JLabel nameErrorLabel = new JLabel("Enter a name");
 
     public AddBoredPanel(Project project, ProjectPanel projectPanel) {
         setSize(770, 680);
         setLayout(null);
 
-        nameLabel.setBounds(125, 200, 75, 25);
-        nameField.setBounds(170, 200, 200, 25);
-        nameErrorLabel.setBounds(170, 225, 200, 25);
-        nameErrorLabel.setFont(new Font(null,Font.BOLD,12));
-        nameErrorLabel.setVisible(false);
+        nameLabel.setBounds(125, 100, 75, 25);
+        nameField.setBounds(170, 100, 200, 25);
 
-        userLabel.setBounds(125, 250, 75, 25);
-        userComboBox.setBounds(170, 250, 200, 25);
+        userLabel.setBounds(125, 150, 75, 25);
+        userComboBox.setBounds(170, 150, 200, 25);
         userComboBox.addItem(null);
-        for (User user: UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId())) {
+        for (User user : UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId())) {
             userComboBox.addItem(user.getFullName());
             users.add(user);
         }
-        userErrorLabel.setBounds(170, 275, 200, 25);
-        userErrorLabel.setVisible(false);
 
-        submit.setBounds(350, 300, 100, 25);
+
+        JLabel statusLabel = new JLabel("Status:");
+        JComboBox<String> statusComboBox = new JComboBox<>(EnumChanger.toStringArray(Status.values()));
+        statusLabel.setBounds(125, 200, 75, 25);
+        statusComboBox.setBounds(170, 200, 200, 25);
+        statusComboBox.insertItemAt(null, 0);
+        statusComboBox.setSelectedIndex(0);
+
+
+        JLabel typeLabel = new JLabel("Type:");
+        JComboBox<String> typeComboBox = new JComboBox<>(EnumChanger.toStringArray(Type.values()));
+        typeLabel.setBounds(125, 250, 75, 25);
+        typeComboBox.setBounds(170, 250, 200, 25);
+        typeComboBox.insertItemAt(null, 0);
+        typeComboBox.setSelectedIndex(0);
+
+        JLabel priorityLabel = new JLabel("Priority:");
+        JComboBox<String> priorityComboBox = new JComboBox<>(EnumChanger.toStringArray(Priority.values()));
+        priorityLabel.setBounds(125, 300, 75, 25);
+        priorityComboBox.setBounds(170, 300, 200, 25);
+        priorityComboBox.insertItemAt(null, 0);
+        priorityComboBox.setSelectedIndex(0);
+
+        submit.setBounds(350, 350, 100, 25);
         submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 nameErrorLabel.setVisible(false);
-                userErrorLabel.setVisible(false);
                 if (GeneralController.getInstance().isEmpty(nameField.getText())) {
                     nameErrorLabel.setForeground(Color.red);
                     nameErrorLabel.setVisible(true);
-                } else if(userComboBox.getSelectedItem()==null) {
-                    userErrorLabel.setForeground(Color.red);
-                    userErrorLabel.setVisible(true);
                 }else {
+                    Type type = null;
+                    Priority priority = null;
+                    Status status = null;
+                    User userName = null;
+                    if (typeComboBox.getSelectedIndex() > 0)
+                        type = Type.values()[typeComboBox.getSelectedIndex() - 1];
+                    if (priorityComboBox.getSelectedIndex() > 0)
+                        priority = Priority.values()[priorityComboBox.getSelectedIndex() - 1];
+                    if (statusComboBox.getSelectedIndex() > 0)
+                        status = Status.values()[statusComboBox.getSelectedIndex() - 1];
+                    if (userComboBox.getSelectedIndex() > 0)
+                        userName = UserProjectDataBaseSql.getInstance().getAllUsersOfProject(project.getId()).get(userComboBox.getSelectedIndex()-1);
                     BoardDataBaseSql.getInstance().createBoard(project.getId(), nameField.getText());
-                    for (Issue issue : IssueDataBaseSql.getInstance().getAllIssuesOfProject(project.getId())) {
-                        if (issue.getUser() != null && issue.getUser().getId() == users.get(userComboBox.getSelectedIndex() - 1).getId()) {
+                        for (Issue issue : IssueDataBaseSql.getInstance().filterIssues(project.getId(), priority, type, status, userName)) {
                             BoardIssuesDataBaseSql.getInstance().assignIssueToBoard(
                                     BoardDataBaseSql.getInstance().getAllBoardsOfProject(project.getId())
                                             .get(BoardDataBaseSql.getInstance().getAllBoardsOfProject(project.getId()).size() - 1).getId(), issue.getId());
                         }
-                    }
                     projectPanel.kanbanButton.doClick();
                 }
             }
@@ -78,7 +100,12 @@ public class AddBoredPanel extends JPanel {
         add(nameErrorLabel);
         add(userLabel);
         add(userComboBox);
-        add(userErrorLabel);
+        add(statusLabel);
+        add(statusComboBox);
+        add(typeLabel);
+        add(typeComboBox);
+        add(priorityLabel);
+        add(priorityComboBox);
         add(submit);
 
         InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
