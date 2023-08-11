@@ -65,7 +65,10 @@ public class BoardsPanel extends JScrollPane {
                         @Override
                         public void mouseClicked(MouseEvent e) {
                             if (SwingUtilities.isRightMouseButton(e)) {
-                                projectPanel.showEditBoardsPanel(board);
+                                if (board.getId()!=BoardDataBaseSql.getInstance().getAllBoardsOfProject(project.getId())
+                                        .get(0).getId()){
+                                    projectPanel.showEditBoardsPanel(board);
+                                }
                             }
                         }
                     });

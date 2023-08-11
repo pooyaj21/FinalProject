@@ -24,7 +24,7 @@ public class AddBoredPanel extends JPanel {
     ArrayList<User> users = new ArrayList<>();
     JLabel userLabel = new JLabel("User:");
     RoundedButton submit = new RoundedButton("Submit", 15, Color.blue, Color.white, 12);
-    JLabel userErrorLabel = new JLabel("Chose a Project");
+    JLabel userErrorLabel = new JLabel("Chose a User");
     JLabel nameErrorLabel = new JLabel("Enter a name");
 
     public AddBoredPanel(Project project, ProjectPanel projectPanel) {
@@ -34,6 +34,7 @@ public class AddBoredPanel extends JPanel {
         nameLabel.setBounds(125, 200, 75, 25);
         nameField.setBounds(170, 200, 200, 25);
         nameErrorLabel.setBounds(170, 225, 200, 25);
+        nameErrorLabel.setFont(new Font(null,Font.BOLD,12));
         nameErrorLabel.setVisible(false);
 
         userLabel.setBounds(125, 250, 75, 25);
