@@ -31,11 +31,14 @@ Welcome to the Project Manager application! This project provides a simple and e
 To run the Project Manager application, follow these steps:
 
 1. Clone the repository: `git clone https://github.com/your-username/project-manager.git`
-2. Navigate to the `FinalProject App` folder: `cd project-manager/FinalProject App`
-3. Follow the instructions provided in the howtoRun file. This file contains the necessary setup and configuration steps for running the application.
-4. super admin as defult is email:admin@a.com password:admin.
+2. Navigate to the `FinalProject App` directory: `cd project-manager/FinalProject App`
+3. Follow the instructions provided in the HowToRun file. This file contains the necessary setup and configuration steps for running the application.
+4. The default super admin credentials are as follows: Email: admin@a.com, Password: admin.
+
+If you prefer to run the application in an IDE of your choice, you can use the source code. All required libraries are included in the file; you just need to add them to the project. Then, you can run the project from `src/Project/Test/mainApp/java`.
 
 If you encounter any issues during setup or execution, please refer to the troubleshooting section below or open an issue for assistance.
+
 
 ## Troubleshooting
 
