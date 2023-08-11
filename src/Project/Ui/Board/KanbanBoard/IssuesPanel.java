@@ -58,6 +58,7 @@ public class IssuesPanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                canMove=false;
                 offset = e.getPoint();
                 getParent().setComponentZOrder(IssuesPanel.this, 0);
 
@@ -65,14 +66,13 @@ public class IssuesPanel extends JPanel {
                 double panelX = kanbanBoardPanel.getLocationOnScreen().getX();
                 double columnWidth = kanbanBoardPanel.getWidth() / 4.0;
                 double whichColumn = (mouseX - panelX) / columnWidth;
-                int issuesUser = -1;
-                if (issue.getUser()!=null)issuesUser=issue.getUser().getId();
+
                 if (whichColumn < 1) {
-                    canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE);
-                  if (issue.getUser()==null) canMove= user.getId() == issuesUser;
+                    if (issue.getUser()!=null) canMove= user.getId() == issue.getUser().getId();
+                    if (!canMove)canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE);
                 } else if (whichColumn >= 1 && whichColumn < 2) {
-                    canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE);
-                    if (issue.getUser()==null) canMove= user.getId() == issuesUser;
+                    if (issue.getUser()!=null) canMove= user.getId() == issue.getUser().getId();
+                    if (!canMove) canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE);
                 } else if (whichColumn >= 2 && whichColumn < 3) {
                     canMove = user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE) || user.getRole().hasAccess(FeatureAccess.MOVE_FROM_QA);
                 } else if (whichColumn >= 3 && whichColumn < 4) {
@@ -111,7 +111,7 @@ public class IssuesPanel extends JPanel {
                             ,issue.getStatus(),Status.QA, DateUtil.timeOfNow());
                     issue.setStatus(Status.QA);
                     IssueDataBaseSql.getInstance().editIssue(issue);
-                } else if (whichColumn >= 3 && whichColumn < 4 && user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE) || user.getRole().hasAccess(FeatureAccess.MOVE_FROM_QA)) {
+                } else if (whichColumn >= 3 && whichColumn < 4 && user.getRole().hasAccess(FeatureAccess.MOVE_EVERYWHERE) || user.getRole().hasAccess(FeatureAccess.MOVE_FROM_QA)&&canMove) {
                     newColumn = kanbanBoardPanel.done;
                     IssuesTransitionSql.getInstance().createIssueTransition(issue.getId()
                             ,issue.getStatus(),Status.DONE, DateUtil.timeOfNow());
