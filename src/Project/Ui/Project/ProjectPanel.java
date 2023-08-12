@@ -6,7 +6,7 @@ import Project.Logic.User;
 import Project.Ui.Board.AddBoredPanel;
 import Project.Ui.Board.BoardsPanel;
 import Project.Ui.Board.EditBoardPanel;
-import Project.Ui.Board.KanbanBoard.KanbanBoardPanel;
+import Project.Ui.Board.KanbanBoard.SwimlaneBoardPanel;
 import Project.Ui.IssueTrackerPanel;
 import Project.Ui.ReportPanel;
 import Project.Ui.User.UserPanel;
@@ -27,7 +27,7 @@ public class ProjectPanel extends JPanel {
     JLabel dateProjectLabel = new JLabel();
     BoardsPanel boardsPanel;
     IssueTrackerPanel issueTrackerPanel;
-    KanbanBoardPanel kanbanBoardPanel;
+    SwimlaneBoardPanel swimlaneBoardPanel;
     ReportPanel reportPanel;
     AddBoredPanel addBoredPanel;
     EditBoardPanel editBoardPanel;
@@ -142,7 +142,6 @@ public class ProjectPanel extends JPanel {
 
         boardsPanel = new BoardsPanel(project, user, this);
         issueTrackerPanel = new IssueTrackerPanel(project, user);
-        kanbanBoardPanel = new KanbanBoardPanel(board, user, project);
         editBoardPanel = new EditBoardPanel(board, project, this);
         addBoredPanel = new AddBoredPanel(project, this);
     }
@@ -161,10 +160,10 @@ public class ProjectPanel extends JPanel {
     public void showKanBanBoardsPanel(Board board) {
         removeAllPanels();
         update();
-        kanbanBoardPanel = new KanbanBoardPanel(board, user, project);
-        kanbanBoardPanel.setBounds(10, 60, 770, 600);
-        kanbanBoardPanel.setVisible(true);
-        add(kanbanBoardPanel);
+        swimlaneBoardPanel = new SwimlaneBoardPanel(board, project, user);
+        swimlaneBoardPanel.setBounds(10, 60, 770, 600);
+        swimlaneBoardPanel.setVisible(true);
+        add(swimlaneBoardPanel);
         revalidate();
         repaint();
     }
@@ -218,7 +217,7 @@ public class ProjectPanel extends JPanel {
     void removeAllPanels() {
         if (issueTrackerPanel != null) issueTrackerPanel.setVisible(false);
         if (boardsPanel != null) boardsPanel.setVisible(false);
-        if (kanbanBoardPanel != null) kanbanBoardPanel.setVisible(false);
+        if (swimlaneBoardPanel != null) swimlaneBoardPanel.setVisible(false);
         if (editBoardPanel != null) editBoardPanel.setVisible(false);
         if (addBoredPanel != null) addBoredPanel.setVisible(false);
         if (reportPanel != null) reportPanel.setVisible(false);

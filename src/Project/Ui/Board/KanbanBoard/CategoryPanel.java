@@ -26,7 +26,7 @@ public class CategoryPanel extends JPanel {
     }
 
     public void showTasks() {
-        lowestY = 0;
+        lowestY = 60;
         int categoryPanelX = getX();
         setBackground(null);
 

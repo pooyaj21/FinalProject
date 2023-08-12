@@ -288,4 +288,4 @@ public class IssueDataBaseSql {
 
         return filteredIssues;
     }
-    }
+}
