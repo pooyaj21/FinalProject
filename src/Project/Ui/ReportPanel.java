@@ -51,6 +51,7 @@ public class ReportPanel extends JPanel {
                 if (pieChart != null) remove(pieChart);
                 if (selectComboBox.getSelectedIndex() == 1) {
                     pieChart = new ProjectPieChart(project);
+                    pieChart.setOpaque(false);
                     pieChart.setBounds(0, 0, 780, 400);
                     pieChart.setVisible(true);
                     pieChart.revalidate();
@@ -58,6 +59,7 @@ public class ReportPanel extends JPanel {
                     add(pieChart);
                 } else if (selectComboBox.getSelectedIndex() == 2) {
                     pieChart = new MultiUserPieChart(project);
+                    pieChart.setOpaque(false);
                     pieChart.setBounds(0, 0, 780, 400);
                     pieChart.setVisible(true);
                     pieChart.revalidate();
@@ -65,6 +67,7 @@ public class ReportPanel extends JPanel {
                     add(pieChart);
                 } else if (selectComboBox.getSelectedIndex() > 2) {
                     pieChart = new UserPieChart(project, users.get(selectComboBox.getSelectedIndex() - 3));
+                    pieChart.setOpaque(false);
                     pieChart.setBounds(0, 0, 780, 400);
                     pieChart.setVisible(true);
                     pieChart.revalidate();
@@ -78,7 +81,7 @@ public class ReportPanel extends JPanel {
 
         optionPanel.add(selectComboBox);
         optionPanel.add(submit);
-        optionPanel.setBackground(Color.GRAY);//change this
+        optionPanel.setBackground(new  Color(0x003d9e));
 
         add(optionPanel);
     }

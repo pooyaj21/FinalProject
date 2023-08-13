@@ -77,7 +77,7 @@ public class BoardsPanel extends JScrollPane {
         }
         int calculatedHeight = ((panelHeight + vGap) * numberOfPanels / cols) + 100;
         contentPanel.setPreferredSize(new Dimension(770, calculatedHeight));
-
+        setOpaque(false);
         setViewportView(contentPanel);
         setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);

@@ -53,11 +53,15 @@ public class TopPanel extends JPanel {
                 AppFrame.getInstance().repaint();
             }
         });
+        ImageIcon backgroundImage = new ImageIcon("Assets/topPanel.jpg");
+        JLabel backgroundLabel = new JLabel(backgroundImage);
+        backgroundLabel.setBounds(0, 0, getWidth(), getHeight());
 
-        add(profile);
-        add(nameLabel);
-        add(roleLabel);
-        add(settingButton);
+        backgroundLabel.add(profile);
+        backgroundLabel.add(nameLabel);
+        backgroundLabel.add(roleLabel);
+        backgroundLabel.add(settingButton);
+        add(backgroundLabel);
     }
 
 }

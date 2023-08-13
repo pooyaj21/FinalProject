@@ -32,6 +32,7 @@ public class UserPanel extends JPanel {
 
     public UserPanel(User user) {
         this.user = user;
+        setOpaque(false);
         setSize(1000, 700);
         setLayout(null);
 
@@ -40,8 +41,8 @@ public class UserPanel extends JPanel {
         add(topPanel);
 
         projectPanelMaker.setBounds(0, 150, 200, getHeight());
+        projectPanelMaker.setOpaque(false);
         projectPanelMaker.setLayout(null);
-        add(projectPanelMaker);
 
         JButton addButton = new JButton();
         if (user.getRole().hasAccess(FeatureAccess.CREATE_PROJECT))addButton.setText("Add+");
@@ -55,6 +56,8 @@ public class UserPanel extends JPanel {
         projectScrollPane.setBounds(0, 150, 200, getHeight() - 50);
         projectScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         projectScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        projectScrollPane.setOpaque(false);
+        projectScrollPane.getViewport().setOpaque(false);
         add(projectScrollPane);
 
 
@@ -65,6 +68,8 @@ public class UserPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Image backgroundImage = new ImageIcon("Assets/mainBackground.jpeg").getImage();
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         g.drawLine(200, 100, 200, getHeight());
         g.drawLine(0, 100, getWidth(), 100);
         g.drawLine(0, 150, 200, 150);
@@ -80,7 +85,7 @@ public class UserPanel extends JPanel {
 
         if (index == selectedProjectIndex) {
             projectButton.setContentAreaFilled(true);
-            projectButton.setBackground(Color.GRAY);
+            projectButton.setBackground(new Color(0x003d9e));
             projectButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -97,6 +102,7 @@ public class UserPanel extends JPanel {
                         projectPanel.setVisible(false);
                     }
                     projectPanel=new ProjectPanel(UserPanel.this,project,user);
+                    projectPanel.setOpaque(false);
                     projectPanel.setVisible(true);
                     projectPanel.setBounds(200,100,800,700);
                     add(projectPanel);

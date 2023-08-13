@@ -11,6 +11,7 @@ import Project.Ui.IssueTrackerPanel;
 import Project.Ui.ReportPanel;
 import Project.Ui.User.UserPanel;
 import Project.Util.DateUtil;
+import Project.Util.RoundedButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,11 +19,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ProjectPanel extends JPanel {
-    public JButton kanbanButton = new JButton("Kanban Board");
+    public RoundedButton kanbanButton = new RoundedButton("Kanban Board",15,new Color(0x247ef0),Color.white,12);
     Project project;
     User user;
-    JButton issueButton = new JButton("Issue Tracker");
-    JButton reportButton = new JButton("Reports");
+    RoundedButton issueButton = new RoundedButton("Issue Tracker",15,new Color(0x247ef0),Color.white,12);
+    RoundedButton reportButton = new RoundedButton("Reports",15,new Color(0x247ef0),Color.white,12);
     JLabel nameProjectLabel = new JLabel();
     JLabel dateProjectLabel = new JLabel();
     BoardsPanel boardsPanel;
@@ -38,8 +39,8 @@ public class ProjectPanel extends JPanel {
         this.userPanel = userPanel;
         this.project = project;
         this.user = user;
+        setOpaque(false);
         setLayout(null);
-
         setSize(800, 700);
 
 
@@ -150,6 +151,7 @@ public class ProjectPanel extends JPanel {
         removeAllPanels();
         update();
         boardsPanel = new BoardsPanel(project, user, this);
+        boardsPanel.setOpaque(false);
         boardsPanel.setBounds(10, 60, 770, 600);
         boardsPanel.setVisible(true);
         add(boardsPanel);
@@ -161,6 +163,7 @@ public class ProjectPanel extends JPanel {
         removeAllPanels();
         update();
         swimlaneBoardPanel = new SwimlaneBoardPanel(board, project, user);
+        swimlaneBoardPanel.setOpaque(false);
         swimlaneBoardPanel.setBounds(10, 60, 770, 600);
         swimlaneBoardPanel.setVisible(true);
         add(swimlaneBoardPanel);
@@ -173,6 +176,7 @@ public class ProjectPanel extends JPanel {
         update();
         addBoredPanel = new AddBoredPanel(project, this);
         addBoredPanel.setBounds(10, 60, 770, 600);
+        addBoredPanel.setOpaque(false);
         addBoredPanel.setVisible(true);
         add(addBoredPanel);
         revalidate();
@@ -184,6 +188,7 @@ public class ProjectPanel extends JPanel {
         update();
         editBoardPanel = new EditBoardPanel(board, project, this);
         editBoardPanel.setBounds(10, 60, 770, 600);
+        editBoardPanel.setOpaque(false);
         editBoardPanel.setProject(project);
         editBoardPanel.update();
         editBoardPanel.setVisible(true);
@@ -196,6 +201,7 @@ public class ProjectPanel extends JPanel {
         removeAllPanels();
         update();
         issueTrackerPanel = new IssueTrackerPanel(project, user);
+        issueTrackerPanel.setOpaque(false);
         issueTrackerPanel.setBounds(10, 60, 770, 600);
         issueTrackerPanel.setVisible(true);
         add(issueTrackerPanel);
@@ -207,6 +213,7 @@ public class ProjectPanel extends JPanel {
         removeAllPanels();
         update();
         reportPanel = new ReportPanel(project);
+        reportPanel.setOpaque(false);
         reportPanel.setBounds(10, 60, 770, 600);
         reportPanel.setVisible(true);
         add(reportPanel);

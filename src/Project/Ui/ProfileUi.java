@@ -28,7 +28,6 @@ public class ProfileUi extends JPanel {
     private JLabel changeSuccessfulLabel = new JLabel();
     private RoundedButton logoutButton = new RoundedButton("Log Out", 12, Color.red, Color.white, 12);
     private RoundedButton backButton = new RoundedButton("⬅",30,Color.red, Color.white, 12);
-
     private String roleName = "";
     public ProfileUi(User user) {
         setLayout(null);
@@ -175,5 +174,11 @@ public class ProfileUi extends JPanel {
                 submitButton.doClick();
             }
         });
+    }
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Image backgroundImage = new ImageIcon("Assets/mainBackground.jpeg").getImage();
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
     }
 }

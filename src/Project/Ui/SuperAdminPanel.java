@@ -41,11 +41,13 @@ public class SuperAdminPanel extends JPanel {
         userManagementButton.setBounds(0,100,200,50);
         userManagementButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         userManagementButton.setHorizontalAlignment(SwingConstants.LEFT);
+        userManagementButton.setForeground(Color.white);
 
         projectManagementButton.setIcon(GeneralController.getInstance().resizeIcon(projectIcon, 30, 30));
         projectManagementButton.setBounds(0,150,200,50);
         projectManagementButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         projectManagementButton.setHorizontalAlignment(SwingConstants.LEFT);
+        projectManagementButton.setForeground(Color.white);
 
         userManagementButton.addActionListener(new ActionListener() {
             @Override
@@ -56,12 +58,14 @@ public class SuperAdminPanel extends JPanel {
                     if (projectManagementPanel != null) projectManagementPanel.setVisible(false);
                     if (projectPanel != null) projectPanel.setVisible(false);
                     userManagementPanel = new UserManagementPanel();
+                    userManagementPanel.setOpaque(false);
                     userManagementPanel.setBounds(201, 100, getWidth(), getHeight());
                     add(userManagementPanel);
                     userManagementPanel.setVisible(true);
-                    projectManagementButton.setBackground(null);
+                    projectManagementButton.setOpaque(false);
+                    projectManagementButton.setContentAreaFilled(false);
                     userManagementButton.setContentAreaFilled(true);
-                    userManagementButton.setBackground(Color.gray);
+                    userManagementButton.setBackground(new Color(0x003d9e));
                     repaint();
                 }
             }
@@ -78,12 +82,14 @@ public class SuperAdminPanel extends JPanel {
                     if (userManagementPanel != null) userManagementPanel.setVisible(false);
                     if (projectPanel != null) projectPanel.setVisible(false);
                     projectManagementPanel = new ProjectManagementPanel(SuperAdminPanel.this);
+                    projectManagementPanel.setOpaque(false);
                     projectManagementPanel.setBounds(201, 100, getWidth(), getHeight());
                     add(projectManagementPanel);
                     projectManagementPanel.setVisible(true);
-                    userManagementButton.setBackground(null);
+                    userManagementButton.setOpaque(false);
+                    userManagementButton.setContentAreaFilled(false);
                     projectManagementButton.setContentAreaFilled(true);
-                    projectManagementButton.setBackground(Color.gray);
+                    projectManagementButton.setBackground(new Color(0x003d9e));
                     repaint();
                 }
             }
@@ -102,6 +108,8 @@ public class SuperAdminPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Image backgroundImage = new ImageIcon("Assets/mainBackground.jpeg").getImage();
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         g.drawLine(200, 99, 200, getHeight());
         g.drawLine(0, 99, getWidth(), 100);
         g.drawLine(0, 150, 200, 150);
@@ -111,6 +119,7 @@ public class SuperAdminPanel extends JPanel {
     public void showProjectPanel(Project project){
         projectManagementPanel.setVisible(false);
         projectPanel=new ProjectPanel(project, admin);
+        projectPanel.setOpaque(false);
         projectPanel.setBounds(201, 100, getWidth(), getHeight());
         projectPanel.kanbanButton.doClick();
         add(projectPanel);

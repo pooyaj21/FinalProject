@@ -64,7 +64,7 @@ public class SwimlaneBoardPanel extends JPanel {
 
     public void addKanbanBoard(ArrayList<Issue> issues, User user, Project project, String name) {
         KanbanBoardPanel kanbanBoardPanel = new KanbanBoardPanel(issues, user, project, name);
-        contentPanel.add(kanbanBoardPanel); // Add to the content wrapping panel
-        contentPanel.revalidate(); // Revalidate the content panel
+        contentPanel.add(kanbanBoardPanel);
+        contentPanel.revalidate();
     }
 }

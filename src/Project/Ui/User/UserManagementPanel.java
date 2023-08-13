@@ -4,6 +4,7 @@ package Project.Ui.User;
 import Project.Logic.DataBase.SQL.UserDataBaseSQL;
 import Project.Logic.Role;
 import Project.Logic.User;
+import Project.Util.RoundedButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,28 +29,33 @@ public class UserManagementPanel extends JPanel {
     JButton userButton;
 
     public UserManagementPanel() {
+        setOpaque(false);
         setSize( 800, 700);
         setLayout(null);
 
-
-        userPanel.setBounds(0,50,199,getHeight());
+        userPanel.setBounds(0, 50, 199, getHeight());
         userPanel.setLayout(null);
         userPanel.setPreferredSize(new Dimension(199, getHeight()));
-        add(userPanel);
+        userPanel.setOpaque(false); // Make the userPanel transparent
 
         userScrollPane = new JScrollPane(userPanel);
-        userScrollPane.setBounds(0, 50, 199, getHeight()-50);
+        userScrollPane.setBounds(0, 50, 199, getHeight() - 50);
         userScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         userScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        userScrollPane.setOpaque(false);
+        userScrollPane.getViewport().setOpaque(false);
+
         add(userScrollPane, BorderLayout.CENTER);
 
         createUserPanel = new CreateUserPanel(this);
         createUserPanel.setBounds(200,0,getWidth(),getHeight());
         createUserPanel.setVisible(false);
+        createUserPanel.setOpaque(false);
         add(createUserPanel);
 
         editUserPanel = new EditUserPanel(200, 0,this);
         editUserPanel.setVisible(false);
+        editUserPanel.setOpaque(false);
         add(editUserPanel);
 
         JButton button = new JButton("Add+");
@@ -81,15 +87,15 @@ public class UserManagementPanel extends JPanel {
         g.drawLine(0, 50, 200, 50);
     }
     private void drawUserButton(User user, int index) {
-        userButton = new JButton();
+        userButton = new JButton(user.getFullName());
         userButton.setBounds(0, (100 * index), 200, 100);
-        userButton.setText(user.getFullName());
         userButton.setContentAreaFilled(false);
         userButton.setBorder(null);
+        userButton.setOpaque(false);
 
         if (index == selectedUserIndex) {
             userButton.setContentAreaFilled(true);
-            userButton.setBackground(Color.GRAY);
+            userButton.setBackground(new Color(0x003d9e));
         } else {
             userButton.setBackground(null);
         }

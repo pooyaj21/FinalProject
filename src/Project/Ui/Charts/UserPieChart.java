@@ -22,10 +22,13 @@ public class UserPieChart extends JPanel {
         ExampleChart<PieChart> exampleChart = new UserChart(completedTasks, rejectedTasks);
         PieChart chart = exampleChart.getChart();
         JPanel panel= new XChartPanel<>(chart);
+        panel.setOpaque(false);
 
         if (completedTasks ==0&& rejectedTasks ==0){
             panel=new JPanel();
+            panel.setOpaque(false);
             errorLabel.setBounds(150,100,400,200);
+            errorLabel.setOpaque(false);
             errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
             errorLabel.setVerticalAlignment(SwingConstants.CENTER);
             errorLabel.setFont(new Font(null,Font.BOLD,30));

@@ -3,6 +3,7 @@ package Project.Ui.Project;
 import Project.Logic.DataBase.SQL.ProjectDatabaseSQL;
 import Project.Logic.Project;
 import Project.Ui.SuperAdminPanel;
+import Project.Util.RoundedButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,22 +35,26 @@ public class ProjectManagementPanel extends JPanel {
         projectPanel.setBounds(0, 50, 199, getHeight());
         projectPanel.setLayout(null);
         projectPanel.setSize(200,700);
-        add(projectPanel);
+        projectPanel.setOpaque(false);
 
         projectScrollPane = new JScrollPane(projectPanel);
         projectScrollPane.setBounds(0, 50, 200, getHeight()-50);
         projectScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         projectScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        projectScrollPane.setOpaque(false);
+        projectScrollPane.getViewport().setOpaque(false);
         add(projectScrollPane, BorderLayout.CENTER);
 
         createProjectPanel = new CreateProjectPanel(this);
         createProjectPanel.setBounds(200,0,getWidth(),getHeight());
         createProjectPanel.setVisible(false);
+        createProjectPanel.setOpaque(false);
         add(createProjectPanel);
 
         projectSettingPanel= new EditProjectPanel(this);
         projectSettingPanel.setBounds(200,0,getWidth(),getHeight());
         projectSettingPanel.setVisible(false);
+        projectSettingPanel.setOpaque(false);
         add(projectSettingPanel);
 
 
@@ -83,15 +88,14 @@ public class ProjectManagementPanel extends JPanel {
     }
 
     private void drawProjectButton(Project project, int index) {
-        projectButton = new JButton();
+        projectButton = new JButton(project.getName());
         projectButton.setBounds(0, (100 * index), 200, 100);
-        projectButton.setText(project.getName());
         projectButton.setContentAreaFilled(false);
         projectButton.setBorder(null);
 
         if (index == selectedProjectIndex) {
             projectButton.setContentAreaFilled(true);
-            projectButton.setBackground(Color.GRAY);
+            projectButton.setBackground(new Color(0x003d9e));
         } else {
             projectButton.setBackground(null);
         }
