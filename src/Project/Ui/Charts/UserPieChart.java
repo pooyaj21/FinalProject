@@ -11,10 +11,10 @@ import java.awt.*;
 
 public class UserPieChart extends JPanel {
     JLabel errorLabel = new JLabel("'There is no Data here'");
-    public UserPieChart(Project project, User user) {
+    public UserPieChart(Project project, User user,long startTime,long endTime) {
 
-        int completedTasks = ChartController.findAmountOFCompletedIssues(project.getId(), user.getId());
-        int rejectedTasks = ChartController.findAmountOFRejectedIssues(project.getId(), user.getId());
+        int completedTasks = ChartController.findAmountOFCompletedIssues(project.getId(), user.getId(),startTime,endTime);
+        int rejectedTasks = ChartController.findAmountOFRejectedIssues(project.getId(), user.getId(),startTime,endTime);
 
         setLayout(null);
         setSize(new Dimension(780, 400));

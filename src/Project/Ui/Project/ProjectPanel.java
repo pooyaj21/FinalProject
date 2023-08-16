@@ -143,7 +143,7 @@ public class ProjectPanel extends JPanel {
 
         boardsPanel = new BoardsPanel(project, user, this);
         issueTrackerPanel = new IssueTrackerPanel(project, user);
-        editBoardPanel = new EditBoardPanel(board, project, this);
+        editBoardPanel = new EditBoardPanel(board, this);
         addBoredPanel = new AddBoredPanel(project, this);
     }
 
@@ -186,10 +186,9 @@ public class ProjectPanel extends JPanel {
     public void showEditBoardsPanel(Board board) {
         removeAllPanels();
         update();
-        editBoardPanel = new EditBoardPanel(board, project, this);
+        editBoardPanel = new EditBoardPanel(board, this);
         editBoardPanel.setBounds(10, 60, 770, 600);
         editBoardPanel.setOpaque(false);
-        editBoardPanel.setProject(project);
         editBoardPanel.update();
         editBoardPanel.setVisible(true);
         add(editBoardPanel);

@@ -166,5 +166,47 @@ public class IssuesTransitionSql {
         return transitionIds;
     }
 
+    public ArrayList<Issue> getIssuesWithStatusAndTransitionTime(int projectId, int userId, String oldStatus, String newStatus, long startTime, long endTime) {
+        ArrayList<Issue> filteredIssues = new ArrayList<>();
+
+        try (Connection connection = getConnection()) {
+            String query = "SELECT i.* FROM Issues i " +
+                    "INNER JOIN IssueTransitions it ON i.issue_id = it.issue_id " +
+                    "WHERE i.project_id = ? AND it.previous_state = ? AND it.new_state = ? " +
+                    "AND it.transition_time BETWEEN ? AND ? AND i.user_id = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, projectId);
+                preparedStatement.setString(2, oldStatus);
+                preparedStatement.setString(3, newStatus);
+                preparedStatement.setLong(4, startTime);
+                preparedStatement.setLong(5, endTime);
+                preparedStatement.setInt(6, userId);
+
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    while (resultSet.next()) {
+                        Issue issue = new Issue(
+                                resultSet.getInt("issue_id"),
+                                resultSet.getInt("project_id"),
+                                resultSet.getInt("user_id"),
+                                resultSet.getString("issue_title"),
+                                resultSet.getLong("issue_addTime"),
+                                resultSet.getLong("issue_updateTime"),
+                                EnumChanger.toEnumType(resultSet.getString("issue_type")),
+                                EnumChanger.toEnumPriority(resultSet.getString("issue_priority")),
+                                EnumChanger.toEnumStatus(resultSet.getString("issue_status"))
+                        );
+                        filteredIssues.add(issue);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return filteredIssues;
+    }
+
+
 
 }

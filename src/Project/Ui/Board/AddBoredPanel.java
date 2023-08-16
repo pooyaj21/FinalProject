@@ -31,6 +31,9 @@ public class AddBoredPanel extends JPanel {
 
         nameLabel.setBounds(125, 100, 75, 25);
         nameField.setBounds(170, 100, 200, 25);
+        nameErrorLabel.setBounds(170, 125, 200, 25);
+        nameErrorLabel.setVisible(false);
+        nameErrorLabel.setFont(new Font(null, Font.ITALIC, 10));
 
         userLabel.setBounds(125, 150, 75, 25);
         userComboBox.setBounds(170, 150, 200, 25);
